@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/statisticsFragment">
+
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="com.matxowy.vehiclecost.ui.statistics.StatisticsFragment"
+        android:label="@string/label_statictics"
+        tools:layout="@layout/statistics_fragment" />
+    <fragment
+        android:id="@+id/calculatorFragment"
+        android:name="com.matxowy.vehiclecost.ui.calculator.CalculatorFragment"
+        android:label="@string/label_calculator"
+        tools:layout="@layout/calculator_fragment" />
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.matxowy.vehiclecost.ui.history.HistoryFragment"
+        android:label="@string/label_history"
+        tools:layout="@layout/history_fragment" />
+</navigation>

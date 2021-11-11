@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Vehicle Cost</string>
+    <string name="bottom_nav_first_text">Statystyki</string>
+    <string name="bottom_nav_second_text">Historia</string>
+    <string name="bottom_nav_third_text">Kalkulator</string>
+    <string name="label_statictics">Statystyki</string>
+    <string name="label_calculator">Kalkulator</string>
+    <string name="label_history">Historia</string>
 </resources>

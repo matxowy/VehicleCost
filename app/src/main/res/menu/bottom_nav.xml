@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/statisticsFragment"
+        android:icon="@drawable/ic_statistic"
+        android:title="@string/bottom_nav_first_text" />
+    <item
+        android:id="@+id/historyFragment"
+        android:icon="@drawable/ic_history"
+        android:title="@string/bottom_nav_second_text" />
+    <item
+        android:id="@+id/calculatorFragment"
+        android:icon="@drawable/ic_calculator"
+        android:title="@string/bottom_nav_third_text" />
+
+</menu>

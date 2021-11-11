@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.calculator.CalculatorFragment">
+
+    <RadioGroup
+        android:id="@+id/rg_types"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/radio_group_tab_background"
+        android:orientation="horizontal"
+        >
+
+        <RadioButton
+            android:id="@+id/rb_fuel_consumption"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/calculation_type_selector"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:text="SPALANIE"
+            android:textColor="@drawable/calculation_type_text_color_selector"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/rb_costs"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/calculation_type_selector"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:text="KOSZTY"
+            android:textColor="@drawable/calculation_type_text_color_selector"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/rb_range"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/calculation_type_selector"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:text="ZASIĘG"
+            android:textColor="@drawable/calculation_type_text_color_selector"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/ll_fuel_consumption_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="70dp"
+        android:padding="10dp"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_fuel"
+                android:contentDescription="fuel_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_refueled_from_fuel_consumption_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_refueled_from_fuel_consumption_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Zatankowano"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ic_car"
+                android:contentDescription="car_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_km_traveled_from_fuel_consumption_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_km_traveled_from_fuel_consumption_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Przejechane kilometry"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ic_money"
+                android:contentDescription="money_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_fuel_price_from_fuel_consumption_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_fuel_price_from_fuel_consumption_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Cena za litr"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_result_from_fuel_consumption_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_avg_fuel_consumption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Srednie spalanie wynosi: 6.6l/100km"
+                android:layout_marginTop="35dp"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:textAlignment="center"
+                />
+
+            <TextView
+                android:id="@+id/tv_cost_of_100km"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cena za przejechanie 100km wynosi: 20.38zł"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:textAlignment="center"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_costs_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="70dp"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_fuel"
+                android:contentDescription="fuel_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_avg_fuel_consumption_from_costs_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_avg_fuel_consumption_from_costs_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Srednie spalanie"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ic_car"
+                android:contentDescription="car_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_km_traveled_from_costs_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_km_traveled_from_costs_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Przejechane kilometry"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ic_money"
+                android:contentDescription="money_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_fuel_price_from_costs_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_fuel_price_from_costs_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Cena za litr"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ic_people"
+                android:contentDescription="people_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_number_of_people_from_costs_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_number_of_people_from_costs_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Liczba osób"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_result_from_costs_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_required_amount_of_fuel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wymagana ilość paliwa: 6.6l"
+                android:layout_marginTop="35dp"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/tv_travel_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Koszt podróży wyniesie: 20.38zł"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/tv_travel_cost_per_person"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Na osobę: 20.38zł"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_range_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="70dp"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_fuel"
+                android:contentDescription="fuel_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_avg_fuel_consumption_from_range_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_avg_fuel_consumption_from_range_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Srednie spalanie"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/ic_payment"
+                android:contentDescription="payment_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_paid_from_range_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_paid_from_range_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Zapłacono"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ic_money"
+                android:contentDescription="money_icon" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_fuel_price_from_range_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:background="@android:color/transparent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_fuel_price_from_range_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Cena za litr"
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_result_from_range_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_filled_with_fuel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Zatankowano: 6.6l"
+                android:layout_marginTop="35dp"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/tv_expected_range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Przewidywany zasięg wynosi: 50km"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
