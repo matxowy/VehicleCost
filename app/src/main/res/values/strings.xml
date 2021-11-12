@@ -6,4 +6,12 @@
     <string name="label_statictics">Statystyki</string>
     <string name="label_calculator">Kalkulator</string>
     <string name="label_history">Historia</string>
+    <string name="stat_header_fuel">Paliwo</string>
+    <string name="stat_refueled_text">Zatankowano:</string>
+    <string name="stat_paid_text">Wydano:</string>
+    <string name="stat_last_fuel_price_text">Ostatnia cena paliwa:</string>
+    <string name="stat_header_repair">Naprawy</string>
+    <string name="stat_avg_cost_repair">Średni wydatek na miesiąc</string>
+    <string name="stat_greatest_expense_repair">Największy wydatek:</string>
+    <string name="stat_latest_cost_repair">Ostatni wydatek:</string>
 </resources>

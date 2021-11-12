@@ -1,13 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.statistics.StatisticsFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.statistics.StatisticsFragment"
+    android:orientation="vertical"
+    android:background="#E3E3E3">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Statistics" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:text="@string/stat_header_fuel" />
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/ll_background_under_statistics_text"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_refueled_text"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/tv_refueled_stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 l"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:maxLength="15"
+                android:ellipsize="end"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_paid_text"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/tv_fuel_costs_stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 zł"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:maxLength="15"
+                android:ellipsize="end"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_last_fuel_price_text"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/tv_last_fuel_price_stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 zł"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:maxLength="15"
+                android:ellipsize="end"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="10dp"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:text="@string/stat_header_repair" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/ll_background_under_statistics_text"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_avg_cost_repair"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/tv_avg_repair_cost_stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 zł"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:maxLength="15"
+                android:ellipsize="end"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_greatest_expense_repair"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/tv_greatest_cost_repair_stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 zł"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:maxLength="15"
+                android:ellipsize="end"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_latest_cost_repair"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/tv_latest_cost_repair_stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 zł"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:maxLength="15"
+                android:ellipsize="end"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_repair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="15dp"
+        android:focusable="true"
+        android:visibility="gone"
+        app:tint="@android:color/white"
+        android:src="@drawable/ic_repair" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_refuel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="15dp"
+        android:focusable="true"
+        android:visibility="gone"
+        app:tint="@android:color/white"
+        android:src="@drawable/ic_add_refuel" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/purple_500"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@android:color/white"
+        android:src="@drawable/ic_add"/>
+
+</LinearLayout>
