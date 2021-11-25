@@ -30,8 +30,8 @@
     <fragment
         android:id="@+id/addEditRefuelFragment"
         android:name="com.matxowy.vehiclecost.ui.addeditrefuel.AddEditRefuelFragment"
-        android:label="add_edit_refuel_fragment"
-        tools:layout="@layout/add_edit_refuel_fragment" >
+        android:label="{title}"
+        tools:layout="@layout/add_edit_refuel_fragment">
         <argument
             android:name="refuel"
             app:argType="com.matxowy.vehiclecost.data.Refuel"
@@ -43,6 +43,14 @@
     <fragment
         android:id="@+id/addEditRepairFragment"
         android:name="com.matxowy.vehiclecost.ui.addeditrepair.AddEditRepairFragment"
-        android:label="add_edit_repair_fragment"
-        tools:layout="@layout/add_edit_repair_fragment" />
+        android:label="{title}"
+        tools:layout="@layout/add_edit_repair_fragment">
+        <argument
+            android:name="repair"
+            app:argType="com.matxowy.vehiclecost.data.Repair"
+            app:nullable="true" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>

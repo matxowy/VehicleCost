@@ -29,7 +29,7 @@
         android:layout_marginStart="9dp"
         android:background="@drawable/radio_group_tab_background"
         android:orientation="horizontal"
-        app:layout_constraintStart_toTopOf="@+id/recyclerView_refuel"
+        app:layout_constraintStart_toStartOf="@+id/recyclerView_refuel"
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton

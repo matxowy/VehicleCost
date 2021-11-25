@@ -24,4 +24,19 @@
     <string name="label_of_date">Data</string>
     <string name="loading">Ładowanie</string>
     <string name="label_time">Czas</string>
+    <string name="hint_price_per_liter">Cena za litr</string>
+    <string name="hint_cost">Koszt</string>
+    <string name="hint_amount_of_fuel">Ilość paliwa</string>
+    <string name="hint_type_of_fuel">Typ paliwa</string>
+    <string name="switch_full_refueled">Tankowanie do pełna</string>
+    <string name="button_add_new_refuel">Dodaj tankowanie</string>
+    <string name="title">Tytuł</string>
+    <string name="comments">Uwagi</string>
+    <string name="btn_add_new_repair">Dodaj naprawę</string>
+
+    <string-array name="type_of_fuel">
+        <item>ON</item>
+        <item>PB</item>
+        <item>LPG</item>
+    </string-array>
 </resources>

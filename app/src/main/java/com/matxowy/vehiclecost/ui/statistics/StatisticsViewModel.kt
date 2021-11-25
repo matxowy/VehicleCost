@@ -14,6 +14,10 @@ class StatisticsViewModel : ViewModel() {
         addEventChannel.send(AddingEvent.NavigateToAddRefuelScreen)
     }
 
+    fun onAddNewRepairClick() = viewModelScope.launch {
+        addEventChannel.send(AddingEvent.NavigateToAddRepairScreen)
+    }
+
     sealed class AddingEvent {
         object NavigateToAddRefuelScreen : AddingEvent()
         object NavigateToAddRepairScreen : AddingEvent()

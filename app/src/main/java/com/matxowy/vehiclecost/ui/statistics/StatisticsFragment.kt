@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.StatisticsFragmentBinding
 import com.matxowy.vehiclecost.util.exhaustive
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 
@@ -49,7 +47,7 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
             }
 
             fabAddRepair.setOnClickListener {
-                Toast.makeText(context, "Add repair clicked", Toast.LENGTH_SHORT).show()
+                viewModel.onAddNewRepairClick()
             }
         }
 
@@ -63,7 +61,9 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
                         clicked = false
                     }
                     is StatisticsViewModel.AddingEvent.NavigateToAddRepairScreen -> {
-
+                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRepairFragment(null, "Nowa naprawa")
+                        findNavController().navigate(action)
+                        clicked = false
                     }
                 }.exhaustive
             }

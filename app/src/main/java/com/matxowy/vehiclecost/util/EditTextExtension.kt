@@ -1,13 +1,11 @@
 package com.matxowy.vehiclecost.util
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.widget.EditText
 import java.text.SimpleDateFormat
 import java.util.*
-
-import android.app.TimePickerDialog
-import kotlinx.android.synthetic.main.add_edit_refuel_fragment.view.*
 
 
 fun EditText.transformIntoDatePicker(context: Context, format: String, maxDate: Date? = null) {
