@@ -252,7 +252,8 @@
         android:focusable="true"
         android:visibility="gone"
         app:tint="@android:color/white"
-        android:src="@drawable/ic_repair" />
+        android:src="@drawable/ic_repair"
+        android:contentDescription="@string/content_description_fab_add_repair"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_refuel"
@@ -263,7 +264,8 @@
         android:focusable="true"
         android:visibility="gone"
         app:tint="@android:color/white"
-        android:src="@drawable/ic_add_refuel" />
+        android:src="@drawable/ic_add_refuel"
+        android:contentDescription="@string/content_description_fab_add_refuel"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
@@ -275,6 +277,7 @@
         android:clickable="true"
         android:focusable="true"
         app:tint="@android:color/white"
-        android:src="@drawable/ic_add"/>
+        android:src="@drawable/ic_add"
+        android:contentDescription="@string/content_description_fab_add"/>
 
 </LinearLayout>

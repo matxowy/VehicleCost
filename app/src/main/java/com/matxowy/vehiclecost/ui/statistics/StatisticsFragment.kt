@@ -6,11 +6,19 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.StatisticsFragmentBinding
+import com.matxowy.vehiclecost.util.exhaustive
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+
 
 class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
+    private val viewModel: StatisticsViewModel by viewModels()
     private lateinit var binding: StatisticsFragmentBinding
 
     //Animations
@@ -25,8 +33,6 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
         fun newInstance() = StatisticsFragment()
     }
 
-    private lateinit var viewModel: StatisticsViewModel
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -39,11 +45,27 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
             }
 
             fabAddRefuel.setOnClickListener {
-                Toast.makeText(context, "Add refuel clicked", Toast.LENGTH_SHORT).show()
+                viewModel.onAddNewRefuelClick()
             }
 
             fabAddRepair.setOnClickListener {
                 Toast.makeText(context, "Add repair clicked", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Navigation between screens
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.addingEvent.collect { event ->
+                when(event) {
+                    is StatisticsViewModel.AddingEvent.NavigateToAddRefuelScreen -> {
+                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRefuelFragment(null, "Nowe tankowanie")
+                        findNavController().navigate(action)
+                        clicked = false
+                    }
+                    is StatisticsViewModel.AddingEvent.NavigateToAddRepairScreen -> {
+
+                    }
+                }.exhaustive
             }
         }
     }

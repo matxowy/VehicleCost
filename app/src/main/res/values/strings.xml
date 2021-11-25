@@ -14,4 +14,14 @@
     <string name="stat_avg_cost_repair">Średni wydatek na miesiąc</string>
     <string name="stat_greatest_expense_repair">Największy wydatek:</string>
     <string name="stat_latest_cost_repair">Ostatni wydatek:</string>
+    <string name="rb_fuel_text">Paliwo</string>
+    <string name="rb_repair_text">Naprawy</string>
+    <string name="content_description_fab_add">Dodaj</string>
+    <string name="content_description_fab_add_refuel">Dodaj tankowanie</string>
+    <string name="content_description_fab_add_repair">Dodaj naprawę</string>
+    <string name="text_input_hint_mileage">Przebieg (km)</string>
+    <string name="editText_hint_date">Data</string>
+    <string name="label_of_date">Data</string>
+    <string name="loading">Ładowanie</string>
+    <string name="label_time">Czas</string>
 </resources>

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.matxowy.vehiclecost.R
 
-class AddEditRepairFragment : Fragment() {
+class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
 
     companion object {
         fun newInstance() = AddEditRepairFragment()
