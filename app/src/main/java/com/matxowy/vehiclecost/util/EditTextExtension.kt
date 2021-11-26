@@ -40,16 +40,16 @@ fun EditText.transformIntoTimePicker(context: Context, format: String) {
 
     val timePickerOnDataSetListener =
         TimePickerDialog.OnTimeSetListener {_, hour, minute ->
-            myCalendar.set(Calendar.HOUR, hour)
+            myCalendar.set(Calendar.HOUR_OF_DAY, hour) // musi być hour_of_day bo samo hour ustawiało godzinę, np 15:33 jako 3:33
             myCalendar.set(Calendar.MINUTE, minute)
-            val sdf = SimpleDateFormat(format, Locale.UK) // przyjrzeć się czemu timepicker po ponownym kliknięciu używa formatu np zamiast 15:33 to 3:33
+            val sdf = SimpleDateFormat(format, Locale.UK)
             setText(sdf.format(myCalendar.time))
         }
 
     setOnClickListener {
         TimePickerDialog(
             context, timePickerOnDataSetListener, myCalendar
-                .get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true
+                .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), true
         ).run {
             show()
         }

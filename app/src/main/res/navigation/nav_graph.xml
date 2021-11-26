@@ -34,7 +34,7 @@
         tools:layout="@layout/add_edit_refuel_fragment">
         <argument
             android:name="refuel"
-            app:argType="com.matxowy.vehiclecost.data.Refuel"
+            app:argType="com.matxowy.vehiclecost.data.db.entity.Refuel"
             app:nullable="true" />
         <argument
             android:name="title"
@@ -47,7 +47,7 @@
         tools:layout="@layout/add_edit_repair_fragment">
         <argument
             android:name="repair"
-            app:argType="com.matxowy.vehiclecost.data.Repair"
+            app:argType="com.matxowy.vehiclecost.data.db.entity.Repair"
             app:nullable="true" />
         <argument
             android:name="title"
