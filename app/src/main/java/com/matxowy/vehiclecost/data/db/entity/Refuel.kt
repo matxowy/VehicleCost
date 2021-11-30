@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalDateTime
 
-@Entity(tableName = "Refuel")
+@Entity(tableName = "refuel")
 @Parcelize
 data class Refuel (
     val mileage: Int,
@@ -15,7 +15,7 @@ data class Refuel (
     val amountOfFuel: Double,
     val cost: Double,
     val price: Double,
-    val fullRefueled: Boolean,
-    val comments: String,
+    val fullRefueled: Boolean = false,
+    val comments: String = "",
     @PrimaryKey(autoGenerate = true) val id: Int = 0
     ) : Parcelable

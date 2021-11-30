@@ -60,7 +60,7 @@
             tools:text="Wymiana rozrządu" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -73,7 +73,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_mileage"
-            tools:text="60.74 l" />
+            tools:text="607 zł" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

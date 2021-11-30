@@ -9,9 +9,10 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Repair(
     val title: String,
+    val mileage: Int,
     val cost: Double,
     val date: String,
     val time: String,
-    val comments: String,
+    val comments: String = "",
     @PrimaryKey(autoGenerate = true) val id: Int = 0
 ) : Parcelable

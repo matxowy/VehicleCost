@@ -10,9 +10,11 @@ import com.matxowy.vehiclecost.databinding.AddEditRefuelFragmentBinding
 import com.matxowy.vehiclecost.util.LocalDateConverter
 import com.matxowy.vehiclecost.util.transformIntoDatePicker
 import com.matxowy.vehiclecost.util.transformIntoTimePicker
+import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 
+@AndroidEntryPoint
 class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
 
     private val viewModel: AddEditRefuelViewModel by viewModels()

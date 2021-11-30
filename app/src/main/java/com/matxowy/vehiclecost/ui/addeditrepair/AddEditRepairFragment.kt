@@ -9,9 +9,11 @@ import com.matxowy.vehiclecost.databinding.AddEditRepairFragmentBinding
 import com.matxowy.vehiclecost.util.LocalDateConverter
 import com.matxowy.vehiclecost.util.transformIntoDatePicker
 import com.matxowy.vehiclecost.util.transformIntoTimePicker
+import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 
+@AndroidEntryPoint
 class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
 
     private val viewModel: AddEditRepairViewModel by viewModels()

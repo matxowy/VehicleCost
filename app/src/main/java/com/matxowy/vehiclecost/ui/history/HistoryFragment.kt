@@ -1,18 +1,21 @@
 package com.matxowy.vehiclecost.ui.history
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.HistoryFragmentBinding
-import com.matxowy.vehiclecost.databinding.StatisticsFragmentBinding
+import com.matxowy.vehiclecost.ui.history.adapters.RefuelAdapter
+import com.matxowy.vehiclecost.ui.history.adapters.RepairAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.history_fragment.*
 
+@AndroidEntryPoint
 class HistoryFragment : Fragment(R.layout.history_fragment) {
 
     private lateinit var binding: HistoryFragmentBinding
@@ -29,12 +32,56 @@ class HistoryFragment : Fragment(R.layout.history_fragment) {
         fun newInstance() = HistoryFragment()
     }
 
-    private lateinit var viewModel: HistoryViewModel
+    private val viewModel: HistoryViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = HistoryFragmentBinding.bind(view)
+
+        //Radio group operations
+        binding.rgHistory.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.rb_fuel_history -> {
+                    recyclerView_repair.visibility = View.GONE
+                    recyclerView_refuel.visibility = View.VISIBLE
+                }
+                R.id.rb_repair_history -> {
+                    recyclerView_repair.visibility = View.VISIBLE
+                    recyclerView_refuel.visibility = View.GONE
+                }
+            }
+        }
+
+        //RecyclerView operations
+        val refuelAdapter = RefuelAdapter()
+        val repairAdapter = RepairAdapter()
+
+        binding.apply {
+            recyclerViewRefuel.apply {
+                adapter = refuelAdapter
+                layoutManager = LinearLayoutManager(requireContext())
+                setHasFixedSize(true)
+            }
+
+            recyclerViewRepair.apply {
+                adapter = repairAdapter
+                layoutManager = LinearLayoutManager(requireContext())
+                setHasFixedSize(true)
+            }
+        }
+
+        viewModel.refuels.observe(viewLifecycleOwner) {
+            binding.groupLoading.visibility = View.GONE
+            refuelAdapter.submitList(it)
+        }
+
+        viewModel.repairs.observe(viewLifecycleOwner) {
+            binding.groupLoading.visibility = View.GONE
+            repairAdapter.submitList(it)
+        }
+
+
 
         //FAB operations
         binding.apply {
