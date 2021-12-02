@@ -27,10 +27,6 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
     private var clicked = false
 
-    companion object {
-        fun newInstance() = StatisticsFragment()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

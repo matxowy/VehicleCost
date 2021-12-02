@@ -20,15 +20,15 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
     private val viewModel: AddEditRefuelViewModel by viewModels()
     private lateinit var binding: AddEditRefuelFragmentBinding
 
-    companion object {
-        fun newInstance() = AddEditRefuelFragment()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = AddEditRefuelFragmentBinding.bind(view)
-        val spinnerAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.type_of_fuel, R.layout.spinner_item_list)
+        val spinnerAdapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.type_of_fuel,
+            R.layout.spinner_item_list
+        )
 
         binding.apply {
             etDate.setText(LocalDateConverter.dateToString(LocalDate.now()))

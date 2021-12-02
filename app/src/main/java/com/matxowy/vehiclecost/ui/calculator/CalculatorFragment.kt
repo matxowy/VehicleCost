@@ -1,7 +1,6 @@
 package com.matxowy.vehiclecost.ui.calculator
 
 
-
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -14,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.text.bold
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.matxowy.vehiclecost.R
@@ -21,33 +21,20 @@ import com.matxowy.vehiclecost.databinding.CalculatorFragmentBinding
 import com.matxowy.vehiclecost.internal.SelectedTab
 import com.matxowy.vehiclecost.util.StringUtils
 import com.matxowy.vehiclecost.util.roundTo
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
-class CalculatorFragment : Fragment() {
+@AndroidEntryPoint
+class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
 
-    private var _binding: CalculatorFragmentBinding? = null
-    private val binding
-        get() = _binding!!
+    private lateinit var binding: CalculatorFragmentBinding
+    private val viewModel: CalculatorViewModel by viewModels()
 
-    companion object {
-        fun newInstance() = CalculatorFragment()
-    }
 
-    private lateinit var viewModel: CalculatorViewModel
-    
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = CalculatorFragmentBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CalculatorViewModel::class.java)
-
+        binding = CalculatorFragmentBinding.bind(view)
 
         binding.rgTypes.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -86,7 +73,11 @@ class CalculatorFragment : Fragment() {
                         showResultForConsumptionTab(event.avgConsumption, event.price)
                     }
                     is CalculatorViewModel.CalculatorEvent.ShowResultForCostsTab -> {
-                        showResultForCostsTab(event.requiredAmountOfFuel, event.costForTravel, event.costPerPerson)
+                        showResultForCostsTab(
+                            event.requiredAmountOfFuel,
+                            event.costForTravel,
+                            event.costPerPerson
+                        )
                     }
                     is CalculatorViewModel.CalculatorEvent.ShowResultForRangeTab -> {
                         showResultForRangeTab(event.amountOfFilledWithFuel, event.rangeInKm)
@@ -98,26 +89,36 @@ class CalculatorFragment : Fragment() {
 
     private fun setValuesInEditTexts() {
         binding.apply {
-            if(viewModel.refueled != null) etRefueledFromFuelConsumptionTab.setText(
-                StringUtils.trimTrailingZero((viewModel.refueled).toString()))
-            if(viewModel.paid != null) etPaidFromRangeTab.setText(
-                StringUtils.trimTrailingZero((viewModel.paid).toString()))
-            if(viewModel.numberOfPeople != null) etNumberOfPeopleFromCostsTab.setText(
-                StringUtils.trimTrailingZero((viewModel.numberOfPeople).toString()))
-            if(viewModel.kmTraveled != null) etKmTraveledFromFuelConsumptionTab.setText(
-                StringUtils.trimTrailingZero((viewModel.kmTraveled).toString()))
-            if(viewModel.kmTraveled != null) etKmTraveledFromCostsTab.setText(
-                StringUtils.trimTrailingZero((viewModel.kmTraveled).toString()))
-            if(viewModel.fuelPrice != null) etFuelPriceFromRangeTab.setText(
-                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString()))
-            if(viewModel.fuelPrice != null) etFuelPriceFromFuelConsumptionTab.setText(
-                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString()))
-            if(viewModel.fuelPrice != null) etFuelPriceFromCostsTab.setText(
-                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString()))
-            if(viewModel.avgFuelConsumption != null) etAvgFuelConsumptionFromRangeTab.setText(
-                StringUtils.trimTrailingZero((viewModel.avgFuelConsumption).toString()))
-            if(viewModel.avgFuelConsumption != null) etAvgFuelConsumptionFromCostsTab.setText(
-                StringUtils.trimTrailingZero((viewModel.avgFuelConsumption).toString()))
+            if (viewModel.refueled != null) etRefueledFromFuelConsumptionTab.setText(
+                StringUtils.trimTrailingZero((viewModel.refueled).toString())
+            )
+            if (viewModel.paid != null) etPaidFromRangeTab.setText(
+                StringUtils.trimTrailingZero((viewModel.paid).toString())
+            )
+            if (viewModel.numberOfPeople != null) etNumberOfPeopleFromCostsTab.setText(
+                StringUtils.trimTrailingZero((viewModel.numberOfPeople).toString())
+            )
+            if (viewModel.kmTraveled != null) etKmTraveledFromFuelConsumptionTab.setText(
+                StringUtils.trimTrailingZero((viewModel.kmTraveled).toString())
+            )
+            if (viewModel.kmTraveled != null) etKmTraveledFromCostsTab.setText(
+                StringUtils.trimTrailingZero((viewModel.kmTraveled).toString())
+            )
+            if (viewModel.fuelPrice != null) etFuelPriceFromRangeTab.setText(
+                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString())
+            )
+            if (viewModel.fuelPrice != null) etFuelPriceFromFuelConsumptionTab.setText(
+                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString())
+            )
+            if (viewModel.fuelPrice != null) etFuelPriceFromCostsTab.setText(
+                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString())
+            )
+            if (viewModel.avgFuelConsumption != null) etAvgFuelConsumptionFromRangeTab.setText(
+                StringUtils.trimTrailingZero((viewModel.avgFuelConsumption).toString())
+            )
+            if (viewModel.avgFuelConsumption != null) etAvgFuelConsumptionFromCostsTab.setText(
+                StringUtils.trimTrailingZero((viewModel.avgFuelConsumption).toString())
+            )
         }
     }
 
@@ -183,7 +184,7 @@ class CalculatorFragment : Fragment() {
         val avgFuelConsumptionText = SpannableStringBuilder()
             .append("Srednie spalanie wynosi: ")
             .bold { append(avgConsumption.roundTo(2).toString()) }
-            .bold{ append(" litrów") }
+            .bold { append(" litrów") }
 
         val costFor100kmText = SpannableStringBuilder()
             .append("Cena za przejechanie 100km wynosi: ")
@@ -291,27 +292,27 @@ class CalculatorFragment : Fragment() {
 
     private fun addObservers() {
         viewModel.apply {
-            currentRefueled.observe(viewLifecycleOwner, Observer {
+            currentRefueled.observe(viewLifecycleOwner, {
                 viewModel.doCalculation()
             })
 
-            currentKmTraveled.observe(viewLifecycleOwner, Observer {
+            currentKmTraveled.observe(viewLifecycleOwner, {
                 viewModel.doCalculation()
             })
 
-            currentFuelPrice.observe(viewLifecycleOwner, Observer {
+            currentFuelPrice.observe(viewLifecycleOwner, {
                 viewModel.doCalculation()
             })
 
-            currentAvgFuelConsumption.observe(viewLifecycleOwner, Observer {
+            currentAvgFuelConsumption.observe(viewLifecycleOwner, {
                 viewModel.doCalculation()
             })
 
-            currentNumberOfPeople.observe(viewLifecycleOwner, Observer {
+            currentNumberOfPeople.observe(viewLifecycleOwner, {
                 viewModel.doCalculation()
             })
 
-            currentPaid.observe(viewLifecycleOwner, Observer {
+            currentPaid.observe(viewLifecycleOwner, {
                 viewModel.doCalculation()
             })
         }
@@ -492,8 +493,4 @@ class CalculatorFragment : Fragment() {
         viewModel.currentTabSelected = SelectedTab.CONSUMPTION
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

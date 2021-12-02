@@ -28,10 +28,6 @@ class HistoryFragment : Fragment(R.layout.history_fragment) {
 
     private var clicked = false
 
-    companion object {
-        fun newInstance() = HistoryFragment()
-    }
-
     private val viewModel: HistoryViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,23 +35,53 @@ class HistoryFragment : Fragment(R.layout.history_fragment) {
 
         binding = HistoryFragmentBinding.bind(view)
 
-        //Radio group operations
-        binding.rgHistory.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.rb_fuel_history -> {
-                    recyclerView_repair.visibility = View.GONE
-                    recyclerView_refuel.visibility = View.VISIBLE
-                }
-                R.id.rb_repair_history -> {
-                    recyclerView_repair.visibility = View.VISIBLE
-                    recyclerView_refuel.visibility = View.GONE
-                }
-            }
-        }
+        //Radio group operation
+        onRadioButtonCheckedChanged()
 
         //RecyclerView operations
         val refuelAdapter = RefuelAdapter()
         val repairAdapter = RepairAdapter()
+
+        setAdapters(refuelAdapter, repairAdapter)
+        setObservers(refuelAdapter, repairAdapter)
+
+
+        //FAB operations
+        binding.apply {
+            fabAdd.setOnClickListener {
+                onAddButtonClicked()
+            }
+
+            fabAddRefuel.setOnClickListener {
+                Toast.makeText(context, "Add refuel clicked", Toast.LENGTH_SHORT).show()
+            }
+
+            fabAddRepair.setOnClickListener {
+                Toast.makeText(context, "Add repair clicked", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // Functions managing RecyclerView
+    private fun setObservers(
+        refuelAdapter: RefuelAdapter,
+        repairAdapter: RepairAdapter
+    ) {
+        viewModel.refuels.observe(viewLifecycleOwner) {
+            binding.groupLoading.visibility = View.GONE
+            refuelAdapter.submitList(it)
+        }
+
+        viewModel.repairs.observe(viewLifecycleOwner) {
+            binding.groupLoading.visibility = View.GONE
+            repairAdapter.submitList(it)
+        }
+    }
+
+    private fun setAdapters(
+        refuelAdapter: RefuelAdapter,
+        repairAdapter: RepairAdapter
+    ) {
 
         binding.apply {
             recyclerViewRefuel.apply {
@@ -71,30 +97,20 @@ class HistoryFragment : Fragment(R.layout.history_fragment) {
             }
         }
 
-        viewModel.refuels.observe(viewLifecycleOwner) {
-            binding.groupLoading.visibility = View.GONE
-            refuelAdapter.submitList(it)
-        }
+    }
 
-        viewModel.repairs.observe(viewLifecycleOwner) {
-            binding.groupLoading.visibility = View.GONE
-            repairAdapter.submitList(it)
-        }
-
-
-
-        //FAB operations
-        binding.apply {
-            fabAdd.setOnClickListener {
-                onAddButtonClicked()
-            }
-
-            fabAddRefuel.setOnClickListener {
-                Toast.makeText(context, "Add refuel clicked", Toast.LENGTH_SHORT).show()
-            }
-
-            fabAddRepair.setOnClickListener {
-                Toast.makeText(context, "Add repair clicked", Toast.LENGTH_SHORT).show()
+    // Function managing RadioButtons
+    private fun onRadioButtonCheckedChanged() {
+        binding.rgHistory.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.rb_fuel_history -> {
+                    recyclerView_repair.visibility = View.GONE
+                    recyclerView_refuel.visibility = View.VISIBLE
+                }
+                R.id.rb_repair_history -> {
+                    recyclerView_repair.visibility = View.VISIBLE
+                    recyclerView_refuel.visibility = View.GONE
+                }
             }
         }
     }

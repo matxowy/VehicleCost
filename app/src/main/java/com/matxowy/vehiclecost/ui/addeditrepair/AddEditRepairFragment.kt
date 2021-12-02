@@ -19,10 +19,6 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
     private val viewModel: AddEditRepairViewModel by viewModels()
     private lateinit var binding: AddEditRepairFragmentBinding
 
-    companion object {
-        fun newInstance() = AddEditRepairFragment()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
