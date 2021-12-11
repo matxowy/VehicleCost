@@ -5,18 +5,27 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
+import com.matxowy.vehiclecost.data.db.entity.Refuel
+import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.databinding.HistoryFragmentBinding
 import com.matxowy.vehiclecost.ui.history.adapters.RefuelAdapter
 import com.matxowy.vehiclecost.ui.history.adapters.RepairAdapter
+import com.matxowy.vehiclecost.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.history_fragment.*
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class HistoryFragment : Fragment(R.layout.history_fragment) {
+class HistoryFragment : Fragment(R.layout.history_fragment),
+    RepairAdapter.OnRepairItemClickListener, RefuelAdapter.OnRefuelItemClickListener {
 
     private lateinit var binding: HistoryFragmentBinding
 
@@ -26,6 +35,7 @@ class HistoryFragment : Fragment(R.layout.history_fragment) {
     private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(context, R.anim.from_bottom_anim) }
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(context, R.anim.to_bottom_anim) }
 
+    // Flag to know if fab is clicked or not
     private var clicked = false
 
     private val viewModel: HistoryViewModel by viewModels()
@@ -39,12 +49,15 @@ class HistoryFragment : Fragment(R.layout.history_fragment) {
         onRadioButtonCheckedChanged()
 
         //RecyclerView operations
-        val refuelAdapter = RefuelAdapter()
-        val repairAdapter = RepairAdapter()
+        val refuelAdapter = RefuelAdapter(this)
+        val repairAdapter = RepairAdapter(this)
 
         setAdapters(refuelAdapter, repairAdapter)
         setObservers(refuelAdapter, repairAdapter)
 
+        //Swipe actions in RecyclerView
+        addSwipeToDeleteActionForRefuelRecyclerView(refuelAdapter)
+        addSwipeToDeleteActionForRepairRecyclerView(repairAdapter)
 
         //FAB operations
         binding.apply {
@@ -53,12 +66,104 @@ class HistoryFragment : Fragment(R.layout.history_fragment) {
             }
 
             fabAddRefuel.setOnClickListener {
-                Toast.makeText(context, "Add refuel clicked", Toast.LENGTH_SHORT).show()
+                viewModel.onAddNewRefuelClick()
             }
 
             fabAddRepair.setOnClickListener {
-                Toast.makeText(context, "Add repair clicked", Toast.LENGTH_SHORT).show()
+                viewModel.onAddNewRepairClick()
             }
+        }
+
+        // Navigation between screens
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.refuelAndRepairEvent.collect { event ->
+                when(event) {
+                    is HistoryViewModel.RefuelAndRepairEvent.NavigateToAddRefuelScreen -> {
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(null, "Nowe tankowanie")
+                        findNavController().navigate(action)
+                        clicked = false
+                    }
+                    is HistoryViewModel.RefuelAndRepairEvent.NavigateToAddRepairScreen -> {
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(null, "Nowa naprawa")
+                        findNavController().navigate(action)
+                        clicked = false
+                    }
+                    is HistoryViewModel.RefuelAndRepairEvent.NavigateToEditRefuelScreen -> {
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(event.refuel, "Edycja tankowania")
+                        findNavController().navigate(action)
+                        clicked = false
+                    }
+                    is HistoryViewModel.RefuelAndRepairEvent.NavigateToEditRepairScreen -> {
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(event.repair, "Edycja naprawy")
+                        findNavController().navigate(action)
+                        clicked = false
+                    }
+                    is HistoryViewModel.RefuelAndRepairEvent.ShowUndoDeleteRefuelMessage -> {
+                        Snackbar.make(requireView(), "Usunięto", Snackbar.LENGTH_LONG)
+                            .setAction("Przywróć") {
+                                viewModel.onUndoDeleteRefuelClick(event.refuel)
+                            }.show()
+                    }
+                    is HistoryViewModel.RefuelAndRepairEvent.ShowUndoDeleteRepairMessage -> {
+                        Snackbar.make(requireView(), "Usunięto", Snackbar.LENGTH_LONG)
+                            .setAction("Przywróć") {
+                                viewModel.onUndoDeleteRepairClick(event.repair)
+                            }.show()
+                    }
+                }.exhaustive
+            }
+        }
+    }
+
+    override fun onRefuelItemClick(refuel: Refuel) {
+        viewModel.onRefuelItemSelected(refuel)
+    }
+
+    override fun onRepairItemClick(repair: Repair) {
+        viewModel.onRepairItemSelected(repair)
+    }
+
+    private fun addSwipeToDeleteActionForRepairRecyclerView(repairAdapter: RepairAdapter) {
+        binding.apply {
+            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val repair = repairAdapter.currentList[viewHolder.adapterPosition]
+                    viewModel.onRepairSwiped(repair)
+                }
+            }).attachToRecyclerView(recyclerViewRepair)
+        }
+    }
+
+    private fun addSwipeToDeleteActionForRefuelRecyclerView(refuelAdapter: RefuelAdapter) {
+        binding.apply {
+            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val refuel = refuelAdapter.currentList[viewHolder.adapterPosition]
+                    viewModel.onRefuelSwiped(refuel)
+                }
+            }).attachToRecyclerView(recyclerViewRefuel)
         }
     }
 

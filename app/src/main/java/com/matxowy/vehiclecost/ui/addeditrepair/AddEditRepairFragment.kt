@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.AddEditRepairFragmentBinding
 import com.matxowy.vehiclecost.util.LocalDateConverter
+import com.matxowy.vehiclecost.util.StringUtils
 import com.matxowy.vehiclecost.util.transformIntoDatePicker
 import com.matxowy.vehiclecost.util.transformIntoTimePicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +30,13 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
             etDate.transformIntoDatePicker(requireContext(), "yyyy-MM-dd")
             etTime.setText(LocalDateConverter.timeToString(LocalDateTime.now()))
             etTime.transformIntoTimePicker(requireContext(), "HH:mm")
+
+            etTitle.setText(viewModel.title)
+            etCost.setText(StringUtils.trimTrailingZero(viewModel.cost.toString()))
+            etDate.setText(viewModel.date)
+            etMileage.setText(viewModel.mileage.toString())
+            etTime.setText(viewModel.time)
+            etComments.setText(viewModel.comments)
         }
     }
 

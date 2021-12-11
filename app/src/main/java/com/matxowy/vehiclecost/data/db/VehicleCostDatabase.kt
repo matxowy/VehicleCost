@@ -40,6 +40,7 @@ abstract class VehicleCostDatabase : RoomDatabase() {
                 37.84,
                 174.88,
                 6.04,
+                "ON",
                 true))
 
                 refuelDao.insert(Refuel(224879,
@@ -47,7 +48,18 @@ abstract class VehicleCostDatabase : RoomDatabase() {
                 "10:21",
                 12.44,
                 88.33,
-                6.04))
+                6.04,
+                "ON"))
+
+                refuelDao.insert(Refuel(256222,
+                "2021-12-15",
+                "15:22",
+                12.0,
+                56.0,
+                6.0,
+                "ON",
+                false,
+                "Tankowanie przy rezerwie"))
 
                 repairDao.insert(Repair("Wymiana rozrządu",
                     178993,

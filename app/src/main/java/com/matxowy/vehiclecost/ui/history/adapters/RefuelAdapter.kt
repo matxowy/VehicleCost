@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.databinding.ItemRefuelBinding
+import com.matxowy.vehiclecost.util.StringUtils
 
-class RefuelAdapter : ListAdapter<Refuel, RefuelAdapter.RefuelViewHolder>(DiffCallback()) {
+class RefuelAdapter(private val listener: OnRefuelItemClickListener) :
+    ListAdapter<Refuel, RefuelAdapter.RefuelViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RefuelViewHolder {
         val binding = ItemRefuelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -20,18 +22,34 @@ class RefuelAdapter : ListAdapter<Refuel, RefuelAdapter.RefuelViewHolder>(DiffCa
         holder.bind(currentItem)
     }
 
-    class RefuelViewHolder(private val binding: ItemRefuelBinding) :
+    inner class RefuelViewHolder(private val binding: ItemRefuelBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(refuel: Refuel) {
+        init {
             binding.apply {
-                tvAmountOfFuel.text = "${refuel.amountOfFuel.toString()} l"
-                tvDate.text = refuel.date
-                tvMileage.text = "${refuel.mileage.toString()} km"
-                tvPrice.text = "${refuel.price.toString()} zł"
+                root.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val refuel = getItem(position)
+                        listener.onRefuelItemClick(refuel)
+                    }
+                }
             }
         }
 
+        fun bind(refuel: Refuel) {
+            binding.apply {
+                tvAmountOfFuel.text = "${StringUtils.trimTrailingZero(refuel.amountOfFuel.toString())} l"
+                tvDate.text = refuel.date
+                tvMileage.text = "${refuel.mileage} km"
+                tvPrice.text = "${StringUtils.trimTrailingZero(refuel.price.toString())} zł"
+            }
+        }
+
+    }
+
+    interface OnRefuelItemClickListener {
+        fun onRefuelItemClick(refuel: Refuel)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Refuel>() {

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RepairDao {
 
-    @Query("SELECT * FROM repair")
+    @Query("SELECT * FROM repair ORDER BY date DESC")
     fun getRepairs() : Flow<List<Repair>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

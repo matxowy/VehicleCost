@@ -15,6 +15,7 @@ data class Refuel (
     val amountOfFuel: Double,
     val cost: Double,
     val price: Double,
+    val fuelType: String,
     val fullRefueled: Boolean = false,
     val comments: String = "",
     @PrimaryKey(autoGenerate = true) val id: Int = 0

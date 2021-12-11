@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.AddEditRefuelFragmentBinding
 import com.matxowy.vehiclecost.util.LocalDateConverter
+import com.matxowy.vehiclecost.util.StringUtils
 import com.matxowy.vehiclecost.util.transformIntoDatePicker
 import com.matxowy.vehiclecost.util.transformIntoTimePicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,8 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = AddEditRefuelFragmentBinding.bind(view)
+
+        // Setting spinner adapter
         val spinnerAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.type_of_fuel,
@@ -36,6 +39,17 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
             etTime.setText(LocalDateConverter.timeToString(LocalDateTime.now()))
             etTime.transformIntoTimePicker(requireContext(), "HH:mm")
             spinnerTypeOfFuel.setAdapter(spinnerAdapter)
+
+            etMileage.setText(viewModel.mileage.toString())
+            etTime.setText(viewModel.time)
+            etDate.setText(viewModel.date)
+            etCost.setText(StringUtils.trimTrailingZero(viewModel.cost.toString()))
+            etAmountOfFuel.setText(StringUtils.trimTrailingZero(viewModel.amountOfFuel.toString()))
+            etPricePerLiter.setText(StringUtils.trimTrailingZero(viewModel.price.toString()))
+            etComments.setText(viewModel.comments)
+            spinnerTypeOfFuel.setText(viewModel.fuelType, false)
+            switchFullRefueled.isChecked = viewModel.fullRefueled
+            switchFullRefueled.jumpDrawablesToCurrentState()
         }
     }
 

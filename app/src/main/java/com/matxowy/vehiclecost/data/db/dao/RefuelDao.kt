@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RefuelDao {
 
-    @Query("SELECT * FROM refuel")
+    @Query("SELECT * FROM refuel ORDER BY date DESC")
     fun getRefuels() : Flow<List<Refuel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class StatisticsViewModel : ViewModel() {
+
     private val addEventChannel = Channel<AddingEvent>()
     val addingEvent = addEventChannel.receiveAsFlow()
 
