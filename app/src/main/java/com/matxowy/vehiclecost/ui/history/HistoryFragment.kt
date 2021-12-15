@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -74,6 +75,16 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
             }
         }
 
+        setFragmentResultListener("add_edit_refuel_request") {_, bundle ->
+            val result = bundle.getInt("add_edit_refuel_result")
+            viewModel.onAddEditRefuelResult(result)
+        }
+
+        setFragmentResultListener("add_edit_repair_request") {_, bundle ->
+            val result = bundle.getInt("add_edit_repair_result")
+            viewModel.onAddEditRepairResult(result)
+        }
+
         // Navigation between screens
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.refuelAndRepairEvent.collect { event ->
@@ -109,6 +120,12 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
                             .setAction("Przywróć") {
                                 viewModel.onUndoDeleteRepairClick(event.repair)
                             }.show()
+                    }
+                    is HistoryViewModel.RefuelAndRepairEvent.ShowRefuelSavedConfirmationMessage -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                    }
+                    is HistoryViewModel.RefuelAndRepairEvent.ShowRepairSavedConfirmationMessage -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                 }.exhaustive
             }

@@ -119,8 +119,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title"
-            android:inputType="numberDecimal"
-            android:maxLength="20"
+            android:inputType="text"
+            android:maxLength="50"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -205,7 +205,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btn_add_new_refueled"
+        android:id="@+id/btn_add_new_repair"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"

@@ -2,17 +2,19 @@ package com.matxowy.vehiclecost.ui.addeditrepair
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.AddEditRepairFragmentBinding
-import com.matxowy.vehiclecost.util.LocalDateConverter
-import com.matxowy.vehiclecost.util.StringUtils
-import com.matxowy.vehiclecost.util.transformIntoDatePicker
-import com.matxowy.vehiclecost.util.transformIntoTimePicker
+import com.matxowy.vehiclecost.util.*
 import dagger.hilt.android.AndroidEntryPoint
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
@@ -26,18 +28,84 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
         binding = AddEditRepairFragmentBinding.bind(view)
 
         binding.apply {
-            etDate.setText(LocalDateConverter.dateToString(LocalDate.now()))
-            etDate.transformIntoDatePicker(requireContext(), "yyyy-MM-dd")
-            etTime.setText(LocalDateConverter.timeToString(LocalDateTime.now()))
-            etTime.transformIntoTimePicker(requireContext(), "HH:mm")
+            // Setting date and time pickers to EditTexts
+            setPickersForDateAndTime()
 
-            etTitle.setText(viewModel.title)
-            etCost.setText(StringUtils.trimTrailingZero(viewModel.cost.toString()))
-            etDate.setText(viewModel.date)
-            etMileage.setText(viewModel.mileage.toString())
-            etTime.setText(viewModel.time)
-            etComments.setText(viewModel.comments)
+            // Setting fields with data
+            setFieldsWithData()
+
+            setListenersToFieldsAndButton()
+
+            // Refactor in future
+            if (viewModel.mileage == "") {
+                btnAddNewRepair.text = "DODAJ NAPRAWĘ"
+            } else {
+                btnAddNewRepair.text = "EDYTUJ NAPRAWĘ"
+            }
+
         }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.addEditRepairEvent.collect { event ->
+                when (event) {
+                    is AddEditRepairViewModel.AddEditRepairEvent.NavigateToHistoryWithResult -> {
+                        setFragmentResult(
+                            "add_edit_repair_request",
+                            bundleOf("add_edit_repair_result" to event.result)
+                        )
+                        val action = AddEditRepairFragmentDirections.actionAddEditRepairFragmentToHistoryFragment()
+                        findNavController().navigate(action)
+                    }
+                    is AddEditRepairViewModel.AddEditRepairEvent.ShowInvalidDataMessage -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
+                    }
+                }.exhaustive
+            }
+        }
+    }
+
+    private fun AddEditRepairFragmentBinding.setListenersToFieldsAndButton() {
+        etMileage.addTextChangedListener {
+            viewModel.mileage = it.toString()
+        }
+
+        etComments.addTextChangedListener {
+            viewModel.comments = it.toString()
+        }
+
+        etTime.addTextChangedListener {
+            viewModel.time = it.toString()
+        }
+
+        etDate.addTextChangedListener {
+            viewModel.date = it.toString()
+        }
+
+        etCost.addTextChangedListener {
+            viewModel.cost = it.toString()
+        }
+
+        etTitle.addTextChangedListener {
+            viewModel.title = it.toString()
+        }
+
+        btnAddNewRepair.setOnClickListener {
+            viewModel.onSaveRepairClick()
+        }
+    }
+
+    private fun AddEditRepairFragmentBinding.setPickersForDateAndTime() {
+        etDate.transformIntoDatePicker(requireContext(), "yyyy-MM-dd")
+        etTime.transformIntoTimePicker(requireContext(), "HH:mm")
+    }
+
+    private fun AddEditRepairFragmentBinding.setFieldsWithData() {
+        etTitle.setText(viewModel.title)
+        etCost.setText(StringUtils.trimTrailingZero(viewModel.cost.toString()))
+        etDate.setText(viewModel.date)
+        etMileage.setText(viewModel.mileage.toString())
+        etTime.setText(viewModel.time)
+        etComments.setText(viewModel.comments)
     }
 
 }
