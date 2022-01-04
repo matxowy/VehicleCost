@@ -4,6 +4,7 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.entity.Repair
@@ -64,6 +65,8 @@ class AddEditRepairViewModel @ViewModelInject constructor(
 
     private val addEditRepairEventChannel = Channel<AddEditRepairEvent>()
     val addEditRepairEvent = addEditRepairEventChannel.receiveAsFlow()
+
+    var lastMileage = repairDao.getLastMileage().asLiveData()
 
     fun onSaveRepairClick() {
         if (title.isBlank()

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.databinding.ItemRepairBinding
 import com.matxowy.vehiclecost.util.StringUtils
+import com.matxowy.vehiclecost.util.decimalFormat
 
 class RepairAdapter(private val listener: OnRepairItemClickListener) :
     ListAdapter<Repair, RepairAdapter.RepairViewHolder>(DiffCallback()) {
@@ -39,7 +40,7 @@ class RepairAdapter(private val listener: OnRepairItemClickListener) :
 
         fun bind(repair: Repair) {
             binding.apply {
-                tvCost.text = "${StringUtils.trimTrailingZero(repair.cost.toString())} zł"
+                tvCost.text = "${repair.cost.decimalFormat()} zł"
                 tvDate.text = repair.date
                 tvMileage.text = "${repair.mileage} km"
                 tvRepairTitle.text = repair.title

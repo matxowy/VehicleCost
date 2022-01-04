@@ -47,6 +47,10 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
 
             setListenersToFieldsAndButton()
 
+            viewModel.lastMileage.observe(viewLifecycleOwner) {
+                tvLastValueOfMileage.text = "Ostatnia wartość: ${it.addSpace()} km"
+            }
+
             // Refactor in future
             if (viewModel.mileage == "") {
                 btnAddNewRefueled.text = "DODAJ TANKOWANIE"

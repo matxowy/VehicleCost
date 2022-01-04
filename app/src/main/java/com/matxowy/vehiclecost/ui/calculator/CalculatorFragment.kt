@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -20,6 +21,7 @@ import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.CalculatorFragmentBinding
 import com.matxowy.vehiclecost.internal.SelectedTab
 import com.matxowy.vehiclecost.util.StringUtils
+import com.matxowy.vehiclecost.util.decimalFormat
 import com.matxowy.vehiclecost.util.roundTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -33,6 +35,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Disable back arrow in header for avoid returning to adding/editing screen by this
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         binding = CalculatorFragmentBinding.bind(view)
 
@@ -90,34 +95,34 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
     private fun setValuesInEditTexts() {
         binding.apply {
             if (viewModel.refueled != null) etRefueledFromFuelConsumptionTab.setText(
-                StringUtils.trimTrailingZero((viewModel.refueled).toString())
+                viewModel.refueled!!.decimalFormat()
             )
             if (viewModel.paid != null) etPaidFromRangeTab.setText(
-                StringUtils.trimTrailingZero((viewModel.paid).toString())
+                viewModel.paid!!.decimalFormat()
             )
             if (viewModel.numberOfPeople != null) etNumberOfPeopleFromCostsTab.setText(
-                StringUtils.trimTrailingZero((viewModel.numberOfPeople).toString())
+                viewModel.numberOfPeople.toString()
             )
             if (viewModel.kmTraveled != null) etKmTraveledFromFuelConsumptionTab.setText(
-                StringUtils.trimTrailingZero((viewModel.kmTraveled).toString())
+               viewModel.kmTraveled!!.decimalFormat()
             )
             if (viewModel.kmTraveled != null) etKmTraveledFromCostsTab.setText(
-                StringUtils.trimTrailingZero((viewModel.kmTraveled).toString())
+                viewModel.kmTraveled!!.decimalFormat()
             )
             if (viewModel.fuelPrice != null) etFuelPriceFromRangeTab.setText(
-                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString())
+                viewModel.fuelPrice!!.decimalFormat()
             )
             if (viewModel.fuelPrice != null) etFuelPriceFromFuelConsumptionTab.setText(
-                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString())
+                viewModel.fuelPrice!!.decimalFormat()
             )
             if (viewModel.fuelPrice != null) etFuelPriceFromCostsTab.setText(
-                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString())
+                viewModel.fuelPrice!!.decimalFormat()
             )
             if (viewModel.avgFuelConsumption != null) etAvgFuelConsumptionFromRangeTab.setText(
-                StringUtils.trimTrailingZero((viewModel.avgFuelConsumption).toString())
+                viewModel.avgFuelConsumption!!.decimalFormat()
             )
             if (viewModel.avgFuelConsumption != null) etAvgFuelConsumptionFromCostsTab.setText(
-                StringUtils.trimTrailingZero((viewModel.avgFuelConsumption).toString())
+                viewModel.avgFuelConsumption!!.decimalFormat()
             )
         }
     }

@@ -10,10 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.StatisticsFragmentBinding
-import com.matxowy.vehiclecost.util.exhaustive
+import com.matxowy.vehiclecost.util.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
-
+@AndroidEntryPoint
 class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
     private val viewModel: StatisticsViewModel by viewModels()
@@ -32,6 +33,8 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
         binding = StatisticsFragmentBinding.bind(view)
 
+        addObservers()
+
         //FAB operations
         binding.apply {
             fabAdd.setOnClickListener {
@@ -49,20 +52,46 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
         // Navigation between screens
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.addingEvent.collect { event ->
+            viewModel.statisticsEvent.collect { event ->
                 when(event) {
-                    is StatisticsViewModel.AddingEvent.NavigateToAddRefuelScreen -> {
+                    is StatisticsViewModel.StatisticsEvent.NavigateToAddRefuelScreen -> {
                         val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRefuelFragment(null, "Nowe tankowanie")
                         findNavController().navigate(action)
                         clicked = false
                     }
-                    is StatisticsViewModel.AddingEvent.NavigateToAddRepairScreen -> {
+                    is StatisticsViewModel.StatisticsEvent.NavigateToAddRepairScreen -> {
                         val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRepairFragment(null, "Nowa naprawa")
                         findNavController().navigate(action)
                         clicked = false
                     }
                 }.exhaustive
             }
+        }
+    }
+
+    private fun addObservers() {
+        viewModel.sumOfFuelAmount.observe(viewLifecycleOwner) {
+            binding.tvRefueledStat.text = "${it.decimalFormat()} l"
+        }
+
+        viewModel.sumCostsOfRefuels.observe(viewLifecycleOwner) {
+            binding.tvFuelCostsStat.text = "${it.decimalFormat()} zł"
+        }
+
+        viewModel.lastPriceOfFuel.observe(viewLifecycleOwner) {
+            binding.tvLastFuelPriceStat.text = "${it.decimalFormat()} zł"
+        }
+
+        viewModel.sumCostOfRepair.observe(viewLifecycleOwner) {
+            binding.tvSumCostRepairStat.text = "${it.decimalFormat()} zł"
+        }
+
+        viewModel.maxCostOfRepair.observe(viewLifecycleOwner) {
+            binding.tvGreatestCostRepairStat.text = "${it.decimalFormat()} zł"
+        }
+
+        viewModel.lastCostOfRepair.observe(viewLifecycleOwner) {
+            binding.tvLatestCostRepairStat.text = "${it.decimalFormat()} zł"
         }
     }
 

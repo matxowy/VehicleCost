@@ -1,26 +1,43 @@
 package com.matxowy.vehiclecost.ui.statistics
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.matxowy.vehiclecost.data.db.dao.RefuelDao
+import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class StatisticsViewModel : ViewModel() {
+class StatisticsViewModel @ViewModelInject constructor(
+    private val refuelDao: RefuelDao,
+    private val repairDao: RepairDao
+) : ViewModel() {
 
-    private val addEventChannel = Channel<AddingEvent>()
-    val addingEvent = addEventChannel.receiveAsFlow()
+    private val statisticsChannel = Channel<StatisticsEvent>()
+    val statisticsEvent = statisticsChannel.receiveAsFlow()
 
     fun onAddNewRefuelClick() = viewModelScope.launch {
-        addEventChannel.send(AddingEvent.NavigateToAddRefuelScreen)
+        statisticsChannel.send(StatisticsEvent.NavigateToAddRefuelScreen)
     }
 
     fun onAddNewRepairClick() = viewModelScope.launch {
-        addEventChannel.send(AddingEvent.NavigateToAddRepairScreen)
+        statisticsChannel.send(StatisticsEvent.NavigateToAddRepairScreen)
     }
 
-    sealed class AddingEvent {
-        object NavigateToAddRefuelScreen : AddingEvent()
-        object NavigateToAddRepairScreen : AddingEvent()
+    // Refuels stats
+    val sumOfFuelAmount = refuelDao.getSumOfRefuels().asLiveData()
+    val sumCostsOfRefuels = refuelDao.getSumOfCosts().asLiveData()
+    val lastPriceOfFuel = refuelDao.getLastPriceOfFuel().asLiveData()
+
+    // Repairs stats
+    val sumCostOfRepair = repairDao.getSumCostOfRepair().asLiveData()
+    val maxCostOfRepair = repairDao.getMaxCostOfRepair().asLiveData()
+    val lastCostOfRepair = repairDao.getLastCost().asLiveData()
+
+    sealed class StatisticsEvent {
+        object NavigateToAddRefuelScreen : StatisticsEvent()
+        object NavigateToAddRepairScreen : StatisticsEvent()
     }
 }

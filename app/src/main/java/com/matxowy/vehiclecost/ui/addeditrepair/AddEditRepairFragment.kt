@@ -36,6 +36,10 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
 
             setListenersToFieldsAndButton()
 
+            viewModel.lastMileage.observe(viewLifecycleOwner) {
+                tvLastValueOfMileage.text = "Ostatnia wartość: ${it.addSpace()} km"
+            }
+
             // Refactor in future
             if (viewModel.mileage == "") {
                 btnAddNewRepair.text = "DODAJ NAPRAWĘ"

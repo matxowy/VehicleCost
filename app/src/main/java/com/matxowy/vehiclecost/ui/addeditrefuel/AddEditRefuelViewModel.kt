@@ -4,6 +4,7 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
@@ -84,6 +85,8 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
     private val addEditRefuelEventChannel = Channel<AddEditRefuelEvent>()
     val addEditRefuelEvent = addEditRefuelEventChannel.receiveAsFlow()
 
+    var lastMileage = refuelDao.getLastMileage().asLiveData()
+
 
     fun onSaveRefueledClick() {
         if (mileage.toString().isBlank()
@@ -93,6 +96,8 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
             showInvalidInputMessage("Wymagane pola nie mogą być puste")
             return
         }
+
+        //jeżeli przebieg jest mniejszy od poprzedniego, a data jest późniejsza to zwracać komunikat
 
         if (refuel != null) {
             val updatedRefuel = refuel.copy(
