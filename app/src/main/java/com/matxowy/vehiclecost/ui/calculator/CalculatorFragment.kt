@@ -2,26 +2,21 @@ package com.matxowy.vehiclecost.ui.calculator
 
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.navGraphViewModels
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.CalculatorFragmentBinding
 import com.matxowy.vehiclecost.internal.SelectedTab
 import com.matxowy.vehiclecost.util.StringUtils
-import com.matxowy.vehiclecost.util.decimalFormat
 import com.matxowy.vehiclecost.util.roundTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -30,7 +25,7 @@ import kotlinx.coroutines.flow.collect
 class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
 
     private lateinit var binding: CalculatorFragmentBinding
-    private val viewModel: CalculatorViewModel by viewModels()
+    private val viewModel: CalculatorViewModel by navGraphViewModels(R.id.nav_graph) // must be navGraphViewModels to not delete inputs in calculator
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,22 +36,27 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
 
         binding = CalculatorFragmentBinding.bind(view)
 
+        setValuesInEditTexts()
+
         binding.rgTypes.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rb_fuel_consumption -> {
                     hideSoftKeyboard()
                     setValuesInEditTexts()
                     makeVisibleFuelConsumptionView()
+                    viewModel.doCalculation()
                 }
                 R.id.rb_costs -> {
                     hideSoftKeyboard()
                     setValuesInEditTexts()
                     makeVisibleCostsView()
+                    viewModel.doCalculation()
                 }
                 R.id.rb_range -> {
                     hideSoftKeyboard()
                     setValuesInEditTexts()
                     makeVisibleRangeView()
+                    viewModel.doCalculation()
                 }
             }
         }
@@ -94,35 +94,35 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
 
     private fun setValuesInEditTexts() {
         binding.apply {
-            if (viewModel.refueled != null) etRefueledFromFuelConsumptionTab.setText(
-                viewModel.refueled!!.decimalFormat()
+            if (viewModel.refueled.toString().isNotBlank()) etRefueledFromFuelConsumptionTab.setText(
+                StringUtils.trimTrailingZero((viewModel.refueled).toString())
             )
-            if (viewModel.paid != null) etPaidFromRangeTab.setText(
-                viewModel.paid!!.decimalFormat()
+            if (viewModel.paid.toString().isNotBlank()) etPaidFromRangeTab.setText(
+                StringUtils.trimTrailingZero((viewModel.paid).toString())
             )
-            if (viewModel.numberOfPeople != null) etNumberOfPeopleFromCostsTab.setText(
+            if (viewModel.numberOfPeople.toString().isNotBlank()) etNumberOfPeopleFromCostsTab.setText(
                 viewModel.numberOfPeople.toString()
             )
-            if (viewModel.kmTraveled != null) etKmTraveledFromFuelConsumptionTab.setText(
-               viewModel.kmTraveled!!.decimalFormat()
+            if (viewModel.kmTraveled.toString().isNotBlank()) etKmTraveledFromFuelConsumptionTab.setText(
+                StringUtils.trimTrailingZero((viewModel.kmTraveled).toString())
             )
-            if (viewModel.kmTraveled != null) etKmTraveledFromCostsTab.setText(
-                viewModel.kmTraveled!!.decimalFormat()
+            if (viewModel.kmTraveled.toString().isNotBlank()) etKmTraveledFromCostsTab.setText(
+                StringUtils.trimTrailingZero((viewModel.kmTraveled).toString())
             )
-            if (viewModel.fuelPrice != null) etFuelPriceFromRangeTab.setText(
-                viewModel.fuelPrice!!.decimalFormat()
+            if (viewModel.fuelPrice.toString().isNotBlank()) etFuelPriceFromRangeTab.setText(
+                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString())
             )
-            if (viewModel.fuelPrice != null) etFuelPriceFromFuelConsumptionTab.setText(
-                viewModel.fuelPrice!!.decimalFormat()
+            if (viewModel.fuelPrice.toString().isNotBlank()) etFuelPriceFromFuelConsumptionTab.setText(
+                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString())
             )
-            if (viewModel.fuelPrice != null) etFuelPriceFromCostsTab.setText(
-                viewModel.fuelPrice!!.decimalFormat()
+            if (viewModel.fuelPrice.toString().isNotBlank()) etFuelPriceFromCostsTab.setText(
+                StringUtils.trimTrailingZero((viewModel.fuelPrice).toString())
             )
-            if (viewModel.avgFuelConsumption != null) etAvgFuelConsumptionFromRangeTab.setText(
-                viewModel.avgFuelConsumption!!.decimalFormat()
+            if (viewModel.avgFuelConsumption.toString().isNotBlank()) etAvgFuelConsumptionFromRangeTab.setText(
+                StringUtils.trimTrailingZero((viewModel.avgFuelConsumption).toString())
             )
-            if (viewModel.avgFuelConsumption != null) etAvgFuelConsumptionFromCostsTab.setText(
-                viewModel.avgFuelConsumption!!.decimalFormat()
+            if (viewModel.avgFuelConsumption.toString().isNotBlank()) etAvgFuelConsumptionFromCostsTab.setText(
+                StringUtils.trimTrailingZero((viewModel.avgFuelConsumption).toString())
             )
         }
     }
@@ -138,14 +138,14 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
 
     private fun showResultForRangeTab(amountOfFilledWithFuel: Double, rangeInKm: Double) {
         val filledText = SpannableStringBuilder()
-            .append("Zatankowano: ")
+            .append(getString(R.string.refueled_result_text))
             .bold { append(amountOfFilledWithFuel.roundTo(2).toString()) }
-            .bold { append(" litrów") }
+            .bold { append(getString(R.string.liters_result_text)) }
 
         val expectedRangeText = SpannableStringBuilder()
-            .append("Przewidywany zasięg wynosi: ")
+            .append(getString(R.string.expected_range_is_result_text))
             .bold { append(rangeInKm.roundTo(2).toString()) }
-            .bold { append(" km") }
+            .bold { append(getString(R.string.km_result_text)) }
 
         binding.apply {
             tvFilledWithFuel.text = filledText
@@ -161,19 +161,19 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
         costPerPerson: Double
     ) {
         val requiredAmountText = SpannableStringBuilder()
-            .append("Wymagana ilość paliwa: ")
+            .append(getString(R.string.required_amount_of_fuel_result_text))
             .bold { append(requiredAmountOfFuel.roundTo(2).toString()) }
-            .bold { append(" litrów") }
+            .bold { append(getString(R.string.liters_result_text)) }
 
         val travelCostText = SpannableStringBuilder()
-            .append("Koszt podróży wyniesie: ")
+            .append(getString(R.string.cost_of_travel_result_text))
             .bold { append(costForTravel.roundTo(2).toString()) }
-            .bold { append("zł") }
+            .bold { append(getString(R.string.zloty_result_text)) }
 
         val travelCostPerPersonText = SpannableStringBuilder()
-            .append("Na osobę: ")
+            .append(getString(R.string.per_person_result_text))
             .bold { append(costPerPerson.roundTo(2).toString()) }
-            .bold { append("zł") }
+            .bold { append(getString(R.string.zloty_result_text)) }
 
         binding.apply {
             tvRequiredAmountOfFuel.text = requiredAmountText
@@ -187,14 +187,14 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
 
     private fun showResultForConsumptionTab(avgConsumption: Double, price: Double) {
         val avgFuelConsumptionText = SpannableStringBuilder()
-            .append("Srednie spalanie wynosi: ")
+            .append(getString(R.string.avg_consumtion_result_text))
             .bold { append(avgConsumption.roundTo(2).toString()) }
-            .bold { append(" litrów") }
+            .bold { append(getString(R.string.liters_result_text)) }
 
         val costFor100kmText = SpannableStringBuilder()
-            .append("Cena za przejechanie 100km wynosi: ")
+            .append(getString(R.string.price_per_100km_result_text))
             .bold { append(price.roundTo(2).toString()) }
-            .bold { append("zł") }
+            .bold { append(getString(R.string.zloty_result_text)) }
 
         binding.apply {
             tvAvgFuelConsumption.text = avgFuelConsumptionText
@@ -223,18 +223,18 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
     private fun showPreciseInfoAboutMissingDataInConsumptionTab() {
         binding.apply {
             when {
-                viewModel.refueled == null -> {
-                    tvAvgFuelConsumption.text = "Brak danych o zatankowanym paliwie"
+                viewModel.refueled.toString().isBlank() -> {
+                    tvAvgFuelConsumption.text = getString(R.string.message_about_missing_refueled_data)
                     tvAvgFuelConsumption.visibility = View.VISIBLE
                     tvCostOf100km.visibility = View.GONE
                 }
-                viewModel.kmTraveled == null -> {
-                    tvAvgFuelConsumption.text = "Brak danych o przejechanych kilometrach"
+                viewModel.kmTraveled.toString().isBlank() -> {
+                    tvAvgFuelConsumption.text = getString(R.string.message_about_missing_km_traveled_data)
                     tvAvgFuelConsumption.visibility = View.VISIBLE
                     tvCostOf100km.visibility = View.GONE
                 }
-                viewModel.fuelPrice == null -> {
-                    tvAvgFuelConsumption.text = "Brak danych o cenie za litr paliwa"
+                viewModel.fuelPrice.toString().isBlank() -> {
+                    tvAvgFuelConsumption.text = getString(R.string.message_about_missing_price_per_liter_data)
                     tvAvgFuelConsumption.visibility = View.VISIBLE
                     tvCostOf100km.visibility = View.GONE
                 }
@@ -245,26 +245,26 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
     private fun showPreciseInfoAboutMissingDataInCostsTab() {
         binding.apply {
             when {
-                viewModel.avgFuelConsumption == null -> {
-                    tvRequiredAmountOfFuel.text = "Brak danych o średnim spalaniu"
+                viewModel.avgFuelConsumption.toString().isBlank() -> {
+                    tvRequiredAmountOfFuel.text = getString(R.string.message_about_missing_avg_consumption_data)
                     tvRequiredAmountOfFuel.visibility = View.VISIBLE
                     tvTravelCost.visibility = View.GONE
                     tvTravelCostPerPerson.visibility = View.GONE
                 }
-                viewModel.kmTraveled == null -> {
-                    tvRequiredAmountOfFuel.text = "Brak danych o przejechanych kilometrach"
+                viewModel.kmTraveled.toString().isBlank() -> {
+                    tvRequiredAmountOfFuel.text = getString(R.string.message_about_missing_km_traveled_data)
                     tvRequiredAmountOfFuel.visibility = View.VISIBLE
                     tvTravelCost.visibility = View.GONE
                     tvTravelCostPerPerson.visibility = View.GONE
                 }
-                viewModel.fuelPrice == null -> {
-                    tvRequiredAmountOfFuel.text = "Brak danych o cenie za litr paliwa"
+                viewModel.fuelPrice.toString().isBlank() -> {
+                    tvRequiredAmountOfFuel.text = getString(R.string.message_about_missing_price_per_liter_data)
                     tvRequiredAmountOfFuel.visibility = View.VISIBLE
                     tvTravelCost.visibility = View.GONE
                     tvTravelCostPerPerson.visibility = View.GONE
                 }
-                viewModel.numberOfPeople == null -> {
-                    tvRequiredAmountOfFuel.text = "Brak danych o liczbie osób"
+                viewModel.numberOfPeople.toString().isBlank() -> {
+                    tvRequiredAmountOfFuel.text = getString(R.string.message_about_missing_num_of_people_data)
                     tvRequiredAmountOfFuel.visibility = View.VISIBLE
                     tvTravelCost.visibility = View.GONE
                     tvTravelCostPerPerson.visibility = View.GONE
@@ -276,18 +276,18 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
     private fun showPreciseInfoAboutMissingDataInRangeTab() {
         binding.apply {
             when {
-                viewModel.avgFuelConsumption == null -> {
-                    tvFilledWithFuel.text = "Brak danych o średnim spalaniu"
+                viewModel.avgFuelConsumption.toString().isBlank() -> {
+                    tvFilledWithFuel.text = getString(R.string.message_about_missing_avg_consumption_data)
                     tvFilledWithFuel.visibility = View.VISIBLE
                     tvExpectedRange.visibility = View.GONE
                 }
-                viewModel.paid == null -> {
-                    tvFilledWithFuel.text = "Brak danych o zapłaconej kwocie"
+                viewModel.paid.toString().isBlank() -> {
+                    tvFilledWithFuel.text = getString(R.string.message_about_missing_paid_data)
                     tvFilledWithFuel.visibility = View.VISIBLE
                     tvExpectedRange.visibility = View.GONE
                 }
-                viewModel.fuelPrice == null -> {
-                    tvFilledWithFuel.text = "Brak danych o cenie za litr paliwa"
+                viewModel.fuelPrice.toString().isBlank() -> {
+                    tvFilledWithFuel.text = getString(R.string.message_about_missing_price_per_liter_data)
                     tvFilledWithFuel.visibility = View.VISIBLE
                     tvExpectedRange.visibility = View.GONE
                 }
@@ -329,9 +329,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.avgFuelConsumption = p0.toString().toDouble()
-                        else viewModel.avgFuelConsumption = null
+                        else viewModel.avgFuelConsumption = ""
                     }
-                    viewModel.currentAvgFuelConsumption.value = viewModel.avgFuelConsumption
+                    viewModel.currentAvgFuelConsumption.value = viewModel.avgFuelConsumption.toString().toDouble()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -342,9 +342,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.paid = p0.toString().toDouble()
-                        else viewModel.paid = null
+                        else viewModel.paid = ""
                     }
-                    viewModel.currentPaid.value = viewModel.paid
+                    viewModel.currentPaid.value = viewModel.paid.toString().toDouble()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -355,9 +355,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.fuelPrice = p0.toString().toDouble()
-                        else viewModel.fuelPrice = null
+                        else viewModel.fuelPrice = ""
                     }
-                    viewModel.currentFuelPrice.value = viewModel.fuelPrice
+                    viewModel.currentFuelPrice.value = viewModel.fuelPrice.toString().toDouble()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -372,9 +372,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.avgFuelConsumption = p0.toString().toDouble()
-                        else viewModel.avgFuelConsumption = null
+                        else viewModel.avgFuelConsumption = ""
                     }
-                    viewModel.currentAvgFuelConsumption.value = viewModel.avgFuelConsumption
+                    viewModel.currentAvgFuelConsumption.value = viewModel.avgFuelConsumption.toString().toDouble()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -385,9 +385,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.kmTraveled = p0.toString().toDouble()
-                        else viewModel.kmTraveled = null
+                        else viewModel.kmTraveled = ""
                     }
-                    viewModel.currentKmTraveled.value = viewModel.kmTraveled
+                    viewModel.currentKmTraveled.value = viewModel.kmTraveled.toString().toDouble()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -398,9 +398,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.fuelPrice = p0.toString().toDouble()
-                        else viewModel.fuelPrice = null
+                        else viewModel.fuelPrice = ""
                     }
-                    viewModel.currentFuelPrice.value = viewModel.fuelPrice
+                    viewModel.currentFuelPrice.value = viewModel.fuelPrice.toString().toDouble()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -411,9 +411,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.numberOfPeople = p0.toString().toInt()
-                        else viewModel.numberOfPeople = null
+                        else viewModel.numberOfPeople = ""
                     }
-                    viewModel.currentNumberOfPeople.value = viewModel.numberOfPeople
+                    viewModel.currentNumberOfPeople.value = viewModel.numberOfPeople.toString().toInt()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -428,9 +428,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.refueled = p0.toString().toDouble()
-                        else viewModel.refueled = null
+                        else viewModel.refueled = ""
                     }
-                    viewModel.currentRefueled.value = viewModel.refueled
+                    viewModel.currentRefueled.value = viewModel.refueled.toString().toDouble()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -441,9 +441,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.kmTraveled = p0.toString().toDouble()
-                        else viewModel.kmTraveled = null
+                        else viewModel.kmTraveled = ""
                     }
-                    viewModel.currentKmTraveled.value = viewModel.kmTraveled
+                    viewModel.currentKmTraveled.value = viewModel.kmTraveled.toString().toDouble()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -454,9 +454,9 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     if (p0 != null) {
                         if (p0.isNotEmpty()) viewModel.fuelPrice = p0.toString().toDouble()
-                        else viewModel.fuelPrice = null
+                        else viewModel.fuelPrice = ""
                     }
-                    viewModel.currentFuelPrice.value = viewModel.fuelPrice
+                    viewModel.currentFuelPrice.value = viewModel.fuelPrice.toString().toDouble()
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}

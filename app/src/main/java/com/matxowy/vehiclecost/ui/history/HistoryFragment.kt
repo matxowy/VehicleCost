@@ -94,34 +94,38 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
             viewModel.refuelAndRepairEvent.collect { event ->
                 when(event) {
                     is HistoryViewModel.RefuelAndRepairEvent.NavigateToAddRefuelScreen -> {
-                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(null, "Nowe tankowanie")
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(null,
+                            getString(R.string.title_new_refuel))
                         findNavController().navigate(action)
                         clicked = false
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.NavigateToAddRepairScreen -> {
-                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(null, "Nowa naprawa")
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(null,
+                            getString(R.string.title_new_repair))
                         findNavController().navigate(action)
                         clicked = false
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.NavigateToEditRefuelScreen -> {
-                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(event.refuel, "Edycja tankowania")
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(event.refuel,
+                            getString(R.string.title_edit_refuel))
                         findNavController().navigate(action)
                         clicked = false
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.NavigateToEditRepairScreen -> {
-                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(event.repair, "Edycja naprawy")
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(event.repair,
+                            getString(R.string.title_edit_repair))
                         findNavController().navigate(action)
                         clicked = false
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.ShowUndoDeleteRefuelMessage -> {
-                        Snackbar.make(requireView(), "Usunięto", Snackbar.LENGTH_LONG)
-                            .setAction("Przywróć") {
+                        Snackbar.make(requireView(), getString(R.string.removed_text), Snackbar.LENGTH_LONG)
+                            .setAction(getString(R.string.restore_text)) {
                                 viewModel.onUndoDeleteRefuelClick(event.refuel)
                             }.show()
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.ShowUndoDeleteRepairMessage -> {
-                        Snackbar.make(requireView(), "Usunięto", Snackbar.LENGTH_LONG)
-                            .setAction("Przywróć") {
+                        Snackbar.make(requireView(), getString(R.string.removed_text), Snackbar.LENGTH_LONG)
+                            .setAction(getString(R.string.restore_text)) {
                                 viewModel.onUndoDeleteRepairClick(event.repair)
                             }.show()
                     }

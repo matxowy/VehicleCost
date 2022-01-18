@@ -1,16 +1,19 @@
 package com.matxowy.vehiclecost.ui.addeditrepair
 
+import android.content.Context
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.ui.ADD_REPAIR_RESULT_OK
 import com.matxowy.vehiclecost.ui.EDIT_REPAIR_RESULT_OK
 import com.matxowy.vehiclecost.util.LocalDateConverter
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -19,7 +22,8 @@ import org.threeten.bp.LocalDateTime
 
 class AddEditRepairViewModel @ViewModelInject constructor(
     private val repairDao: RepairDao,
-    @Assisted private val state: SavedStateHandle
+    @Assisted private val state: SavedStateHandle,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     val repair = state.get<Repair>("repair")
 
@@ -73,7 +77,7 @@ class AddEditRepairViewModel @ViewModelInject constructor(
             || cost.toString().isBlank()
             || mileage.toString().isBlank()
         ) {
-            showInvalidInputMessage("Wymagane pola nie mogą być puste")
+            showInvalidInputMessage(context.getString(R.string.required_fields_cannot_be_empty_text))
             return
         }
 

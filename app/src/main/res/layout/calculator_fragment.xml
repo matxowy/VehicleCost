@@ -24,7 +24,7 @@
             android:button="@null"
             android:checked="true"
             android:gravity="center"
-            android:text="SPALANIE"
+            android:text="@string/fuel_consumption"
             android:textColor="@drawable/calculation_type_text_color_selector"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -38,7 +38,7 @@
             android:button="@null"
             android:checked="false"
             android:gravity="center"
-            android:text="KOSZTY"
+            android:text="@string/costs"
             android:textColor="@drawable/calculation_type_text_color_selector"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -52,7 +52,7 @@
             android:button="@null"
             android:checked="false"
             android:gravity="center"
-            android:text="ZASIĘG"
+            android:text="@string/range"
             android:textColor="@drawable/calculation_type_text_color_selector"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -93,7 +93,7 @@
                     android:id="@+id/et_refueled_from_fuel_consumption_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Zatankowano"
+                    android:hint="@string/refueled_hint"
                     android:inputType="numberDecimal"
                     android:textSize="16sp"
                     />
@@ -130,7 +130,7 @@
                     android:id="@+id/et_km_traveled_from_fuel_consumption_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Przejechane kilometry"
+                    android:hint="@string/traveled_kilometers_hint"
                     android:inputType="numberDecimal"
                     android:textSize="16sp"
                     />
@@ -165,7 +165,7 @@
                     android:id="@+id/et_fuel_price_from_fuel_consumption_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cena za litr"
+                    android:hint="@string/price_per_liter_hint"
                     android:inputType="numberDecimal"
                     android:textSize="16sp"
                     />
@@ -243,7 +243,7 @@
                     android:id="@+id/et_avg_fuel_consumption_from_costs_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Srednie spalanie"
+                    android:hint="@string/avg_consumption_hint"
                     android:inputType="numberDecimal"
                     android:textSize="16sp"
                     />
@@ -280,7 +280,7 @@
                     android:id="@+id/et_km_traveled_from_costs_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Przejechane kilometry"
+                    android:hint="@string/traveled_kilometers_hint"
                     android:inputType="numberDecimal"
                     android:textSize="16sp"
                     />
@@ -315,7 +315,7 @@
                     android:id="@+id/et_fuel_price_from_costs_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cena za litr"
+                    android:hint="@string/price_per_liter_hint"
                     android:inputType="numberDecimal"
                     android:textSize="16sp"
                     />
@@ -350,7 +350,7 @@
                     android:id="@+id/et_number_of_people_from_costs_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Liczba osób"
+                    android:hint="@string/number_of_people_hint"
                     android:inputType="number"
                     android:textSize="16sp"
                     />
@@ -435,7 +435,7 @@
                     android:id="@+id/et_avg_fuel_consumption_from_range_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Srednie spalanie"
+                    android:hint="@string/avg_consumption_hint"
                     android:inputType="numberDecimal"
                     android:textSize="16sp"
                     />
@@ -472,7 +472,7 @@
                     android:id="@+id/et_paid_from_range_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Zapłacono"
+                    android:hint="@string/paid_hint"
                     android:inputType="numberDecimal"
                     android:textSize="16sp"
                     />
@@ -507,7 +507,7 @@
                     android:id="@+id/et_fuel_price_from_range_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cena za litr"
+                    android:hint="@string/price_per_liter_hint"
                     android:inputType="numberDecimal"
                     android:textSize="16sp"
                     />

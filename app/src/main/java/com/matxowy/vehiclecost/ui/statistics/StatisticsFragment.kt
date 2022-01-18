@@ -55,12 +55,14 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
             viewModel.statisticsEvent.collect { event ->
                 when(event) {
                     is StatisticsViewModel.StatisticsEvent.NavigateToAddRefuelScreen -> {
-                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRefuelFragment(null, "Nowe tankowanie")
+                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRefuelFragment(null,
+                            getString(R.string.title_new_refuel))
                         findNavController().navigate(action)
                         clicked = false
                     }
                     is StatisticsViewModel.StatisticsEvent.NavigateToAddRepairScreen -> {
-                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRepairFragment(null, "Nowa naprawa")
+                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRepairFragment(null,
+                            getString(R.string.title_new_repair))
                         findNavController().navigate(action)
                         clicked = false
                     }

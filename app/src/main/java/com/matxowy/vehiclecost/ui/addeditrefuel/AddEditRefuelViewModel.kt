@@ -1,16 +1,19 @@
 package com.matxowy.vehiclecost.ui.addeditrefuel
 
+import android.content.Context
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.ui.ADD_REFUEL_RESULT_OK
 import com.matxowy.vehiclecost.ui.EDIT_REFUEL_RESULT_OK
 import com.matxowy.vehiclecost.util.LocalDateConverter
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -19,7 +22,8 @@ import org.threeten.bp.LocalDateTime
 
 class AddEditRefuelViewModel @ViewModelInject constructor(
     private val refuelDao: RefuelDao,
-    @Assisted private val state: SavedStateHandle
+    @Assisted private val state: SavedStateHandle,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     val refuel = state.get<Refuel>("refuel")
@@ -93,7 +97,7 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
             || amountOfFuel.toString().isBlank()
             || cost.toString().isBlank()
             || price.toString().isBlank()) {
-            showInvalidInputMessage("Wymagane pola nie mogą być puste")
+            showInvalidInputMessage(context.getString(R.string.required_fields_cannot_be_empty_text))
             return
         }
 

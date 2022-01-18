@@ -1,6 +1,9 @@
 package com.matxowy.vehiclecost.ui.calculator
 
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.internal.SelectedTab
@@ -8,16 +11,55 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class CalculatorViewModel : ViewModel() {
+class CalculatorViewModel @ViewModelInject constructor(
+    @Assisted private val state: SavedStateHandle
+) : ViewModel() {
 
     var currentTabSelected = SelectedTab.CONSUMPTION
 
-    var refueled: Double? = null
+    var refueled = state.get<Double>("refueled") ?: ""
+        set(value) {
+            field = value
+            state.set("refueled", value)
+        }
+
+    var kmTraveled = state.get<Double>("kmTraveled") ?: ""
+        set(value) {
+            field = value
+            state.set("kmTraveled", value)
+        }
+
+    var fuelPrice = state.get<Double>("fuelPrice") ?: ""
+        set(value) {
+            field = value
+            state.set("fuelPrice", value)
+        }
+
+    var avgFuelConsumption = state.get<Double>("avgFuelConsumption") ?: ""
+        set(value) {
+            field = value
+            state.set("avgFuelConsumption", value)
+        }
+
+    var numberOfPeople = state.get<Int>("numberOfPeople") ?: ""
+        set(value) {
+            field = value
+            state.set("numberOfPeople", value)
+        }
+
+    var paid = state.get<Double>("paid") ?: ""
+        set(value) {
+            field = value
+            state.set("paid", value)
+        }
+
+    /*var refueled: Double? = null
     var kmTraveled: Double? = null
     var fuelPrice: Double? = null
     var avgFuelConsumption: Double? = null
     var numberOfPeople: Int? = null
-    var paid: Double? = null
+    var paid: Double? = null*/
+
 
 
     val currentRefueled : MutableLiveData<Double> by lazy {
@@ -63,34 +105,34 @@ class CalculatorViewModel : ViewModel() {
     }
 
     private fun doCalculationInConsumptionTab() = viewModelScope.launch {
-        if (refueled == null || kmTraveled == null || fuelPrice == null) {
+        if (refueled.toString().isBlank() || kmTraveled.toString().isBlank() || fuelPrice.toString().isBlank()) {
             calculatorEventChannel.send(CalculatorEvent.ShowMessageAboutMissingData)
         } else {
-            val avgConsumption = refueled!! / kmTraveled!! * 100
-            val priceFor100km = avgConsumption * fuelPrice!!
+            val avgConsumption = refueled.toString().toDouble() / kmTraveled.toString().toDouble() * 100
+            val priceFor100km = avgConsumption * fuelPrice.toString().toDouble()
 
             calculatorEventChannel.send(CalculatorEvent.ShowResultForConsumptionTab(avgConsumption, priceFor100km))
         }
     }
 
     private fun doCalculationInCostsTab() = viewModelScope.launch {
-        if (avgFuelConsumption == null || kmTraveled == null || fuelPrice == null || numberOfPeople == null) {
+        if (avgFuelConsumption.toString().isBlank() || kmTraveled.toString().isBlank() || fuelPrice.toString().isBlank() || numberOfPeople.toString().isBlank() ) {
             calculatorEventChannel.send(CalculatorEvent.ShowMessageAboutMissingData)
         } else {
-            val requiredAmountOfFuel = (kmTraveled!! / 100) * avgFuelConsumption!!
-            val costForTravel = fuelPrice!! * requiredAmountOfFuel
-            val costPerPerson = costForTravel / numberOfPeople!!
+            val requiredAmountOfFuel = (kmTraveled.toString().toDouble() / 100) * avgFuelConsumption.toString().toDouble()
+            val costForTravel = fuelPrice.toString().toDouble() * requiredAmountOfFuel
+            val costPerPerson = costForTravel / numberOfPeople.toString().toDouble()
 
             calculatorEventChannel.send(CalculatorEvent.ShowResultForCostsTab(requiredAmountOfFuel, costForTravel, costPerPerson))
         }
     }
 
     private fun doCalculationInRangeTab() = viewModelScope.launch {
-        if (avgFuelConsumption == null || paid == null || fuelPrice == null) {
+        if (avgFuelConsumption.toString().isBlank() || paid.toString().isBlank() || fuelPrice.toString().isBlank()) {
             calculatorEventChannel.send(CalculatorEvent.ShowMessageAboutMissingData)
         } else {
-            val amountOfFilledWithFuel = paid!! / fuelPrice!!
-            val rangeInKm = amountOfFilledWithFuel / avgFuelConsumption!! * 100
+            val amountOfFilledWithFuel = paid.toString().toDouble() / fuelPrice.toString().toDouble()
+            val rangeInKm = amountOfFilledWithFuel / avgFuelConsumption.toString().toDouble() * 100
 
             calculatorEventChannel.send(CalculatorEvent.ShowResultForRangeTab(amountOfFilledWithFuel, rangeInKm))
         }
