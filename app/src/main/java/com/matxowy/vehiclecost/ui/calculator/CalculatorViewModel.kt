@@ -53,15 +53,6 @@ class CalculatorViewModel @ViewModelInject constructor(
             state.set("paid", value)
         }
 
-    /*var refueled: Double? = null
-    var kmTraveled: Double? = null
-    var fuelPrice: Double? = null
-    var avgFuelConsumption: Double? = null
-    var numberOfPeople: Int? = null
-    var paid: Double? = null*/
-
-
-
     val currentRefueled : MutableLiveData<Double> by lazy {
         MutableLiveData<Double>()
     }

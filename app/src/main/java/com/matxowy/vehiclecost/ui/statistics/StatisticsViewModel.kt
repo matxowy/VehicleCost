@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class StatisticsViewModel @ViewModelInject constructor(
-    private val refuelDao: RefuelDao,
-    private val repairDao: RepairDao
+    refuelDao: RefuelDao,
+    repairDao: RepairDao
 ) : ViewModel() {
 
     private val statisticsChannel = Channel<StatisticsEvent>()

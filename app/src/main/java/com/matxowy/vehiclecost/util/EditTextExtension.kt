@@ -25,8 +25,9 @@ fun EditText.transformIntoDatePicker(context: Context, format: String, maxDate: 
 
     setOnClickListener {
         DatePickerDialog(
-            context, datePickerOnDataSetListener, myCalendar
-                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+            context, datePickerOnDataSetListener,
+            myCalendar.get(Calendar.YEAR),
+            myCalendar.get(Calendar.MONTH),
             myCalendar.get(Calendar.DAY_OF_MONTH)
         ).run {
             maxDate?.time?.also { datePicker.maxDate = it }
@@ -39,7 +40,7 @@ fun EditText.transformIntoTimePicker(context: Context, format: String) {
     val myCalendar = Calendar.getInstance()
 
     val timePickerOnDataSetListener =
-        TimePickerDialog.OnTimeSetListener {_, hour, minute ->
+        TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             myCalendar.set(Calendar.HOUR_OF_DAY, hour) // musi być hour_of_day bo samo hour ustawiało godzinę, np 15:33 jako 3:33
             myCalendar.set(Calendar.MINUTE, minute)
             val sdf = SimpleDateFormat(format, Locale.UK)
@@ -48,8 +49,10 @@ fun EditText.transformIntoTimePicker(context: Context, format: String) {
 
     setOnClickListener {
         TimePickerDialog(
-            context, timePickerOnDataSetListener, myCalendar
-                .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), true
+            context, timePickerOnDataSetListener,
+            myCalendar.get(Calendar.HOUR_OF_DAY),
+            myCalendar.get(Calendar.MINUTE),
+            true
         ).run {
             show()
         }

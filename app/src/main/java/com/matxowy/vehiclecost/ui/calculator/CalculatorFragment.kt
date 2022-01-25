@@ -3,13 +3,12 @@ package com.matxowy.vehiclecost.ui.calculator
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
 import android.text.SpannableStringBuilder
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
@@ -325,143 +324,93 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
 
     private fun addTextChangeListenersToRangeTab() {
         binding.apply {
-            etAvgFuelConsumptionFromRangeTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.avgFuelConsumption = p0.toString().toDouble()
-                        else viewModel.avgFuelConsumption = ""
-                    }
-                    viewModel.currentAvgFuelConsumption.value = viewModel.avgFuelConsumption.toString().toDouble()
+            etAvgFuelConsumptionFromRangeTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.avgFuelConsumption = text.toString().toDouble()
+                    else viewModel.avgFuelConsumption = ""
                 }
+                viewModel.currentAvgFuelConsumption.value = viewModel.avgFuelConsumption.toString().toDoubleOrNull()
+            }
 
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
-
-            etPaidFromRangeTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.paid = p0.toString().toDouble()
-                        else viewModel.paid = ""
-                    }
-                    viewModel.currentPaid.value = viewModel.paid.toString().toDouble()
+            etPaidFromRangeTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.paid = text.toString().toDouble()
+                    else viewModel.paid = ""
                 }
+                viewModel.currentPaid.value = viewModel.paid.toString().toDoubleOrNull()
+            }
 
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
-
-            etFuelPriceFromRangeTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.fuelPrice = p0.toString().toDouble()
-                        else viewModel.fuelPrice = ""
-                    }
-                    viewModel.currentFuelPrice.value = viewModel.fuelPrice.toString().toDouble()
+            etFuelPriceFromRangeTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.fuelPrice = text.toString().toDouble()
+                    else viewModel.fuelPrice = ""
                 }
-
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
+                viewModel.currentFuelPrice.value = viewModel.fuelPrice.toString().toDoubleOrNull()
+            }
         }
     }
 
     private fun addTextChangeListenersToCostsTab() {
         binding.apply {
-            etAvgFuelConsumptionFromCostsTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.avgFuelConsumption = p0.toString().toDouble()
-                        else viewModel.avgFuelConsumption = ""
-                    }
-                    viewModel.currentAvgFuelConsumption.value = viewModel.avgFuelConsumption.toString().toDouble()
+            etAvgFuelConsumptionFromCostsTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.avgFuelConsumption = text.toString().toDouble()
+                    else viewModel.avgFuelConsumption = ""
                 }
+                viewModel.currentAvgFuelConsumption.value = viewModel.avgFuelConsumption.toString().toDoubleOrNull()
+            }
 
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
-
-            etKmTraveledFromCostsTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.kmTraveled = p0.toString().toDouble()
-                        else viewModel.kmTraveled = ""
-                    }
-                    viewModel.currentKmTraveled.value = viewModel.kmTraveled.toString().toDouble()
+            etKmTraveledFromCostsTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.kmTraveled = text.toString().toDouble()
+                    else viewModel.kmTraveled = ""
                 }
+                viewModel.currentKmTraveled.value = viewModel.kmTraveled.toString().toDoubleOrNull()
+            }
 
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
-
-            etFuelPriceFromCostsTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.fuelPrice = p0.toString().toDouble()
-                        else viewModel.fuelPrice = ""
-                    }
-                    viewModel.currentFuelPrice.value = viewModel.fuelPrice.toString().toDouble()
+            etFuelPriceFromCostsTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.fuelPrice = text.toString().toDouble()
+                    else viewModel.fuelPrice = ""
                 }
+                viewModel.currentFuelPrice.value = viewModel.fuelPrice.toString().toDoubleOrNull()
+            }
 
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
-
-            etNumberOfPeopleFromCostsTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.numberOfPeople = p0.toString().toInt()
-                        else viewModel.numberOfPeople = ""
-                    }
-                    viewModel.currentNumberOfPeople.value = viewModel.numberOfPeople.toString().toInt()
+            etNumberOfPeopleFromCostsTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.numberOfPeople = text.toString().toInt()
+                    else viewModel.numberOfPeople = ""
                 }
-
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
+                viewModel.currentNumberOfPeople.value = viewModel.numberOfPeople.toString().toIntOrNull()
+            }
         }
     }
 
     private fun addTextChangeListenersToConsumptionTab() {
         binding.apply {
-            etRefueledFromFuelConsumptionTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.refueled = p0.toString().toDouble()
-                        else viewModel.refueled = ""
-                    }
-                    viewModel.currentRefueled.value = viewModel.refueled.toString().toDouble()
+            etRefueledFromFuelConsumptionTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.refueled = text.toString().toDouble()
+                    else viewModel.refueled = ""
                 }
+                viewModel.currentRefueled.value = viewModel.refueled.toString().toDoubleOrNull()
+            }
 
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
-
-            etKmTraveledFromFuelConsumptionTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.kmTraveled = p0.toString().toDouble()
-                        else viewModel.kmTraveled = ""
-                    }
-                    viewModel.currentKmTraveled.value = viewModel.kmTraveled.toString().toDouble()
+            etKmTraveledFromFuelConsumptionTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.kmTraveled = text.toString().toDouble()
+                    else viewModel.kmTraveled = ""
                 }
+                viewModel.currentKmTraveled.value = viewModel.kmTraveled.toString().toDoubleOrNull()
+            }
 
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
-
-            etFuelPriceFromFuelConsumptionTab.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 != null) {
-                        if (p0.isNotEmpty()) viewModel.fuelPrice = p0.toString().toDouble()
-                        else viewModel.fuelPrice = ""
-                    }
-                    viewModel.currentFuelPrice.value = viewModel.fuelPrice.toString().toDouble()
+            etFuelPriceFromFuelConsumptionTab.doAfterTextChanged { text ->
+                if (text != null) {
+                    if (text.isNotEmpty()) viewModel.fuelPrice = text.toString().toDouble()
+                    else viewModel.fuelPrice = ""
                 }
-
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-            })
+                viewModel.currentFuelPrice.value = viewModel.fuelPrice.toString().toDoubleOrNull()
+            }
         }
     }
 
