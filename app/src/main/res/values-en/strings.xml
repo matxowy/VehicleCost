@@ -75,4 +75,5 @@
     <string name="avg_consumption_hint">Average consumption</string>
     <string name="number_of_people_hint">Number of people</string>
     <string name="paid_hint">Paid</string>
+    <string name="mileage_cannot_be_less_than_previous">Mileage cannot be less than previous</string>
 </resources>

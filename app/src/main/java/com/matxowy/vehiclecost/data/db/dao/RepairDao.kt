@@ -16,10 +16,10 @@ interface RepairDao {
     @Query("SELECT cost FROM repair ORDER BY date DESC, mileage DESC LIMIT 1")
     fun getLastCost() : Flow<Double>
 
-    @Query("SELECT * FROM repair ORDER BY date DESC")
+    @Query("SELECT * FROM repair ORDER BY mileage DESC, date DESC")
     fun getRepairs() : Flow<List<Repair>>
 
-    @Query("SELECT mileage FROM refuel ORDER BY mileage DESC LIMIT 1")
+    @Query("SELECT mileage FROM repair ORDER BY mileage DESC LIMIT 1")
     fun getLastMileage() : Flow<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

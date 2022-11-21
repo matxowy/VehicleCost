@@ -74,6 +74,7 @@
     <string name="avg_consumption_hint">Srednie spalanie</string>
     <string name="number_of_people_hint">Liczba osób</string>
     <string name="paid_hint">Zapłacono</string>
+    <string name="mileage_cannot_be_less_than_previous">Przebieg nie może być niższy od poprzedniego</string>
 
     <string-array name="type_of_fuel">
         <item>ON</item>

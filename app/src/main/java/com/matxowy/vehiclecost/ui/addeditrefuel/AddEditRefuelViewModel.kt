@@ -101,7 +101,15 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
             return
         }
 
-        //jeżeli przebieg jest mniejszy od poprzedniego, a data jest późniejsza to zwracać komunikat
+        // The new mileage can't be less than previous
+        if (refuel == null) {
+            lastMileage.value?.let { lastMileage ->
+                if (mileage.toString().toInt() <= lastMileage) {
+                    showInvalidInputMessage(context.getString(R.string.mileage_cannot_be_less_than_previous))
+                    return
+                }
+            }
+        }
 
         if (refuel != null) {
             val updatedRefuel = refuel.copy(
@@ -149,7 +157,7 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
             ADD_REFUEL_RESULT_OK))
     }
 
-    sealed class AddEditRefuelEvent() {
+    sealed class AddEditRefuelEvent {
         data class ShowInvalidInputMessage(val msg: String) : AddEditRefuelEvent()
         data class NavigateToHistoryWithResult(val result: Int) : AddEditRefuelEvent()
     }

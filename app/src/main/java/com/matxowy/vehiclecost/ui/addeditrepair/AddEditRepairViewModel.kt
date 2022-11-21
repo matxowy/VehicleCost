@@ -81,6 +81,16 @@ class AddEditRepairViewModel @ViewModelInject constructor(
             return
         }
 
+        // The new mileage can't be less than previous
+        if (repair == null) {
+            lastMileage.value?.let { lastMileage ->
+                if (mileage.toString().toInt() <= lastMileage) {
+                    showInvalidInputMessage(context.getString(R.string.mileage_cannot_be_less_than_previous))
+                    return
+                }
+            }
+        }
+
         if (repair != null) {
             val updatedRepair = repair.copy(
                 title = title,
