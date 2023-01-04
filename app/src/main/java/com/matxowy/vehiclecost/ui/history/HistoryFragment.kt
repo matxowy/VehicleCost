@@ -65,6 +65,27 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
         addSwipeToDeleteActionForRepairRecyclerView(repairAdapter)
 
         //FAB operations
+        setFabListeners()
+
+        setFragmentResultListeners()
+
+        // Navigation between screens
+        handleRefuelAndRepairEvents()
+    }
+
+    private fun setFragmentResultListeners() {
+        setFragmentResultListener("add_edit_refuel_request") { _, bundle ->
+            val result = bundle.getInt("add_edit_refuel_result")
+            viewModel.onAddEditRefuelResult(result)
+        }
+
+        setFragmentResultListener("add_edit_repair_request") { _, bundle ->
+            val result = bundle.getInt("add_edit_repair_result")
+            viewModel.onAddEditRepairResult(result)
+        }
+    }
+
+    private fun setFabListeners() {
         binding.apply {
             fabAdd.setOnClickListener {
                 onAddButtonClicked()
@@ -78,42 +99,41 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
                 viewModel.onAddNewRepairClick()
             }
         }
+    }
 
-        setFragmentResultListener("add_edit_refuel_request") {_, bundle ->
-            val result = bundle.getInt("add_edit_refuel_result")
-            viewModel.onAddEditRefuelResult(result)
-        }
-
-        setFragmentResultListener("add_edit_repair_request") {_, bundle ->
-            val result = bundle.getInt("add_edit_repair_result")
-            viewModel.onAddEditRepairResult(result)
-        }
-
-        // Navigation between screens
+    private fun handleRefuelAndRepairEvents() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.refuelAndRepairEvent.collect { event ->
-                when(event) {
+                when (event) {
                     is HistoryViewModel.RefuelAndRepairEvent.NavigateToAddRefuelScreen -> {
-                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(null,
-                            getString(R.string.title_new_refuel))
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(
+                            null,
+                            getString(R.string.title_new_refuel)
+                        )
                         findNavController().navigate(action)
                         clicked = false
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.NavigateToAddRepairScreen -> {
-                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(null,
-                            getString(R.string.title_new_repair))
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(
+                            null,
+                            getString(R.string.title_new_repair)
+                        )
                         findNavController().navigate(action)
                         clicked = false
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.NavigateToEditRefuelScreen -> {
-                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(event.refuel,
-                            getString(R.string.title_edit_refuel))
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(
+                            event.refuel,
+                            getString(R.string.title_edit_refuel)
+                        )
                         findNavController().navigate(action)
                         clicked = false
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.NavigateToEditRepairScreen -> {
-                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(event.repair,
-                            getString(R.string.title_edit_repair))
+                        val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(
+                            event.repair,
+                            getString(R.string.title_edit_repair)
+                        )
                         findNavController().navigate(action)
                         clicked = false
                     }

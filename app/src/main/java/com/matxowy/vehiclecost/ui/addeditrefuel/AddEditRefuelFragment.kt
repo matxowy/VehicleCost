@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
@@ -47,18 +48,15 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
 
             setListenersToFieldsAndButton()
 
-            viewModel.lastMileage.observe(viewLifecycleOwner) {
-                tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it.addSpace())
-            }
+            setObservers()
 
-            // Refactor in future
-            if (viewModel.mileage == "") {
-                btnAddNewRefueled.text = getString(R.string.add_refuel_button_text)
-            } else {
-                btnAddNewRefueled.text = getString(R.string.edit_refuel_button_text)
-            }
+            setProperTextForButton()
         }
 
+        handleAddEditRefuelEvents()
+    }
+
+    private fun handleAddEditRefuelEvents() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.addEditRefuelEvent.collect { event ->
                 when (event) {
@@ -75,6 +73,20 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
                     }
                 }.exhaustive
             }
+        }
+    }
+
+    private fun AddEditRefuelFragmentBinding.setProperTextForButton() {
+        if (viewModel.mileage.toString().isEmpty()) {
+            btnAddNewRefueled.text = getString(R.string.add_refuel_button_text)
+        } else {
+            btnAddNewRefueled.text = getString(R.string.edit_refuel_button_text)
+        }
+    }
+
+    private fun AddEditRefuelFragmentBinding.setObservers() {
+        viewModel.lastMileage.observe(viewLifecycleOwner) {
+            tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it?.addSpace() ?: "0")
         }
     }
 
@@ -114,18 +126,11 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
         btnAddNewRefueled.setOnClickListener {
             viewModel.onSaveRefueledClick()
         }
-    }
 
-    // not needed
-    /*private fun AddEditRefuelFragmentBinding.clearFocusOnEditTexts() {
-        etComments.clearFocus()
-        etTime.clearFocus()
-        etDate.clearFocus()
-        etCost.clearFocus()
-        etAmountOfFuel.clearFocus()
-        etPricePerLiter.clearFocus()
-        etMileage.clearFocus()
-    }*/
+        spinnerTypeOfFuel.doOnTextChanged { text, _, _, _ ->
+            viewModel.fuelType = text.toString()
+        }
+    }
 
     private fun AddEditRefuelFragmentBinding.setPickersForDateAndTime() {
         etDate.transformIntoDatePicker(requireContext(), "yyyy-MM-dd")
@@ -144,5 +149,4 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
         switchFullRefueled.isChecked = viewModel.fullRefueled
         switchFullRefueled.jumpDrawablesToCurrentState()
     }
-
 }

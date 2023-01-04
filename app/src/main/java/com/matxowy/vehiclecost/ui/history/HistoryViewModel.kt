@@ -10,6 +10,7 @@ import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.data.db.entity.Repair
+import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.ui.ADD_REFUEL_RESULT_OK
 import com.matxowy.vehiclecost.ui.ADD_REPAIR_RESULT_OK
 import com.matxowy.vehiclecost.ui.EDIT_REFUEL_RESULT_OK
@@ -22,7 +23,8 @@ import kotlinx.coroutines.launch
 class HistoryViewModel @ViewModelInject constructor(
     private val refuelDao: RefuelDao,
     private val repairDao: RepairDao,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
 
     private val refuelAndRepairEventChannel = Channel<RefuelAndRepairEvent>()
@@ -84,13 +86,14 @@ class HistoryViewModel @ViewModelInject constructor(
         refuelAndRepairEventChannel.send(RefuelAndRepairEvent.ShowRepairSavedConfirmationMessage(text))
     }
 
-    val refuels = refuelDao.getRefuels().asLiveData()
-    val repairs = repairDao.getRepairs().asLiveData()
+    private val selectedVehicleId = localPreferences.getSelectedVehicleId()
+    val refuels = refuelDao.getRefuels(selectedVehicleId).asLiveData()
+    val repairs = repairDao.getRepairs(selectedVehicleId).asLiveData()
 
     sealed class RefuelAndRepairEvent {
         object NavigateToAddRefuelScreen : RefuelAndRepairEvent()
-        data class NavigateToEditRefuelScreen(val refuel: Refuel) : RefuelAndRepairEvent()
         object NavigateToAddRepairScreen : RefuelAndRepairEvent()
+        data class NavigateToEditRefuelScreen(val refuel: Refuel) : RefuelAndRepairEvent()
         data class NavigateToEditRepairScreen(val repair: Repair) : RefuelAndRepairEvent()
         data class ShowUndoDeleteRefuelMessage(val refuel: Refuel) : RefuelAndRepairEvent()
         data class ShowUndoDeleteRepairMessage(val repair: Repair) : RefuelAndRepairEvent()

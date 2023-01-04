@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.entity.Repair
+import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.ui.ADD_REPAIR_RESULT_OK
 import com.matxowy.vehiclecost.ui.EDIT_REPAIR_RESULT_OK
 import com.matxowy.vehiclecost.util.LocalDateConverter
@@ -23,7 +24,8 @@ import org.threeten.bp.LocalDateTime
 class AddEditRepairViewModel @ViewModelInject constructor(
     private val repairDao: RepairDao,
     @Assisted private val state: SavedStateHandle,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
     val repair = state.get<Repair>("repair")
 
@@ -70,7 +72,8 @@ class AddEditRepairViewModel @ViewModelInject constructor(
     private val addEditRepairEventChannel = Channel<AddEditRepairEvent>()
     val addEditRepairEvent = addEditRepairEventChannel.receiveAsFlow()
 
-    var lastMileage = repairDao.getLastMileage().asLiveData()
+    private val selectedVehicleId = localPreferences.getSelectedVehicleId()
+    var lastMileage = repairDao.getLastMileage(selectedVehicleId).asLiveData()
 
     fun onSaveRepairClick() {
         if (title.isBlank()
@@ -98,7 +101,8 @@ class AddEditRepairViewModel @ViewModelInject constructor(
                 cost = cost.toString().toDouble(),
                 date = date.toString(),
                 time = time.toString(),
-                comments = comments
+                comments = comments,
+                vehicleId = selectedVehicleId,
             )
 
             updateRepair(updatedRepair)
@@ -109,7 +113,8 @@ class AddEditRepairViewModel @ViewModelInject constructor(
                 cost = cost.toString().toDouble(),
                 date = date.toString(),
                 time = time.toString(),
-                comments = comments
+                comments = comments,
+                vehicleId = selectedVehicleId,
             )
 
             createRepair(repair)
@@ -138,7 +143,7 @@ class AddEditRepairViewModel @ViewModelInject constructor(
         )
     }
 
-    sealed class AddEditRepairEvent() {
+    sealed class AddEditRepairEvent {
         data class ShowInvalidDataMessage(val msg: String) : AddEditRepairEvent()
         data class NavigateToHistoryWithResult(val result: Int) : AddEditRepairEvent()
     }

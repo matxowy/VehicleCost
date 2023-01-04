@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
+import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.ui.ADD_REFUEL_RESULT_OK
 import com.matxowy.vehiclecost.ui.EDIT_REFUEL_RESULT_OK
 import com.matxowy.vehiclecost.util.LocalDateConverter
@@ -23,7 +24,8 @@ import org.threeten.bp.LocalDateTime
 class AddEditRefuelViewModel @ViewModelInject constructor(
     private val refuelDao: RefuelDao,
     @Assisted private val state: SavedStateHandle,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
 
     val refuel = state.get<Refuel>("refuel")
@@ -89,8 +91,8 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
     private val addEditRefuelEventChannel = Channel<AddEditRefuelEvent>()
     val addEditRefuelEvent = addEditRefuelEventChannel.receiveAsFlow()
 
-    var lastMileage = refuelDao.getLastMileage().asLiveData()
-
+    private val selectedVehicleId = localPreferences.getSelectedVehicleId()
+    var lastMileage = refuelDao.getLastMileage(selectedVehicleId).asLiveData()
 
     fun onSaveRefueledClick() {
         if (mileage.toString().isBlank()
@@ -121,7 +123,8 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
                 price = price.toString().toDouble(),
                 fuelType = fuelType,
                 fullRefueled = fullRefueled,
-                comments = comments
+                comments = comments,
+                vehicleId = selectedVehicleId,
             )
 
             updateRefuel(updatedRefuel)
@@ -135,7 +138,8 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
                 price = price.toString().toDouble(),
                 fuelType = fuelType,
                 fullRefueled = fullRefueled,
-                comments = comments
+                comments = comments,
+                vehicleId = selectedVehicleId,
             )
             createRefuel(refuel)
         }

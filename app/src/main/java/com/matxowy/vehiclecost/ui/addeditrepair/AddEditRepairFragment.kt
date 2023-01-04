@@ -36,19 +36,15 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
 
             setListenersToFieldsAndButton()
 
-            viewModel.lastMileage.observe(viewLifecycleOwner) {
-                tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it.addSpace())
-            }
+            setObservers()
 
-            // Refactor in future
-            if (viewModel.mileage == "") {
-                btnAddNewRepair.text = getString(R.string.add_repair_button_text)
-            } else {
-                btnAddNewRepair.text = getString(R.string.edit_repair_button_text)
-            }
-
+            setProperTextForButton()
         }
 
+        handleAddEditRepairEvents()
+    }
+
+    private fun handleAddEditRepairEvents() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.addEditRepairEvent.collect { event ->
                 when (event) {
@@ -65,6 +61,20 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
                     }
                 }.exhaustive
             }
+        }
+    }
+
+    private fun AddEditRepairFragmentBinding.setProperTextForButton() {
+        if (viewModel.mileage.toString().isEmpty()) {
+            btnAddNewRepair.text = getString(R.string.add_repair_button_text)
+        } else {
+            btnAddNewRepair.text = getString(R.string.edit_repair_button_text)
+        }
+    }
+
+    private fun AddEditRepairFragmentBinding.setObservers() {
+        viewModel.lastMileage.observe(viewLifecycleOwner) {
+            tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it?.addSpace() ?: "0")
         }
     }
 

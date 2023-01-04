@@ -1,9 +1,12 @@
 package com.matxowy.vehiclecost.ui.statistics
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -34,8 +37,38 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
         binding = StatisticsFragmentBinding.bind(view)
 
         addObservers()
+        setListeners()
 
-        //FAB operations
+        // Navigation between screens
+        handleStatisticsEvents()
+    }
+
+    private fun handleStatisticsEvents() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.statisticsEvent.collect { event ->
+                when (event) {
+                    is StatisticsViewModel.StatisticsEvent.NavigateToAddRefuelScreen -> {
+                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRefuelFragment(
+                            refuel = null,
+                            title = getString(R.string.title_new_refuel)
+                        )
+                        findNavController().navigate(action)
+                        clicked = false
+                    }
+                    is StatisticsViewModel.StatisticsEvent.NavigateToAddRepairScreen -> {
+                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRepairFragment(
+                            repair = null,
+                            title = getString(R.string.title_new_repair)
+                        )
+                        findNavController().navigate(action)
+                        clicked = false
+                    }
+                }.exhaustive
+            }
+        }
+    }
+
+    private fun setListeners() {
         binding.apply {
             fabAdd.setOnClickListener {
                 onAddButtonClicked()
@@ -48,52 +81,55 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
             fabAddRepair.setOnClickListener {
                 viewModel.onAddNewRepairClick()
             }
-        }
 
-        // Navigation between screens
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.statisticsEvent.collect { event ->
-                when(event) {
-                    is StatisticsViewModel.StatisticsEvent.NavigateToAddRefuelScreen -> {
-                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRefuelFragment(null,
-                            getString(R.string.title_new_refuel))
-                        findNavController().navigate(action)
-                        clicked = false
-                    }
-                    is StatisticsViewModel.StatisticsEvent.NavigateToAddRepairScreen -> {
-                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditRepairFragment(null,
-                            getString(R.string.title_new_repair))
-                        findNavController().navigate(action)
-                        clicked = false
-                    }
-                }.exhaustive
+            spinnerVehicle.setOnItemClickListener { _, _, position, _ ->
+                viewModel.saveSelectedVehicleAndRefreshStatistics(position)
             }
         }
     }
 
     private fun addObservers() {
         viewModel.sumOfFuelAmount.observe(viewLifecycleOwner) {
-            binding.tvRefueledStat.text = "${it.decimalFormat()} l"
+            binding.tvRefueledStat.text = "${it?.decimalFormat() ?: 0} l"
         }
 
         viewModel.sumCostsOfRefuels.observe(viewLifecycleOwner) {
-            binding.tvFuelCostsStat.text = "${it.decimalFormat()} zł"
+            binding.tvFuelCostsStat.text = "${it?.decimalFormat() ?: 0} zł"
         }
 
         viewModel.lastPriceOfFuel.observe(viewLifecycleOwner) {
-            binding.tvLastFuelPriceStat.text = "${it.decimalFormat()} zł"
+            binding.tvLastFuelPriceStat.text = "${it?.decimalFormat() ?: 0} zł"
         }
 
         viewModel.sumCostOfRepair.observe(viewLifecycleOwner) {
-            binding.tvSumCostRepairStat.text = "${it.decimalFormat()} zł"
+            binding.tvSumCostRepairStat.text = "${it?.decimalFormat() ?: 0} zł"
         }
 
         viewModel.maxCostOfRepair.observe(viewLifecycleOwner) {
-            binding.tvGreatestCostRepairStat.text = "${it.decimalFormat()} zł"
+            binding.tvGreatestCostRepairStat.text = "${it?.decimalFormat() ?: 0} zł"
         }
 
         viewModel.lastCostOfRepair.observe(viewLifecycleOwner) {
-            binding.tvLatestCostRepairStat.text = "${it.decimalFormat()} zł"
+            binding.tvLatestCostRepairStat.text = "${it?.decimalFormat() ?: 0} zł"
+        }
+
+        viewModel.vehiclesNames.observe(viewLifecycleOwner) { listOfVehiclesNames ->
+            setSpinner(requireContext(), listOfVehiclesNames)
+            setSpinnerOnCurrentSelectedVehicle(listOfVehiclesNames)
+        }
+    }
+
+    private fun setSpinner(context: Context, listOfVehiclesNames: List<String>) {
+        val spinnerAdapter = ArrayAdapter(context, R.layout.spinner_item_list, listOfVehiclesNames)
+        binding.spinnerVehicle.setAdapter(spinnerAdapter)
+    }
+
+    private fun setSpinnerOnCurrentSelectedVehicle(listOfVehiclesNames: List<String>) {
+        val selectedVehiclePosition = viewModel.getSelectedVehiclePosition()
+        try {
+            binding.spinnerVehicle.setText(listOfVehiclesNames[selectedVehiclePosition], false)
+        } catch (e: Exception) {
+            Log.i("Spinner error: ", e.toString())
         }
     }
 

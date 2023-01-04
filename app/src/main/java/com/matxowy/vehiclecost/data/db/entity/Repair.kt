@@ -14,5 +14,6 @@ data class Repair(
     val date: String,
     val time: String,
     val comments: String = "",
-    @PrimaryKey(autoGenerate = true) val id: Int = 0
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val vehicleId: Int,
 ) : Parcelable
