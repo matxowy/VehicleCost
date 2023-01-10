@@ -11,9 +11,9 @@ import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
-import com.matxowy.vehiclecost.ui.ADD_REFUEL_RESULT_OK
-import com.matxowy.vehiclecost.ui.EDIT_REFUEL_RESULT_OK
 import com.matxowy.vehiclecost.util.LocalDateConverter
+import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
+import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -36,17 +36,13 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
             state.set("refuelMileage", value)
         }
 
-    var date = state.get<String>("refuelDate") ?: refuel?.date ?: LocalDateConverter.dateToString(
-        LocalDate.now()
-    )
+    var date = state.get<String>("refuelDate") ?: refuel?.date ?: LocalDateConverter.dateToString(LocalDate.now())
         set(value) {
             field = value
             state.set("refuelDate", value)
         }
 
-    var time = state.get<String>("refuelTime") ?: refuel?.time ?: LocalDateConverter.timeToString(
-        LocalDateTime.now()
-    )
+    var time = state.get<String>("refuelTime") ?: refuel?.time ?: LocalDateConverter.timeToString(LocalDateTime.now())
         set(value) {
             field = value
             state.set("refuelTime", value)
@@ -98,7 +94,8 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
         if (mileage.toString().isBlank()
             || amountOfFuel.toString().isBlank()
             || cost.toString().isBlank()
-            || price.toString().isBlank()) {
+            || price.toString().isBlank()
+        ) {
             showInvalidInputMessage(context.getString(R.string.required_fields_cannot_be_empty_text))
             return
         }
@@ -126,7 +123,6 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
                 comments = comments,
                 vehicleId = selectedVehicleId,
             )
-
             updateRefuel(updatedRefuel)
         } else {
             val refuel = Refuel(
@@ -151,14 +147,12 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
 
     private fun updateRefuel(updatedRefuel: Refuel) = viewModelScope.launch {
         refuelDao.update(updatedRefuel)
-        addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(
-            EDIT_REFUEL_RESULT_OK))
+        addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
     }
 
     private fun createRefuel(refuel: Refuel) = viewModelScope.launch {
         refuelDao.insert(refuel)
-        addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(
-            ADD_REFUEL_RESULT_OK))
+        addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
     }
 
     sealed class AddEditRefuelEvent {

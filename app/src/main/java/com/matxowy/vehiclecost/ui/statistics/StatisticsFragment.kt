@@ -8,12 +8,15 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.StatisticsFragmentBinding
-import com.matxowy.vehiclecost.util.*
+import com.matxowy.vehiclecost.util.decimalFormat
+import com.matxowy.vehiclecost.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -38,9 +41,15 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
         addObservers()
         setListeners()
-
-        // Navigation between screens
         handleStatisticsEvents()
+        setFragmentResultListeners()
+    }
+
+    private fun setFragmentResultListeners() {
+        setFragmentResultListener("add_edit_vehicle_request") { _, bundle ->
+            val result = bundle.getInt("add_edit_vehicle_result")
+            viewModel.onAddEditVehicleResult(result)
+        }
     }
 
     private fun handleStatisticsEvents() {
@@ -63,6 +72,18 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
                         findNavController().navigate(action)
                         clicked = false
                     }
+                    is StatisticsViewModel.StatisticsEvent.NavigateToAddEditVehicleScreen -> {
+                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditVehicleFragment(
+                            title = getString(R.string.title_new_vehicle)
+                        )
+                        findNavController().navigate(action)
+                    }
+                    is StatisticsViewModel.StatisticsEvent.ShowVehicleEditedConfirmationMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.vehicle_added_message), Snackbar.LENGTH_LONG).show()
+                    }
+                    is StatisticsViewModel.StatisticsEvent.ShowVehicleSavedConfirmationMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.vehicle_updated_message), Snackbar.LENGTH_LONG).show()
+                    }
                 }.exhaustive
             }
         }
@@ -83,7 +104,11 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
             }
 
             spinnerVehicle.setOnItemClickListener { _, _, position, _ ->
-                viewModel.saveSelectedVehicleAndRefreshStatistics(position)
+                if (position == 0) {
+                    viewModel.onAddNewVehicleClick()
+                } else {
+                    viewModel.saveSelectedVehicleAndRefreshStatistics(position)
+                }
             }
         }
     }
@@ -114,8 +139,12 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
         }
 
         viewModel.vehiclesNames.observe(viewLifecycleOwner) { listOfVehiclesNames ->
-            setSpinner(requireContext(), listOfVehiclesNames)
-            setSpinnerOnCurrentSelectedVehicle(listOfVehiclesNames)
+            val listOfVehiclesNamesWithAddingOption = viewModel.getListOfVehiclesNamesWithAddingOptionOnFirstPosition(
+                listOfVehiclesNames = listOfVehiclesNames,
+                addNewVehicleText = getString(R.string.add_new_vehicle_text)
+            )
+            setSpinner(requireContext(), listOfVehiclesNamesWithAddingOption)
+            setSpinnerOnCurrentSelectedVehicle(listOfVehiclesNamesWithAddingOption)
         }
     }
 
@@ -125,7 +154,7 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
     }
 
     private fun setSpinnerOnCurrentSelectedVehicle(listOfVehiclesNames: List<String>) {
-        val selectedVehiclePosition = viewModel.getSelectedVehiclePosition()
+        val selectedVehiclePosition = viewModel.getSelectedVehicleId()
         try {
             binding.spinnerVehicle.setText(listOfVehiclesNames[selectedVehiclePosition], false)
         } catch (e: Exception) {

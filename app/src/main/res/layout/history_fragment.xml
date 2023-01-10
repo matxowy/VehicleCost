@@ -150,7 +150,7 @@
         android:layout_marginBottom="15dp"
         android:backgroundTint="@color/purple_500"
         android:clickable="true"
-        android:contentDescription="@string/content_description_fab_add"
+        android:contentDescription="@string/add_text"
         android:focusable="true"
         android:src="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"

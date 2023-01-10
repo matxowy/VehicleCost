@@ -39,9 +39,3 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
-
-// Created to avoid clashes between RESULT_OK, RESULT_CANCELED...
-const val ADD_REFUEL_RESULT_OK = Activity.RESULT_FIRST_USER
-const val EDIT_REFUEL_RESULT_OK = Activity.RESULT_FIRST_USER + 1
-const val ADD_REPAIR_RESULT_OK = Activity.RESULT_FIRST_USER + 2
-const val EDIT_REPAIR_RESULT_OK = Activity.RESULT_FIRST_USER + 3

@@ -295,6 +295,6 @@
         android:focusable="true"
         app:tint="@android:color/white"
         android:src="@drawable/ic_add"
-        android:contentDescription="@string/content_description_fab_add"/>
+        android:contentDescription="@string/add_text"/>
 
 </LinearLayout>

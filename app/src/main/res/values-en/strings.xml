@@ -17,7 +17,7 @@
     <string name="stat_latest_cost_repair">Latest cost:</string>
     <string name="rb_fuel_text">Fuel</string>
     <string name="rb_repair_text">Repairs</string>
-    <string name="content_description_fab_add">Add</string>
+    <string name="add_text">Add</string>
     <string name="content_description_fab_add_refuel">Add refuel</string>
     <string name="content_description_fab_add_repair">Add repair</string>
     <string name="text_input_hint_mileage">Mileage (km)</string>
@@ -76,4 +76,9 @@
     <string name="number_of_people_hint">Number of people</string>
     <string name="paid_hint">Paid</string>
     <string name="mileage_cannot_be_less_than_previous">Mileage cannot be less than previous</string>
+    <string name="title_new_vehicle">New vehicle</string>
+    <string name="vehicle_added_message">Vehicle added</string>
+    <string name="vehicle_updated_message">Vehicle updated</string>
+    <string name="add_new_vehicle_text">Add new vehicle</string>
+    <string name="vehicle_name_hint">Vehicle name</string>
 </resources>

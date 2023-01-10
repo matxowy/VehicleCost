@@ -11,9 +11,9 @@ import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
-import com.matxowy.vehiclecost.ui.ADD_REPAIR_RESULT_OK
-import com.matxowy.vehiclecost.ui.EDIT_REPAIR_RESULT_OK
 import com.matxowy.vehiclecost.util.LocalDateConverter
+import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
+import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -127,20 +127,12 @@ class AddEditRepairViewModel @ViewModelInject constructor(
 
     private fun createRepair(repair: Repair) = viewModelScope.launch {
         repairDao.insert(repair)
-        addEditRepairEventChannel.send(
-            AddEditRepairEvent.NavigateToHistoryWithResult(
-                ADD_REPAIR_RESULT_OK
-            )
-        )
+        addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
     }
 
     private fun updateRepair(updatedRepair: Repair) = viewModelScope.launch {
         repairDao.update(updatedRepair)
-        addEditRepairEventChannel.send(
-            AddEditRepairEvent.NavigateToHistoryWithResult(
-                EDIT_REPAIR_RESULT_OK
-            )
-        )
+        addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
     }
 
     sealed class AddEditRepairEvent {

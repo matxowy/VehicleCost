@@ -11,10 +11,8 @@ import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
-import com.matxowy.vehiclecost.ui.ADD_REFUEL_RESULT_OK
-import com.matxowy.vehiclecost.ui.ADD_REPAIR_RESULT_OK
-import com.matxowy.vehiclecost.ui.EDIT_REFUEL_RESULT_OK
-import com.matxowy.vehiclecost.ui.EDIT_REPAIR_RESULT_OK
+import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
+import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -66,15 +64,15 @@ class HistoryViewModel @ViewModelInject constructor(
 
     fun onAddEditRefuelResult(result: Int) {
         when (result) {
-            ADD_REFUEL_RESULT_OK -> showRefuelSavedConfirmationMessage(context.getString(R.string.refueled_added_message))
-            EDIT_REFUEL_RESULT_OK -> showRefuelSavedConfirmationMessage(context.getString(R.string.refueled_updated_message))
+            ADD_RESULT_OK -> showRefuelSavedConfirmationMessage(context.getString(R.string.refueled_added_message))
+            EDIT_RESULT_OK -> showRefuelSavedConfirmationMessage(context.getString(R.string.refueled_updated_message))
         }
     }
 
     fun onAddEditRepairResult(result: Int) {
         when (result) {
-            ADD_REPAIR_RESULT_OK -> showRepairSavedConfirmationMessage(context.getString(R.string.repair_added_message))
-            EDIT_REPAIR_RESULT_OK -> showRepairSavedConfirmationMessage(context.getString(R.string.repair_updated_message))
+            ADD_RESULT_OK -> showRepairSavedConfirmationMessage(context.getString(R.string.repair_added_message))
+            EDIT_RESULT_OK -> showRepairSavedConfirmationMessage(context.getString(R.string.repair_updated_message))
         }
     }
 
