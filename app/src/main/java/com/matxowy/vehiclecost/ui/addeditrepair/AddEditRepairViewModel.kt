@@ -1,8 +1,6 @@
 package com.matxowy.vehiclecost.ui.addeditrepair
 
 import android.content.Context
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -14,16 +12,19 @@ import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.LocalDateConverter
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDate
+import java.time.LocalDateTime
+import javax.inject.Inject
 
-class AddEditRepairViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AddEditRepairViewModel @Inject constructor(
     private val repairDao: RepairDao,
-    @Assisted private val state: SavedStateHandle,
+    private val state: SavedStateHandle,
     @ApplicationContext private val context: Context,
     val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
@@ -32,41 +33,37 @@ class AddEditRepairViewModel @ViewModelInject constructor(
     var title = state.get<String>("repairTitle") ?: repair?.title ?: ""
         set(value) {
             field = value
-            state.set("repairTitle", value)
+            state["repairTitle"] = value
         }
 
     var mileage = state.get<Int>("repairMileage") ?: repair?.mileage ?: ""
         set(value) {
             field = value
-            state.set("repairMileage", value)
+            state["repairMileage"] = value
         }
 
     var cost = state.get<Double>("repairCost") ?: repair?.cost ?: ""
         set(value) {
             field = value
-            state.set("repairCost", value)
+            state["repairCost"] = value
         }
 
-    var date = state.get<String>("repairDate") ?: repair?.date ?: LocalDateConverter.dateToString(
-        LocalDate.now()
-    )
+    var date = state.get<String>("repairDate") ?: repair?.date ?: LocalDateConverter.dateToString(LocalDate.now())
         set(value) {
             field = value
-            state.set("repairDate", value)
+            state["repairDate"] = value
         }
 
-    var time = state.get<String>("repairTime") ?: repair?.time ?: LocalDateConverter.timeToString(
-        LocalDateTime.now()
-    )
+    var time = state.get<String>("repairTime") ?: repair?.time ?: LocalDateConverter.timeToString(LocalDateTime.now())
         set(value) {
             field = value
-            state.set("repairTime", value)
+            state["repairTime"] = value
         }
 
     var comments = state.get<String>("repairComments") ?: repair?.comments ?: ""
         set(value) {
             field = value
-            state.set("repairComments", value)
+            state["repairComments"] = value
         }
 
     private val addEditRepairEventChannel = Channel<AddEditRepairEvent>()

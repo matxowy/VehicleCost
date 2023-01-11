@@ -1,7 +1,6 @@
 package com.matxowy.vehiclecost.ui.history
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,12 +12,15 @@ import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HistoryViewModel @ViewModelInject constructor(
+@HiltViewModel
+class HistoryViewModel @Inject constructor(
     private val refuelDao: RefuelDao,
     private val repairDao: RepairDao,
     @ApplicationContext private val context: Context,

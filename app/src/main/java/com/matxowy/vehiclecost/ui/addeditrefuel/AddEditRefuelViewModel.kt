@@ -1,8 +1,6 @@
 package com.matxowy.vehiclecost.ui.addeditrefuel
 
 import android.content.Context
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -14,16 +12,19 @@ import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.LocalDateConverter
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDate
+import java.time.LocalDateTime
+import javax.inject.Inject
 
-class AddEditRefuelViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AddEditRefuelViewModel @Inject constructor(
     private val refuelDao: RefuelDao,
-    @Assisted private val state: SavedStateHandle,
+    private val state: SavedStateHandle,
     @ApplicationContext private val context: Context,
     val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
@@ -33,55 +34,55 @@ class AddEditRefuelViewModel @ViewModelInject constructor(
     var mileage = state.get<Int>("refuelMileage") ?: refuel?.mileage ?: ""
         set(value) {
             field = value
-            state.set("refuelMileage", value)
+            state["refuelMileage"] = value
         }
 
     var date = state.get<String>("refuelDate") ?: refuel?.date ?: LocalDateConverter.dateToString(LocalDate.now())
         set(value) {
             field = value
-            state.set("refuelDate", value)
+            state["refuelDate"] = value
         }
 
     var time = state.get<String>("refuelTime") ?: refuel?.time ?: LocalDateConverter.timeToString(LocalDateTime.now())
         set(value) {
             field = value
-            state.set("refuelTime", value)
+            state["refuelTime"] = value
         }
 
     var amountOfFuel = state.get<Double>("refuelAmountOfFuel") ?: refuel?.amountOfFuel ?: ""
         set(value) {
             field = value
-            state.set("refuelAmountOfFuel", value)
+            state["refuelAmountOfFuel"] = value
         }
 
     var cost = state.get<Double>("refuelCost") ?: refuel?.cost ?: ""
         set(value) {
             field = value
-            state.set("refuelCost", value)
+            state["refuelCost"] = value
         }
 
     var price = state.get<Double>("refuelPrice") ?: refuel?.price ?: ""
         set(value) {
             field = value
-            state.set("refuelPrice", value)
+            state["refuelPrice"] = value
         }
 
     var fullRefueled = state.get<Boolean>("refuelFullRefueled") ?: refuel?.fullRefueled ?: false
         set(value) {
             field = value
-            state.set("refuelFullRefueled", value)
+            state["refuelFullRefueled"] = value
         }
 
     var comments = state.get<String>("refuelComments") ?: refuel?.comments ?: ""
         set(value) {
             field = value
-            state.set("refuelComments", value)
+            state["refuelComments"] = value
         }
 
     var fuelType = state.get<String>("refuelType") ?: refuel?.fuelType ?: "ON"
         set(value) {
             field = value
-            state.set("refuelType", value)
+            state["refuelType"] = value
         }
 
     private val addEditRefuelEventChannel = Channel<AddEditRefuelEvent>()

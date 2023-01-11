@@ -1,7 +1,5 @@
 package com.matxowy.vehiclecost.ui.addeditvehicle
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,13 +7,16 @@ import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AddEditVehicleViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AddEditVehicleViewModel @Inject constructor(
     private val vehicleDao: VehicleDao,
-    @Assisted private val state: SavedStateHandle,
+    private val state: SavedStateHandle,
 ) : ViewModel() {
 
     val vehicle = state.get<Vehicle>("vehicle")
@@ -23,13 +24,13 @@ class AddEditVehicleViewModel @ViewModelInject constructor(
     var vehicleName = state.get<String>("vehicleName") ?: vehicle?.name ?: ""
         set(value) {
             field = value
-            state.set("vehicleName", value)
+            state["vehicleName"] = value
         }
 
     var vehicleMileage = state.get<Int>("vehicleMileage") ?: vehicle?.mileage ?: ""
         set(value) {
             field = value
-            state.set("vehicleMileage", value)
+            state["vehicleMileage"] = value
         }
 
     private val addEditVehicleChannel = Channel<AddEditVehicleEvent>()

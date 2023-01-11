@@ -1,11 +1,11 @@
 package com.matxowy.vehiclecost.ui.history
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -22,8 +22,6 @@ import com.matxowy.vehiclecost.ui.history.adapters.RefuelAdapter
 import com.matxowy.vehiclecost.ui.history.adapters.RepairAdapter
 import com.matxowy.vehiclecost.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.history_fragment.*
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class HistoryFragment : Fragment(R.layout.history_fragment),
@@ -254,12 +252,16 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
         binding.rgHistory.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rb_fuel_history -> {
-                    recyclerView_repair.visibility = View.GONE
-                    recyclerView_refuel.visibility = View.VISIBLE
+                    binding.apply {
+                        recyclerViewRepair.visibility = View.GONE
+                        recyclerViewRefuel.visibility = View.VISIBLE
+                    }
                 }
                 R.id.rb_repair_history -> {
-                    recyclerView_repair.visibility = View.VISIBLE
-                    recyclerView_refuel.visibility = View.GONE
+                    binding.apply {
+                        recyclerViewRepair.visibility = View.VISIBLE
+                        recyclerViewRefuel.visibility = View.GONE
+                    }
                 }
             }
         }

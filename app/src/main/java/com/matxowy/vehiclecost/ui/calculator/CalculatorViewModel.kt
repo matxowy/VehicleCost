@@ -1,18 +1,19 @@
 package com.matxowy.vehiclecost.ui.calculator
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.internal.SelectedTab
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CalculatorViewModel @ViewModelInject constructor(
-    @Assisted private val state: SavedStateHandle
+@HiltViewModel
+class CalculatorViewModel @Inject constructor(
+    private val state: SavedStateHandle
 ) : ViewModel() {
 
     var currentTabSelected = SelectedTab.CONSUMPTION
@@ -20,37 +21,37 @@ class CalculatorViewModel @ViewModelInject constructor(
     var refueled = state.get<Double>("refueled") ?: ""
         set(value) {
             field = value
-            state.set("refueled", value)
+            state["refueled"] = value
         }
 
     var kmTraveled = state.get<Double>("kmTraveled") ?: ""
         set(value) {
             field = value
-            state.set("kmTraveled", value)
+            state["kmTraveled"] = value
         }
 
     var fuelPrice = state.get<Double>("fuelPrice") ?: ""
         set(value) {
             field = value
-            state.set("fuelPrice", value)
+            state["fuelPrice"] = value
         }
 
     var avgFuelConsumption = state.get<Double>("avgFuelConsumption") ?: ""
         set(value) {
             field = value
-            state.set("avgFuelConsumption", value)
+            state["avgFuelConsumption"] = value
         }
 
     var numberOfPeople = state.get<Int>("numberOfPeople") ?: ""
         set(value) {
             field = value
-            state.set("numberOfPeople", value)
+            state["numberOfPeople"] = value
         }
 
     var paid = state.get<Double>("paid") ?: ""
         set(value) {
             field = value
-            state.set("paid", value)
+            state["paid"] = value
         }
 
     val currentRefueled : MutableLiveData<Double> by lazy {

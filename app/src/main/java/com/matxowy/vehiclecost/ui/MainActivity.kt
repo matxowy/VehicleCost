@@ -1,13 +1,11 @@
 package com.matxowy.vehiclecost.ui
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.jakewharton.threetenabp.AndroidThreeTen
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,9 +27,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNav.setupWithNavController(navController)
         NavigationUI.setupActionBarWithNavController(this, navController)
-
-        // Initialize read the time zones data for use AndroidThreeTen
-        AndroidThreeTen.init(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {
