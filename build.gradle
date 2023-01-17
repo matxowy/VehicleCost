@@ -17,6 +17,9 @@ buildscript {
         roomVersion = "2.4.3"
         legacySupportVersion = "1.0.0"
         desugarVersion = "1.1.5"
+        googleServicesVersion = "4.3.13"
+        firebaseBomVersion = "31.1.1"
+        crashlyticsGradleVersion = "2.9.2"
         // Testing
         junitVersion = "4.13.2"
         espressoVersion = "3.5.1"
@@ -35,6 +38,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinGradleVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
+        classpath "com.google.gms:google-services:$googleServicesVersion"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:$crashlyticsGradleVersion"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

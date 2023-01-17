@@ -16,5 +16,5 @@ class LocalPreferencesService @Inject constructor(
     }
 
     override fun getSelectedVehicleId() =
-        sharedPreferences.getInt(CURRENT_PICKED_CAR, 0)
+        sharedPreferences.getInt(CURRENT_PICKED_CAR, 1)
 }

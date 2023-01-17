@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -89,6 +91,11 @@ dependencies {
 
     // Needed to use java.time for api below 26 (backwards compatibility)
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$desugarVersion"
+
+    // Google services
+    implementation platform("com.google.firebase:firebase-bom:$firebaseBomVersion")
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
     //Testing
     testImplementation "junit:junit:$junitVersion"

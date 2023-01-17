@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "773492958209",
+    "project_id": "vehicle-cost-18add",
+    "storage_bucket": "vehicle-cost-18add.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773492958209:android:24bcaa4da153237b1b0c00",
+        "android_client_info": {
+          "package_name": "com.matxowy.vehiclecost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773492958209-rin192c6kggcnhtkgar15qoc2uee6i8g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5EAdsYxgpAt3N7-voG06DfexRiTI4Lqw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773492958209-rin192c6kggcnhtkgar15qoc2uee6i8g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
