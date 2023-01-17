@@ -13,19 +13,21 @@ import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.AddEditRepairFragmentBinding
 import com.matxowy.vehiclecost.util.*
+import com.matxowy.vehiclecost.util.constants.Formats.DATE_FORMAT
+import com.matxowy.vehiclecost.util.constants.Formats.TIME_FORMAT
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
 
     private val viewModel: AddEditRepairViewModel by viewModels()
-    private lateinit var binding: AddEditRepairFragmentBinding
+    private var _binding: AddEditRepairFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = AddEditRepairFragmentBinding.bind(view)
+        _binding = AddEditRepairFragmentBinding.bind(view)
 
         binding.apply {
             // Setting date and time pickers to EditTexts
@@ -50,14 +52,17 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
                 when (event) {
                     is AddEditRepairViewModel.AddEditRepairEvent.NavigateToHistoryWithResult -> {
                         setFragmentResult(
-                            "add_edit_repair_request",
-                            bundleOf("add_edit_repair_result" to event.result)
+                            requestKey = ADD_EDIT_REPAIR_REQUEST,
+                            result = bundleOf(ADD_EDIT_REPAIR_RESULT to event.result)
                         )
                         val action = AddEditRepairFragmentDirections.actionAddEditRepairFragmentToHistoryFragment()
                         findNavController().navigate(action)
                     }
-                    is AddEditRepairViewModel.AddEditRepairEvent.ShowInvalidDataMessage -> {
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
+                    is AddEditRepairViewModel.AddEditRepairEvent.ShowFieldsCannotBeEmptyMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.required_fields_cannot_be_empty_text), Snackbar.LENGTH_LONG).show()
+                    }
+                    AddEditRepairViewModel.AddEditRepairEvent.ShowMileageCannotBeLessThanPreviousMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.mileage_cannot_be_less_than_previous), Snackbar.LENGTH_LONG).show()
                     }
                 }.exhaustive
             }
@@ -74,7 +79,7 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
 
     private fun AddEditRepairFragmentBinding.setObservers() {
         viewModel.lastMileage.observe(viewLifecycleOwner) {
-            tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it?.addSpace() ?: "0")
+            tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it?.addSpace() ?: ZERO_KILOMETERS_STRING)
         }
     }
 
@@ -109,8 +114,8 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
     }
 
     private fun AddEditRepairFragmentBinding.setPickersForDateAndTime() {
-        etDate.transformIntoDatePicker(requireContext(), "yyyy-MM-dd")
-        etTime.transformIntoTimePicker(requireContext(), "HH:mm")
+        etDate.transformIntoDatePicker(requireContext(), DATE_FORMAT)
+        etTime.transformIntoTimePicker(requireContext(), TIME_FORMAT)
     }
 
     private fun AddEditRepairFragmentBinding.setFieldsWithData() {
@@ -122,4 +127,14 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
         etComments.setText(viewModel.comments)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        const val ZERO_KILOMETERS_STRING = "0"
+        const val ADD_EDIT_REPAIR_REQUEST = "add_edit_repair_request"
+        const val ADD_EDIT_REPAIR_RESULT = "add_edit_repair_result"
+    }
 }

@@ -18,6 +18,10 @@ import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.databinding.HistoryFragmentBinding
+import com.matxowy.vehiclecost.ui.addeditrefuel.AddEditRefuelFragment.Companion.ADD_EDIT_REFUEL_REQUEST
+import com.matxowy.vehiclecost.ui.addeditrefuel.AddEditRefuelFragment.Companion.ADD_EDIT_REFUEL_RESULT
+import com.matxowy.vehiclecost.ui.addeditrepair.AddEditRepairFragment.Companion.ADD_EDIT_REPAIR_REQUEST
+import com.matxowy.vehiclecost.ui.addeditrepair.AddEditRepairFragment.Companion.ADD_EDIT_REPAIR_RESULT
 import com.matxowy.vehiclecost.ui.history.adapters.RefuelAdapter
 import com.matxowy.vehiclecost.ui.history.adapters.RepairAdapter
 import com.matxowy.vehiclecost.util.exhaustive
@@ -27,7 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class HistoryFragment : Fragment(R.layout.history_fragment),
     RepairAdapter.OnRepairItemClickListener, RefuelAdapter.OnRefuelItemClickListener {
 
-    private lateinit var binding: HistoryFragmentBinding
+    private var _binding: HistoryFragmentBinding? = null
+    private val binding get() = _binding!!
 
     //Animations
     private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(context, R.anim.rotate_open_anim) }
@@ -46,7 +51,7 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
         // Disable back arrow in header for avoid returning to adding/editing screen by this
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        binding = HistoryFragmentBinding.bind(view)
+        _binding = HistoryFragmentBinding.bind(view)
 
         //Radio group operation
         onRadioButtonCheckedChanged()
@@ -72,13 +77,13 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
     }
 
     private fun setFragmentResultListeners() {
-        setFragmentResultListener("add_edit_refuel_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_refuel_result")
+        setFragmentResultListener(ADD_EDIT_REPAIR_REQUEST) { _, bundle ->
+            val result = bundle.getInt(ADD_EDIT_REPAIR_RESULT)
             viewModel.onAddEditRefuelResult(result)
         }
 
-        setFragmentResultListener("add_edit_repair_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_repair_result")
+        setFragmentResultListener(ADD_EDIT_REFUEL_REQUEST) { _, bundle ->
+            val result = bundle.getInt(ADD_EDIT_REFUEL_RESULT)
             viewModel.onAddEditRepairResult(result)
         }
     }
@@ -148,10 +153,16 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
                             }.show()
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.ShowRefuelSavedConfirmationMessage -> {
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), getString(R.string.refueled_added_message), Snackbar.LENGTH_SHORT).show()
                     }
                     is HistoryViewModel.RefuelAndRepairEvent.ShowRepairSavedConfirmationMessage -> {
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), getString(R.string.repair_added_message), Snackbar.LENGTH_SHORT).show()
+                    }
+                    is HistoryViewModel.RefuelAndRepairEvent.ShowRefuelEditedConfirmationMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.refueled_updated_message), Snackbar.LENGTH_SHORT).show()
+                    }
+                    is HistoryViewModel.RefuelAndRepairEvent.ShowRepairEditedConfirmationMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.repair_updated_message), Snackbar.LENGTH_SHORT).show()
                     }
                 }.exhaustive
             }
@@ -319,4 +330,8 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

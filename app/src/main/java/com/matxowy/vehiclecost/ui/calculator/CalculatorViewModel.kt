@@ -18,43 +18,43 @@ class CalculatorViewModel @Inject constructor(
 
     var currentTabSelected = SelectedTab.CONSUMPTION
 
-    var refueled = state.get<Double>("refueled") ?: ""
+    var refueled = state.get<Double>(REFUELED_STATE_KEY) ?: ""
         set(value) {
             field = value
-            state["refueled"] = value
+            state[REFUELED_STATE_KEY] = value
         }
 
-    var kmTraveled = state.get<Double>("kmTraveled") ?: ""
+    var kmTraveled = state.get<Double>(KM_TRAVELED_STATE_KEY) ?: ""
         set(value) {
             field = value
-            state["kmTraveled"] = value
+            state[KM_TRAVELED_STATE_KEY] = value
         }
 
-    var fuelPrice = state.get<Double>("fuelPrice") ?: ""
+    var fuelPrice = state.get<Double>(FUEL_PRICE_STATE_KEY) ?: ""
         set(value) {
             field = value
-            state["fuelPrice"] = value
+            state[FUEL_PRICE_STATE_KEY] = value
         }
 
-    var avgFuelConsumption = state.get<Double>("avgFuelConsumption") ?: ""
+    var avgFuelConsumption = state.get<Double>(AVG_FUEL_CONSUMPTION_STATE_KEY) ?: ""
         set(value) {
             field = value
-            state["avgFuelConsumption"] = value
+            state[AVG_FUEL_CONSUMPTION_STATE_KEY] = value
         }
 
-    var numberOfPeople = state.get<Int>("numberOfPeople") ?: ""
+    var numberOfPeople = state.get<Int>(NUMBER_OF_PEOPLE_STATE_KEY) ?: ""
         set(value) {
             field = value
-            state["numberOfPeople"] = value
+            state[NUMBER_OF_PEOPLE_STATE_KEY] = value
         }
 
-    var paid = state.get<Double>("paid") ?: ""
+    var paid = state.get<Double>(PAID_STATE_KEY) ?: ""
         set(value) {
             field = value
-            state["paid"] = value
+            state[PAID_STATE_KEY] = value
         }
 
-    val currentRefueled : MutableLiveData<Double> by lazy {
+    val currentRefueled: MutableLiveData<Double> by lazy {
         MutableLiveData<Double>()
     }
 
@@ -80,7 +80,6 @@ class CalculatorViewModel @Inject constructor(
 
     private val calculatorEventChannel = Channel<CalculatorEvent>()
     val calculatorEvent = calculatorEventChannel.receiveAsFlow()
-
 
     fun doCalculation() {
         when (currentTabSelected) {
@@ -108,7 +107,9 @@ class CalculatorViewModel @Inject constructor(
     }
 
     private fun doCalculationInCostsTab() = viewModelScope.launch {
-        if (avgFuelConsumption.toString().isBlank() || kmTraveled.toString().isBlank() || fuelPrice.toString().isBlank() || numberOfPeople.toString().isBlank() ) {
+        if (avgFuelConsumption.toString().isBlank() || kmTraveled.toString().isBlank() || fuelPrice.toString().isBlank()
+            || numberOfPeople.toString().isBlank()
+        ) {
             calculatorEventChannel.send(CalculatorEvent.ShowMessageAboutMissingData)
         } else {
             val requiredAmountOfFuel = (kmTraveled.toString().toDouble() / 100) * avgFuelConsumption.toString().toDouble()
@@ -128,6 +129,15 @@ class CalculatorViewModel @Inject constructor(
 
             calculatorEventChannel.send(CalculatorEvent.ShowResultForRangeTab(amountOfFilledWithFuel, rangeInKm))
         }
+    }
+
+    companion object {
+        const val REFUELED_STATE_KEY = "refueled"
+        const val KM_TRAVELED_STATE_KEY = "kmTraveled"
+        const val FUEL_PRICE_STATE_KEY = "fuelPrice"
+        const val AVG_FUEL_CONSUMPTION_STATE_KEY = "avgFuelConsumption"
+        const val NUMBER_OF_PEOPLE_STATE_KEY = "numberOfPeople"
+        const val PAID_STATE_KEY = "paid"
     }
 
     sealed class CalculatorEvent {

@@ -18,13 +18,13 @@ import com.matxowy.vehiclecost.internal.SelectedTab
 import com.matxowy.vehiclecost.util.StringUtils
 import com.matxowy.vehiclecost.util.roundTo
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
 
-    private lateinit var binding: CalculatorFragmentBinding
     private val viewModel: CalculatorViewModel by navGraphViewModels(R.id.nav_graph) // must be navGraphViewModels to not delete inputs in calculator
+    private var _binding: CalculatorFragmentBinding? = null
+    private val binding get() = _binding!!
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
         // Disable back arrow in header for avoid returning to adding/editing screen by this
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        binding = CalculatorFragmentBinding.bind(view)
+        _binding = CalculatorFragmentBinding.bind(view)
 
         setValuesInEditTexts()
 
@@ -447,4 +447,8 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
         viewModel.currentTabSelected = SelectedTab.CONSUMPTION
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

@@ -14,18 +14,18 @@ import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.AddEditVehicleFragmentBinding
 import com.matxowy.vehiclecost.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class AddEditVehicleFragment : Fragment(R.layout.add_edit_vehicle_fragment) {
 
     private val viewModel: AddEditVehicleViewModel by viewModels()
-    private lateinit var binding: AddEditVehicleFragmentBinding
+    private var _binding: AddEditVehicleFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = AddEditVehicleFragmentBinding.bind(view)
+        _binding = AddEditVehicleFragmentBinding.bind(view)
 
         setListeners()
         handleAddEditVehicleEvents()
@@ -53,8 +53,8 @@ class AddEditVehicleFragment : Fragment(R.layout.add_edit_vehicle_fragment) {
                 when (event) {
                     is AddEditVehicleViewModel.AddEditVehicleEvent.NavigateToStatisticsWithResult -> {
                         setFragmentResult(
-                            "add_edit_vehicle_request",
-                            bundleOf("add_edit_vehicle_result" to event.result)
+                            requestKey = ADD_EDIT_VEHICLE_REQUEST,
+                            result = bundleOf(ADD_EDIT_VEHICLE_RESULT to event.result)
                         )
                         val action = AddEditVehicleFragmentDirections.actionAddEditVehicleFragmentToStatisticsFragment()
                         findNavController().navigate(action)
@@ -65,5 +65,15 @@ class AddEditVehicleFragment : Fragment(R.layout.add_edit_vehicle_fragment) {
                 }.exhaustive
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        const val ADD_EDIT_VEHICLE_REQUEST = "add_edit_vehicle_request"
+        const val ADD_EDIT_VEHICLE_RESULT = "add_edit_vehicle_result"
     }
 }

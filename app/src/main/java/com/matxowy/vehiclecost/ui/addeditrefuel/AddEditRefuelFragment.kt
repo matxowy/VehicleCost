@@ -15,6 +15,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.AddEditRefuelFragmentBinding
 import com.matxowy.vehiclecost.util.*
+import com.matxowy.vehiclecost.util.constants.Formats.DATE_FORMAT
+import com.matxowy.vehiclecost.util.constants.Formats.TIME_FORMAT
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -22,12 +24,13 @@ import kotlinx.coroutines.flow.collect
 class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
 
     private val viewModel: AddEditRefuelViewModel by viewModels()
-    private lateinit var binding: AddEditRefuelFragmentBinding
+    private var _binding: AddEditRefuelFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = AddEditRefuelFragmentBinding.bind(view)
+        _binding = AddEditRefuelFragmentBinding.bind(view)
 
         // Setting spinner adapter
         val spinnerAdapter = ArrayAdapter.createFromResource(
@@ -62,14 +65,17 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
                 when (event) {
                     is AddEditRefuelViewModel.AddEditRefuelEvent.NavigateToHistoryWithResult -> {
                         setFragmentResult(
-                            "add_edit_refuel_request",
-                            bundleOf("add_edit_refuel_result" to event.result)
+                            requestKey = ADD_EDIT_REFUEL_REQUEST,
+                            result = bundleOf(ADD_EDIT_REFUEL_RESULT to event.result)
                         )
                         val action = AddEditRefuelFragmentDirections.actionAddEditRefuelFragmentToHistoryFragment()
                         findNavController().navigate(action)
                     }
-                    is AddEditRefuelViewModel.AddEditRefuelEvent.ShowInvalidInputMessage -> {
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
+                    is AddEditRefuelViewModel.AddEditRefuelEvent.ShowFieldsCannotBeEmptyMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.required_fields_cannot_be_empty_text), Snackbar.LENGTH_LONG).show()
+                    }
+                    is AddEditRefuelViewModel.AddEditRefuelEvent.ShowMileageCannotBeLessThanPreviousMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.mileage_cannot_be_less_than_previous), Snackbar.LENGTH_LONG).show()
                     }
                 }.exhaustive
             }
@@ -86,7 +92,7 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
 
     private fun AddEditRefuelFragmentBinding.setObservers() {
         viewModel.lastMileage.observe(viewLifecycleOwner) {
-            tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it?.addSpace() ?: "0")
+            tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it?.addSpace() ?: ZERO_KILOMETERS_STRING)
         }
     }
 
@@ -133,8 +139,8 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
     }
 
     private fun AddEditRefuelFragmentBinding.setPickersForDateAndTime() {
-        etDate.transformIntoDatePicker(requireContext(), "yyyy-MM-dd")
-        etTime.transformIntoTimePicker(requireContext(), "HH:mm")
+        etDate.transformIntoDatePicker(requireContext(), DATE_FORMAT)
+        etTime.transformIntoTimePicker(requireContext(), TIME_FORMAT)
     }
 
     private fun AddEditRefuelFragmentBinding.setFieldsWithData() {
@@ -148,5 +154,16 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
         spinnerTypeOfFuel.setText(viewModel.fuelType, false)
         switchFullRefueled.isChecked = viewModel.fullRefueled
         switchFullRefueled.jumpDrawablesToCurrentState()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        const val ZERO_KILOMETERS_STRING = "0"
+        const val ADD_EDIT_REFUEL_REQUEST = "add_edit_refuel_request"
+        const val ADD_EDIT_REFUEL_RESULT = "add_edit_refuel_result"
     }
 }

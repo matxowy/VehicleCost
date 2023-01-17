@@ -15,16 +15,18 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.StatisticsFragmentBinding
+import com.matxowy.vehiclecost.ui.addeditvehicle.AddEditVehicleFragment.Companion.ADD_EDIT_VEHICLE_REQUEST
+import com.matxowy.vehiclecost.ui.addeditvehicle.AddEditVehicleFragment.Companion.ADD_EDIT_VEHICLE_RESULT
 import com.matxowy.vehiclecost.util.decimalFormat
 import com.matxowy.vehiclecost.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
     private val viewModel: StatisticsViewModel by viewModels()
-    private lateinit var binding: StatisticsFragmentBinding
+    private var _binding: StatisticsFragmentBinding? = null
+    private val binding get() = _binding!!
 
     //Animations
     private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(context, R.anim.rotate_open_anim) }
@@ -37,7 +39,7 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = StatisticsFragmentBinding.bind(view)
+        _binding = StatisticsFragmentBinding.bind(view)
 
         addObservers()
         setListeners()
@@ -46,8 +48,8 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
     }
 
     private fun setFragmentResultListeners() {
-        setFragmentResultListener("add_edit_vehicle_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_vehicle_result")
+        setFragmentResultListener(ADD_EDIT_VEHICLE_REQUEST) { _, bundle ->
+            val result = bundle.getInt(ADD_EDIT_VEHICLE_RESULT)
             viewModel.onAddEditVehicleResult(result)
         }
     }
@@ -115,27 +117,27 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
     private fun addObservers() {
         viewModel.sumOfFuelAmount.observe(viewLifecycleOwner) {
-            binding.tvRefueledStat.text = "${it?.decimalFormat() ?: 0} l"
+            binding.tvRefueledStat.text = getString(R.string.numerical_value_with_unit_of_volume, it?.decimalFormat() ?: "0", UNIT_OF_VOLUME)
         }
 
         viewModel.sumCostsOfRefuels.observe(viewLifecycleOwner) {
-            binding.tvFuelCostsStat.text = "${it?.decimalFormat() ?: 0} zł"
+            binding.tvFuelCostsStat.text = getString(R.string.numerical_value_with_currency, it?.decimalFormat() ?: "0", CURRENCY)
         }
 
         viewModel.lastPriceOfFuel.observe(viewLifecycleOwner) {
-            binding.tvLastFuelPriceStat.text = "${it?.decimalFormat() ?: 0} zł"
+            binding.tvLastFuelPriceStat.text = getString(R.string.numerical_value_with_currency, it?.decimalFormat() ?: "0", CURRENCY)
         }
 
         viewModel.sumCostOfRepair.observe(viewLifecycleOwner) {
-            binding.tvSumCostRepairStat.text = "${it?.decimalFormat() ?: 0} zł"
+            binding.tvSumCostRepairStat.text = getString(R.string.numerical_value_with_currency, it?.decimalFormat() ?: "0", CURRENCY)
         }
 
         viewModel.maxCostOfRepair.observe(viewLifecycleOwner) {
-            binding.tvGreatestCostRepairStat.text = "${it?.decimalFormat() ?: 0} zł"
+            binding.tvGreatestCostRepairStat.text = getString(R.string.numerical_value_with_currency, it?.decimalFormat() ?: "0", CURRENCY)
         }
 
         viewModel.lastCostOfRepair.observe(viewLifecycleOwner) {
-            binding.tvLatestCostRepairStat.text = "${it?.decimalFormat() ?: 0} zł"
+            binding.tvLatestCostRepairStat.text = getString(R.string.numerical_value_with_currency, it?.decimalFormat() ?: "0", CURRENCY)
         }
 
         viewModel.vehiclesNames.observe(viewLifecycleOwner) { listOfVehiclesNames ->
@@ -214,4 +216,13 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        const val UNIT_OF_VOLUME = "l"
+        const val CURRENCY = "zł"
+    }
 }

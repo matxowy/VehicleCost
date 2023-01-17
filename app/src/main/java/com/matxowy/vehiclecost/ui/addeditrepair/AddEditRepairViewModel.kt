@@ -1,6 +1,5 @@
 package com.matxowy.vehiclecost.ui.addeditrepair
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -13,7 +12,6 @@ import com.matxowy.vehiclecost.util.LocalDateConverter
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -25,45 +23,44 @@ import javax.inject.Inject
 class AddEditRepairViewModel @Inject constructor(
     private val repairDao: RepairDao,
     private val state: SavedStateHandle,
-    @ApplicationContext private val context: Context,
     val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
-    val repair = state.get<Repair>("repair")
+    val repair = state.get<Repair>(REPAIR_STATE_KEY)
 
-    var title = state.get<String>("repairTitle") ?: repair?.title ?: ""
+    var title = state.get<String>(TITLE_STATE_KEY) ?: repair?.title ?: ""
         set(value) {
             field = value
-            state["repairTitle"] = value
+            state[TITLE_STATE_KEY] = value
         }
 
-    var mileage = state.get<Int>("repairMileage") ?: repair?.mileage ?: ""
+    var mileage = state.get<Int>(MILEAGE_STATE_KEY) ?: repair?.mileage ?: ""
         set(value) {
             field = value
-            state["repairMileage"] = value
+            state[MILEAGE_STATE_KEY] = value
         }
 
-    var cost = state.get<Double>("repairCost") ?: repair?.cost ?: ""
+    var cost = state.get<Double>(COST_STATE_KEY) ?: repair?.cost ?: ""
         set(value) {
             field = value
-            state["repairCost"] = value
+            state[COST_STATE_KEY] = value
         }
 
-    var date = state.get<String>("repairDate") ?: repair?.date ?: LocalDateConverter.dateToString(LocalDate.now())
+    var date = state.get<String>(DATE_STATE_KEY) ?: repair?.date ?: LocalDateConverter.dateToString(LocalDate.now())
         set(value) {
             field = value
-            state["repairDate"] = value
+            state[DATE_STATE_KEY] = value
         }
 
-    var time = state.get<String>("repairTime") ?: repair?.time ?: LocalDateConverter.timeToString(LocalDateTime.now())
+    var time = state.get<String>(TIME_STATE_KEY) ?: repair?.time ?: LocalDateConverter.timeToString(LocalDateTime.now())
         set(value) {
             field = value
-            state["repairTime"] = value
+            state[TIME_STATE_KEY] = value
         }
 
-    var comments = state.get<String>("repairComments") ?: repair?.comments ?: ""
+    var comments = state.get<String>(COMMENTS_STATE_KEY) ?: repair?.comments ?: ""
         set(value) {
             field = value
-            state["repairComments"] = value
+            state[COMMENTS_STATE_KEY] = value
         }
 
     private val addEditRepairEventChannel = Channel<AddEditRepairEvent>()
@@ -77,7 +74,7 @@ class AddEditRepairViewModel @Inject constructor(
             || cost.toString().isBlank()
             || mileage.toString().isBlank()
         ) {
-            showInvalidInputMessage(context.getString(R.string.required_fields_cannot_be_empty_text))
+            showFieldsCannotBeEmptyMessage()
             return
         }
 
@@ -85,7 +82,7 @@ class AddEditRepairViewModel @Inject constructor(
         if (repair == null) {
             lastMileage.value?.let { lastMileage ->
                 if (mileage.toString().toInt() <= lastMileage) {
-                    showInvalidInputMessage(context.getString(R.string.mileage_cannot_be_less_than_previous))
+                    showMileageCannotBeLessThanPreviousMessage()
                     return
                 }
             }
@@ -118,8 +115,12 @@ class AddEditRepairViewModel @Inject constructor(
         }
     }
 
-    private fun showInvalidInputMessage(text: String) = viewModelScope.launch {
-        addEditRepairEventChannel.send(AddEditRepairEvent.ShowInvalidDataMessage(text))
+    private fun showFieldsCannotBeEmptyMessage() = viewModelScope.launch {
+        addEditRepairEventChannel.send(AddEditRepairEvent.ShowFieldsCannotBeEmptyMessage)
+    }
+
+    private fun showMileageCannotBeLessThanPreviousMessage() = viewModelScope.launch {
+        addEditRepairEventChannel.send(AddEditRepairEvent.ShowMileageCannotBeLessThanPreviousMessage)
     }
 
     private fun createRepair(repair: Repair) = viewModelScope.launch {
@@ -132,8 +133,19 @@ class AddEditRepairViewModel @Inject constructor(
         addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
     }
 
+    companion object {
+        const val REPAIR_STATE_KEY = "repair"
+        const val TITLE_STATE_KEY = "repairTitle"
+        const val MILEAGE_STATE_KEY = "repairMileage"
+        const val DATE_STATE_KEY = "repairDate"
+        const val TIME_STATE_KEY = "repairTime"
+        const val COST_STATE_KEY = "repairCost"
+        const val COMMENTS_STATE_KEY = "repairComments"
+    }
+
     sealed class AddEditRepairEvent {
-        data class ShowInvalidDataMessage(val msg: String) : AddEditRepairEvent()
+        object ShowFieldsCannotBeEmptyMessage : AddEditRepairEvent()
+        object ShowMileageCannotBeLessThanPreviousMessage : AddEditRepairEvent()
         data class NavigateToHistoryWithResult(val result: Int) : AddEditRepairEvent()
     }
 

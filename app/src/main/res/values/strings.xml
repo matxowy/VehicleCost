@@ -81,6 +81,10 @@
     <string name="add_new_vehicle_text">Dodaj nowy pojazd</string>
     <string name="vehicle_name_hint">Nazwa pojazdu</string>
 
+    // Statistics strings
+    <string name="numerical_value_with_unit_of_volume">%1$s %2$s</string>
+    <string name="numerical_value_with_currency">%1$s %2$s</string>
+
     <string-array name="type_of_fuel">
         <item>ON</item>
         <item>PB</item>

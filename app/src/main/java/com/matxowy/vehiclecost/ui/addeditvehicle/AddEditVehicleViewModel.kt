@@ -19,18 +19,18 @@ class AddEditVehicleViewModel @Inject constructor(
     private val state: SavedStateHandle,
 ) : ViewModel() {
 
-    val vehicle = state.get<Vehicle>("vehicle")
+    val vehicle = state.get<Vehicle>(VEHICLE_STATE_KEY)
 
-    var vehicleName = state.get<String>("vehicleName") ?: vehicle?.name ?: ""
+    var vehicleName = state.get<String>(NAME_STATE_KEY) ?: vehicle?.name ?: ""
         set(value) {
             field = value
-            state["vehicleName"] = value
+            state[NAME_STATE_KEY] = value
         }
 
-    var vehicleMileage = state.get<Int>("vehicleMileage") ?: vehicle?.mileage ?: ""
+    var vehicleMileage = state.get<Int>(MILEAGE_STATE_KEY) ?: vehicle?.mileage ?: ""
         set(value) {
             field = value
-            state["vehicleMileage"] = value
+            state[MILEAGE_STATE_KEY] = value
         }
 
     private val addEditVehicleChannel = Channel<AddEditVehicleEvent>()
@@ -71,6 +71,12 @@ class AddEditVehicleViewModel @Inject constructor(
 
     private fun showInvalidInputMessage() = viewModelScope.launch {
         addEditVehicleChannel.send(AddEditVehicleEvent.ShowInvalidDataMessage)
+    }
+
+    companion object {
+        const val VEHICLE_STATE_KEY = "vehicle"
+        const val NAME_STATE_KEY = "vehicleName"
+        const val MILEAGE_STATE_KEY = "vehicleMileage"
     }
 
     sealed class AddEditVehicleEvent {

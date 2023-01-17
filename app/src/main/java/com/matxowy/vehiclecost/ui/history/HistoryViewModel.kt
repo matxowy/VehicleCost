@@ -1,10 +1,8 @@
 package com.matxowy.vehiclecost.ui.history
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
@@ -13,7 +11,6 @@ import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -23,7 +20,6 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
     private val refuelDao: RefuelDao,
     private val repairDao: RepairDao,
-    @ApplicationContext private val context: Context,
     val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
 
@@ -66,24 +62,32 @@ class HistoryViewModel @Inject constructor(
 
     fun onAddEditRefuelResult(result: Int) {
         when (result) {
-            ADD_RESULT_OK -> showRefuelSavedConfirmationMessage(context.getString(R.string.refueled_added_message))
-            EDIT_RESULT_OK -> showRefuelSavedConfirmationMessage(context.getString(R.string.refueled_updated_message))
+            ADD_RESULT_OK -> showRefuelSavedConfirmationMessage()
+            EDIT_RESULT_OK -> showRefuelEditedConfirmationMessage()
         }
     }
 
     fun onAddEditRepairResult(result: Int) {
         when (result) {
-            ADD_RESULT_OK -> showRepairSavedConfirmationMessage(context.getString(R.string.repair_added_message))
-            EDIT_RESULT_OK -> showRepairSavedConfirmationMessage(context.getString(R.string.repair_updated_message))
+            ADD_RESULT_OK -> showRepairSavedConfirmationMessage()
+            EDIT_RESULT_OK -> showRepairEditedConfirmationMessage()
         }
     }
 
-    private fun showRefuelSavedConfirmationMessage(text: String) = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(RefuelAndRepairEvent.ShowRefuelSavedConfirmationMessage(text))
+    private fun showRefuelSavedConfirmationMessage() = viewModelScope.launch {
+        refuelAndRepairEventChannel.send(RefuelAndRepairEvent.ShowRefuelSavedConfirmationMessage)
     }
 
-    private fun showRepairSavedConfirmationMessage(text: String) = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(RefuelAndRepairEvent.ShowRepairSavedConfirmationMessage(text))
+    private fun showRefuelEditedConfirmationMessage() = viewModelScope.launch {
+        refuelAndRepairEventChannel.send(RefuelAndRepairEvent.ShowRefuelEditedConfirmationMessage)
+    }
+
+    private fun showRepairSavedConfirmationMessage() = viewModelScope.launch {
+        refuelAndRepairEventChannel.send(RefuelAndRepairEvent.ShowRepairSavedConfirmationMessage)
+    }
+
+    private fun showRepairEditedConfirmationMessage() = viewModelScope.launch {
+        refuelAndRepairEventChannel.send(RefuelAndRepairEvent.ShowRepairEditedConfirmationMessage)
     }
 
     private val selectedVehicleId = localPreferences.getSelectedVehicleId()
@@ -93,11 +97,13 @@ class HistoryViewModel @Inject constructor(
     sealed class RefuelAndRepairEvent {
         object NavigateToAddRefuelScreen : RefuelAndRepairEvent()
         object NavigateToAddRepairScreen : RefuelAndRepairEvent()
+        object ShowRefuelSavedConfirmationMessage : RefuelAndRepairEvent()
+        object ShowRefuelEditedConfirmationMessage : RefuelAndRepairEvent()
+        object ShowRepairSavedConfirmationMessage : RefuelAndRepairEvent()
+        object ShowRepairEditedConfirmationMessage : RefuelAndRepairEvent()
         data class NavigateToEditRefuelScreen(val refuel: Refuel) : RefuelAndRepairEvent()
         data class NavigateToEditRepairScreen(val repair: Repair) : RefuelAndRepairEvent()
         data class ShowUndoDeleteRefuelMessage(val refuel: Refuel) : RefuelAndRepairEvent()
         data class ShowUndoDeleteRepairMessage(val repair: Repair) : RefuelAndRepairEvent()
-        data class ShowRefuelSavedConfirmationMessage(val msg: String) : RefuelAndRepairEvent()
-        data class ShowRepairSavedConfirmationMessage(val msg: String) : RefuelAndRepairEvent()
     }
 }

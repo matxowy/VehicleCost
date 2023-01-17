@@ -81,4 +81,6 @@
     <string name="vehicle_updated_message">Vehicle updated</string>
     <string name="add_new_vehicle_text">Add new vehicle</string>
     <string name="vehicle_name_hint">Vehicle name</string>
+    <string name="numerical_value_with_unit_of_volume">%1$s %2$s</string>
+    <string name="numerical_value_with_currency">%1$s %2$s</string>
 </resources>
