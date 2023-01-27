@@ -22,7 +22,8 @@
             android:id="@+id/spinner_vehicle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none" />
+            android:inputType="none"
+            tools:ignore="SpeakableTextPresentCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -63,7 +64,7 @@
                 android:id="@+id/tv_refueled_stat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 l"
+                tools:text="0 l"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:layout_marginEnd="10dp"
@@ -94,7 +95,7 @@
                 android:id="@+id/tv_fuel_costs_stat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 zł"
+                tools:text="0 zł"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:layout_marginEnd="10dp"
@@ -126,7 +127,7 @@
                 android:id="@+id/tv_last_fuel_price_stat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 zł"
+                tools:text="0 zł"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:layout_marginEnd="10dp"
@@ -178,7 +179,7 @@
                 android:id="@+id/tv_sum_cost_repair_stat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 zł"
+                tools:text="0 zł"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:layout_marginEnd="10dp"
@@ -209,7 +210,7 @@
                 android:id="@+id/tv_greatest_cost_repair_stat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 zł"
+                tools:text="0 zł"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:layout_marginEnd="10dp"
@@ -241,7 +242,7 @@
                 android:id="@+id/tv_latest_cost_repair_stat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 zł"
+                tools:text="0 zł"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:layout_marginEnd="10dp"

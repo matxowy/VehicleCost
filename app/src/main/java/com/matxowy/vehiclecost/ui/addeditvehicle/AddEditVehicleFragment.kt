@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.AddEditVehicleFragmentBinding
 import com.matxowy.vehiclecost.util.exhaustive
+import com.matxowy.vehiclecost.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -60,7 +61,12 @@ class AddEditVehicleFragment : Fragment(R.layout.add_edit_vehicle_fragment) {
                         findNavController().navigate(action)
                     }
                     is AddEditVehicleViewModel.AddEditVehicleEvent.ShowInvalidDataMessage -> {
+                        hideKeyboard()
                         Snackbar.make(requireView(), R.string.required_fields_cannot_be_empty_text, Snackbar.LENGTH_LONG).show()
+                    }
+                    AddEditVehicleViewModel.AddEditVehicleEvent.ShowAddErrorMessage -> {
+                        hideKeyboard()
+                        Snackbar.make(requireView(), R.string.insert_new_vehicle_error_message, Snackbar.LENGTH_LONG).show()
                     }
                 }.exhaustive
             }

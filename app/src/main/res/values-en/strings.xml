@@ -83,4 +83,11 @@
     <string name="vehicle_name_hint">Vehicle name</string>
     <string name="numerical_value_with_unit_of_volume">%1$s %2$s</string>
     <string name="numerical_value_with_currency">%1$s %2$s</string>
+    <string name="title_manage_vehicle">Manage vehicles</string>
+    <string name="edit_text">Edit</string>
+    <string name="remove_text">Remove</string>
+    <string name="choose_vehicle">Choose vehicle</string>
+    <string name="insert_new_vehicle_error_message">An error occurred during adding a new vehicle. Make sure the vehicle name is not already in use.</string>
+    <string name="default_vehicle">My Vehicle</string>
+    <string name="delete_current_selected_vehicle_error_message">You cannot delete the currently selected vehicle as it is the primary vehicle.</string>
 </resources>

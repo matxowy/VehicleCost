@@ -17,6 +17,8 @@
     <string name="rb_fuel_text">Paliwo</string>
     <string name="rb_repair_text">Naprawy</string>
     <string name="add_text">Dodaj</string>
+    <string name="edit_text">Edytuj</string>
+    <string name="remove_text">Usuń</string>
     <string name="content_description_fab_add_refuel">Dodaj tankowanie</string>
     <string name="content_description_fab_add_repair">Dodaj naprawę</string>
     <string name="text_input_hint_mileage">Przebieg (km)</string>
@@ -54,13 +56,6 @@
     <string name="per_person_result_text">"Na osobę: "</string>
     <string name="avg_consumtion_result_text">"Srednie spalanie wynosi: "</string>
     <string name="price_per_100km_result_text">"Cena za przejechanie 100km wynosi: "</string>
-    <string name="message_about_missing_refueled_data">Brak danych o zatankowanym paliwie</string>
-    <string name="message_about_missing_km_traveled_data">Brak danych o przejechanych kilometrach</string>
-    <string name="message_about_missing_price_per_liter_data">Brak danych o cenie za litr paliwa</string>
-    <string name="message_about_missing_avg_consumption_data">Brak danych o średnim spalaniu</string>
-    <string name="message_about_missing_num_of_people_data">Brak danych o liczbie osób</string>
-    <string name="message_about_missing_paid_data">Brak danych o zapłaconej kwocie</string>
-    <string name="required_fields_cannot_be_empty_text">Wymagane pola nie mogą być puste</string>
     <string name="refueled_added_message">Tankowanie dodanie</string>
     <string name="refueled_updated_message">Tankowanie zaktualizowane</string>
     <string name="repair_added_message">Naprawa dodana</string>
@@ -74,12 +69,30 @@
     <string name="avg_consumption_hint">Srednie spalanie</string>
     <string name="number_of_people_hint">Liczba osób</string>
     <string name="paid_hint">Zapłacono</string>
-    <string name="mileage_cannot_be_less_than_previous">Przebieg nie może być niższy od poprzedniego</string>
     <string name="title_new_vehicle">Nowy pojazd</string>
+    <string name="title_manage_vehicle">Zarządzaj pojazdami</string>
     <string name="vehicle_added_message">Pojazd dodany</string>
     <string name="vehicle_updated_message">Pojazd zaktualizowany</string>
     <string name="add_new_vehicle_text">Dodaj nowy pojazd</string>
     <string name="vehicle_name_hint">Nazwa pojazdu</string>
+    <string name="choose_vehicle">Wybierz pojazd</string>
+    <string name="default_vehicle">Mój Pojazd</string>
+
+    // Errors messages
+    <string name="message_about_missing_refueled_data">Brak danych o zatankowanym paliwie</string>
+    <string name="message_about_missing_km_traveled_data">Brak danych o przejechanych kilometrach</string>
+    <string name="message_about_missing_price_per_liter_data">Brak danych o cenie za litr paliwa</string>
+    <string name="message_about_missing_avg_consumption_data">Brak danych o średnim spalaniu</string>
+    <string name="message_about_missing_num_of_people_data">Brak danych o liczbie osób</string>
+    <string name="message_about_missing_paid_data">Brak danych o zapłaconej kwocie</string>
+    <string name="required_fields_cannot_be_empty_text">Wymagane pola nie mogą być puste</string>
+    <string name="mileage_cannot_be_less_than_previous">Przebieg nie może być niższy od poprzedniego</string>
+    <string name="insert_new_vehicle_error_message">
+        Wystąpił błąd przy dodawaniu nowego pojazdu. Upewnij się, że nazwa pojazdu nie jest już używana.
+    </string>
+    <string name="delete_current_selected_vehicle_error_message">
+        Nie można usunąć aktualnie wybranego pojazdu gdyż jest on pojazdem głównym.
+    </string>
 
     // Statistics strings
     <string name="numerical_value_with_unit_of_volume">%1$s %2$s</string>

@@ -19,6 +19,7 @@ class AddEditVehicleViewModel @Inject constructor(
     private val state: SavedStateHandle,
 ) : ViewModel() {
 
+    // todo change to only add
     val vehicle = state.get<Vehicle>(VEHICLE_STATE_KEY)
 
     var vehicleName = state.get<String>(NAME_STATE_KEY) ?: vehicle?.name ?: ""
@@ -60,8 +61,12 @@ class AddEditVehicleViewModel @Inject constructor(
 
     private fun createVehicle(newVehicle: Vehicle) = viewModelScope.launch {
         // TODO Add try catch block for all types of similar actions with new bad result code
-        vehicleDao.insert(newVehicle)
-        addEditVehicleChannel.send(AddEditVehicleEvent.NavigateToStatisticsWithResult(ADD_RESULT_OK))
+        try {
+            vehicleDao.insert(newVehicle)
+            addEditVehicleChannel.send(AddEditVehicleEvent.NavigateToStatisticsWithResult(ADD_RESULT_OK))
+        } catch (e: Exception) {
+            addEditVehicleChannel.send(AddEditVehicleEvent.ShowAddErrorMessage)
+        }
     }
 
     private fun updateVehicle(updatedVehicle: Vehicle) = viewModelScope.launch {
@@ -81,6 +86,7 @@ class AddEditVehicleViewModel @Inject constructor(
 
     sealed class AddEditVehicleEvent {
         object ShowInvalidDataMessage : AddEditVehicleEvent()
+        object ShowAddErrorMessage : AddEditVehicleEvent()
         data class NavigateToStatisticsWithResult(val result: Int) : AddEditVehicleEvent()
     }
 }

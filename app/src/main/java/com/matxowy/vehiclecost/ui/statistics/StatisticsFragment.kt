@@ -3,13 +3,19 @@ package com.matxowy.vehiclecost.ui.statistics
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -41,10 +47,33 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
         _binding = StatisticsFragmentBinding.bind(view)
 
+        addTopMenu()
         addObservers()
         setListeners()
         handleStatisticsEvents()
         setFragmentResultListeners()
+    }
+
+    private fun addTopMenu() {
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.top_menu_statistics_fragment, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_manage_vehicles -> {
+                        val action =
+                            StatisticsFragmentDirections.actionStatisticsFragmentToManageVehicleFragment(getString(R.string.title_manage_vehicle))
+                        findNavController().navigate(action)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setFragmentResultListeners() {
@@ -109,7 +138,7 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
                 if (position == 0) {
                     viewModel.onAddNewVehicleClick()
                 } else {
-                    viewModel.saveSelectedVehicleAndRefreshStatistics(position)
+                    viewModel.saveSelectedVehicleAndRefreshStatistics(position, spinnerVehicle.text.toString())
                 }
             }
         }

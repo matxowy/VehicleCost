@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
@@ -66,7 +65,7 @@ class AddEditRepairViewModel @Inject constructor(
     private val addEditRepairEventChannel = Channel<AddEditRepairEvent>()
     val addEditRepairEvent = addEditRepairEventChannel.receiveAsFlow()
 
-    private val selectedVehicleId = localPreferences.getSelectedVehicleId()
+    private val selectedVehicleId = localPreferences.getSelectedVehiclePosition()
     var lastMileage = repairDao.getLastMileage(selectedVehicleId).asLiveData()
 
     fun onSaveRepairClick() {

@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_statisticsFragment_to_addEditVehicleFragment"
             app:destination="@id/addEditVehicleFragment" />
+        <action
+            android:id="@+id/action_statisticsFragment_to_manageVehicleFragment"
+            app:destination="@id/manageVehicleFragment" />
     </fragment>
     <fragment
         android:id="@+id/calculatorFragment"
@@ -82,5 +85,14 @@
         <action
             android:id="@+id/action_addEditVehicleFragment_to_statisticsFragment"
             app:destination="@id/statisticsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/manageVehicleFragment"
+        android:name="com.matxowy.vehiclecost.ui.managevehicle.ManageVehicleFragment"
+        android:label="{title}"
+        tools:layout="@layout/add_edit_vehicle_fragment">
+    <argument
+        android:name="title"
+        app:argType="string" />
     </fragment>
 </navigation>

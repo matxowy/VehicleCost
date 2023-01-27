@@ -69,14 +69,15 @@ class StatisticsViewModel @Inject constructor(
         statisticsChannel.send(StatisticsEvent.NavigateToAddEditVehicleScreen)
     }
 
-    fun saveSelectedVehicleAndRefreshStatistics(position: Int) {
+    fun saveSelectedVehicleAndRefreshStatistics(position: Int, vehicleName: String) {
         if (position != 0) {
-            localPreferences.saveSelectedVehicleId(position)
+            localPreferences.saveSelectedVehiclePosition(position)
+            localPreferences.saveSelectedVehicleName(vehicleName)
             refreshStatistics()
         }
     }
 
-    fun getSelectedVehicleId() = localPreferences.getSelectedVehicleId()
+    fun getSelectedVehicleId() = localPreferences.getSelectedVehiclePosition()
 
     private fun refreshStatistics() {
         val selectedVehicleId = getSelectedVehicleId()

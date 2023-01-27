@@ -1,8 +1,10 @@
 package com.matxowy.vehiclecost.data.db
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.dao.VehicleDao
@@ -10,6 +12,7 @@ import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.di.ApplicationScope
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +30,7 @@ abstract class VehicleCostDatabase : RoomDatabase() {
 
     class Callback @Inject constructor(
         private val database: Provider<VehicleCostDatabase>,
+        @ApplicationContext private val context: Context,
         @ApplicationScope private val applicationScope: CoroutineScope
     ) : RoomDatabase.Callback() {
 
@@ -40,7 +44,7 @@ abstract class VehicleCostDatabase : RoomDatabase() {
             applicationScope.launch {
                 vehicleDao.insert(
                     Vehicle(
-                        name = "My Car",
+                        name = context.getString(R.string.default_vehicle),
                         mileage = 0,
                     )
 

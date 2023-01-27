@@ -16,6 +16,7 @@ import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.CalculatorFragmentBinding
 import com.matxowy.vehiclecost.internal.SelectedTab
 import com.matxowy.vehiclecost.util.StringUtils
+import com.matxowy.vehiclecost.util.hideKeyboard
 import com.matxowy.vehiclecost.util.roundTo
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,19 +41,19 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
         binding.rgTypes.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rb_fuel_consumption -> {
-                    hideSoftKeyboard()
+                    hideKeyboard()
                     setValuesInEditTexts()
                     makeVisibleFuelConsumptionView()
                     viewModel.doCalculation()
                 }
                 R.id.rb_costs -> {
-                    hideSoftKeyboard()
+                    hideKeyboard()
                     setValuesInEditTexts()
                     makeVisibleCostsView()
                     viewModel.doCalculation()
                 }
                 R.id.rb_range -> {
-                    hideSoftKeyboard()
+                    hideKeyboard()
                     setValuesInEditTexts()
                     makeVisibleRangeView()
                     viewModel.doCalculation()
@@ -123,15 +124,6 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
             if (viewModel.avgFuelConsumption.toString().isNotBlank()) etAvgFuelConsumptionFromCostsTab.setText(
                 StringUtils.trimTrailingZero((viewModel.avgFuelConsumption).toString())
             )
-        }
-    }
-
-    private fun hideSoftKeyboard() {
-        val view = activity?.currentFocus
-        view?.let { v ->
-            val imm =
-                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(v.windowToken, 0)
         }
     }
 

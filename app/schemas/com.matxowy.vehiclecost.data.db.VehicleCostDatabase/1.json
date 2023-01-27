@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "94a4f129d0a68386df64c8f2a163fdd1",
+    "identityHash": "481857cbd32ca2c91efb627ecae84b3c",
     "entities": [
       {
         "tableName": "refuel",
@@ -175,14 +175,24 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_vehicle_name",
+            "unique": true,
+            "columnNames": [
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_vehicle_name` ON `${TABLE_NAME}` (`name`)"
+          }
+        ],
         "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '94a4f129d0a68386df64c8f2a163fdd1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '481857cbd32ca2c91efb627ecae84b3c')"
     ]
   }
 }
