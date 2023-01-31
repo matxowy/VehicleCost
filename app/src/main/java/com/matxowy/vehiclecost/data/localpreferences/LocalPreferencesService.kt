@@ -8,13 +8,13 @@ import javax.inject.Inject
 
 class LocalPreferencesService @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    @ApplicationContext private val context: Context,
 ) : LocalPreferencesApi {
 
     companion object {
         const val CURRENT_PICKED_CAR_POSITION = "current_picked_car_position"
-        const val CURRENT_PICKED_CAR_NAME = "current_picked_car_name"
+        const val CURRENT_PICKED_CAR_ID = "current_picked_car_id"
         const val DEFAULT_CAR_POSITION = 1
+        const val DEFAULT_CAR_ID = 1
     }
 
     override fun saveSelectedVehiclePosition(position: Int) {
@@ -24,10 +24,10 @@ class LocalPreferencesService @Inject constructor(
     override fun getSelectedVehiclePosition() =
         sharedPreferences.getInt(CURRENT_PICKED_CAR_POSITION, DEFAULT_CAR_POSITION)
 
-    override fun saveSelectedVehicleName(name: String) {
-        sharedPreferences.edit().putString(CURRENT_PICKED_CAR_NAME, name).apply()
+    override fun saveSelectedVehicleId(id: Int) {
+        sharedPreferences.edit().putInt(CURRENT_PICKED_CAR_ID, id).apply()
     }
 
-    override fun getSelectedVehicleName() =
-        sharedPreferences.getString(CURRENT_PICKED_CAR_NAME, context.getString(R.string.default_vehicle))!!
+    override fun getSelectedVehicleId(): Int =
+        sharedPreferences.getInt(CURRENT_PICKED_CAR_ID, DEFAULT_CAR_ID)
 }

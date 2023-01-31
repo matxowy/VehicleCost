@@ -90,7 +90,7 @@ class HistoryViewModel @Inject constructor(
         refuelAndRepairEventChannel.send(RefuelAndRepairEvent.ShowRepairEditedConfirmationMessage)
     }
 
-    private val selectedVehicleId = localPreferences.getSelectedVehiclePosition()
+    private val selectedVehicleId = localPreferences.getSelectedVehicleId()
     val refuels = refuelDao.getRefuels(selectedVehicleId).asLiveData()
     val repairs = repairDao.getRepairs(selectedVehicleId).asLiveData()
 

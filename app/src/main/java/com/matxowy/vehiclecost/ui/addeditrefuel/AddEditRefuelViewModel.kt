@@ -5,12 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
+import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.LocalDateConverter
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -21,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditRefuelViewModel @Inject constructor(
     private val refuelDao: RefuelDao,
+    private val vehicleDao: VehicleDao,
     private val state: SavedStateHandle,
     val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
@@ -84,7 +87,7 @@ class AddEditRefuelViewModel @Inject constructor(
     private val addEditRefuelEventChannel = Channel<AddEditRefuelEvent>()
     val addEditRefuelEvent = addEditRefuelEventChannel.receiveAsFlow()
 
-    private val selectedVehicleId = localPreferences.getSelectedVehiclePosition()
+    private val selectedVehicleId = localPreferences.getSelectedVehicleId()
     var lastMileage = refuelDao.getLastMileage(selectedVehicleId).asLiveData()
 
     fun onSaveRefueledClick() {
@@ -146,12 +149,14 @@ class AddEditRefuelViewModel @Inject constructor(
         addEditRefuelEventChannel.send(AddEditRefuelEvent.ShowMileageCannotBeLessThanPreviousMessage)
     }
 
-    private fun updateRefuel(updatedRefuel: Refuel) = viewModelScope.launch {
+    private fun updateRefuel(updatedRefuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
+        vehicleDao.updateMileageOfVehicle(updatedRefuel.vehicleId, updatedRefuel.mileage)
         refuelDao.update(updatedRefuel)
         addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
     }
 
-    private fun createRefuel(refuel: Refuel) = viewModelScope.launch {
+    private fun createRefuel(refuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
+        vehicleDao.updateMileageOfVehicle(refuel.vehicleId, refuel.mileage)
         refuelDao.insert(refuel)
         addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
     }

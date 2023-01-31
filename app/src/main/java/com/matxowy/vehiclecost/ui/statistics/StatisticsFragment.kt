@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -20,9 +21,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
+import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.databinding.StatisticsFragmentBinding
-import com.matxowy.vehiclecost.ui.addeditvehicle.AddEditVehicleFragment.Companion.ADD_EDIT_VEHICLE_REQUEST
-import com.matxowy.vehiclecost.ui.addeditvehicle.AddEditVehicleFragment.Companion.ADD_EDIT_VEHICLE_RESULT
+import com.matxowy.vehiclecost.ui.addvehicle.AddVehicleFragment.Companion.ADD_EDIT_VEHICLE_REQUEST
+import com.matxowy.vehiclecost.ui.addvehicle.AddVehicleFragment.Companion.ADD_EDIT_VEHICLE_RESULT
 import com.matxowy.vehiclecost.util.decimalFormat
 import com.matxowy.vehiclecost.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,7 +81,7 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
     private fun setFragmentResultListeners() {
         setFragmentResultListener(ADD_EDIT_VEHICLE_REQUEST) { _, bundle ->
             val result = bundle.getInt(ADD_EDIT_VEHICLE_RESULT)
-            viewModel.onAddEditVehicleResult(result)
+            viewModel.onAddVehicleResult(result)
         }
     }
 
@@ -103,17 +105,14 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
                         findNavController().navigate(action)
                         clicked = false
                     }
-                    is StatisticsViewModel.StatisticsEvent.NavigateToAddEditVehicleScreen -> {
-                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddEditVehicleFragment(
+                    is StatisticsViewModel.StatisticsEvent.NavigateToAddVehicleScreen -> {
+                        val action = StatisticsFragmentDirections.actionStatisticsFragmentToAddVehicleFragment(
                             title = getString(R.string.title_new_vehicle)
                         )
                         findNavController().navigate(action)
                     }
-                    is StatisticsViewModel.StatisticsEvent.ShowVehicleEditedConfirmationMessage -> {
-                        Snackbar.make(requireView(), getString(R.string.vehicle_added_message), Snackbar.LENGTH_LONG).show()
-                    }
                     is StatisticsViewModel.StatisticsEvent.ShowVehicleSavedConfirmationMessage -> {
-                        Snackbar.make(requireView(), getString(R.string.vehicle_updated_message), Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(requireView(), getString(R.string.vehicle_added_message), Snackbar.LENGTH_LONG).show()
                     }
                 }.exhaustive
             }
@@ -132,14 +131,6 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
 
             fabAddRepair.setOnClickListener {
                 viewModel.onAddNewRepairClick()
-            }
-
-            spinnerVehicle.setOnItemClickListener { _, _, position, _ ->
-                if (position == 0) {
-                    viewModel.onAddNewVehicleClick()
-                } else {
-                    viewModel.saveSelectedVehicleAndRefreshStatistics(position, spinnerVehicle.text.toString())
-                }
             }
         }
     }
@@ -169,25 +160,32 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
             binding.tvLatestCostRepairStat.text = getString(R.string.numerical_value_with_currency, it?.decimalFormat() ?: "0", CURRENCY)
         }
 
-        viewModel.vehiclesNames.observe(viewLifecycleOwner) { listOfVehiclesNames ->
-            val listOfVehiclesNamesWithAddingOption = viewModel.getListOfVehiclesNamesWithAddingOptionOnFirstPosition(
-                listOfVehiclesNames = listOfVehiclesNames,
+        viewModel.vehiclesNames.observe(viewLifecycleOwner) { listOfVehicles ->
+            val listOfVehiclesWithAddingOption = viewModel.getListOfVehiclesNamesWithAddingOptionOnFirstPosition(
+                listOfVehiclesNames = listOfVehicles,
                 addNewVehicleText = getString(R.string.add_new_vehicle_text)
             )
-            setSpinner(requireContext(), listOfVehiclesNamesWithAddingOption)
-            setSpinnerOnCurrentSelectedVehicle(listOfVehiclesNamesWithAddingOption)
+            setSpinner(requireContext(), listOfVehiclesWithAddingOption)
+            setSpinnerOnCurrentSelectedVehicle(listOfVehiclesWithAddingOption)
         }
     }
 
-    private fun setSpinner(context: Context, listOfVehiclesNames: List<String>) {
-        val spinnerAdapter = ArrayAdapter(context, R.layout.spinner_item_list, listOfVehiclesNames)
+    private fun setSpinner(context: Context, listOfVehicles: List<Vehicle>) {
+        val spinnerAdapter = ArrayAdapter(context, R.layout.spinner_item_list, listOfVehicles)
         binding.spinnerVehicle.setAdapter(spinnerAdapter)
+        binding.spinnerVehicle.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            if (position == 0) {
+                viewModel.onAddNewVehicleClick()
+            } else {
+                viewModel.saveSelectedVehicleAndRefreshStatistics(position, listOfVehicles[position].vehicleId)
+            }
+        }
     }
 
-    private fun setSpinnerOnCurrentSelectedVehicle(listOfVehiclesNames: List<String>) {
-        val selectedVehiclePosition = viewModel.getSelectedVehicleId()
+    private fun setSpinnerOnCurrentSelectedVehicle(listOfVehicles: List<Vehicle>) {
+        val selectedVehiclePosition = viewModel.getSelectedVehiclePosition()
         try {
-            binding.spinnerVehicle.setText(listOfVehiclesNames[selectedVehiclePosition], false)
+            binding.spinnerVehicle.setText(listOfVehicles[selectedVehiclePosition].name, false)
         } catch (e: Exception) {
             Log.i("Spinner error: ", e.toString())
         }

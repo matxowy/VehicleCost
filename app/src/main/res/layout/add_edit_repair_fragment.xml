@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
         android:clickable="false"
         android:cursorVisible="false"
@@ -25,14 +25,14 @@
         android:background="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_last_value_of_mileage" />
+        app:layout_constraintTop_toBottomOf="@+id/til_mileage" />
 
     <EditText
         android:id="@+id/et_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
         android:clickable="false"
         android:cursorVisible="false"
@@ -44,17 +44,6 @@
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/tv_last_value_of_mileage" />
-
-    <TextView
-        android:id="@+id/tv_last_value_of_mileage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
-        android:text="Ostatnia wartość: 264 778 km"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/til_mileage" />
 
     <TextView
@@ -69,7 +58,7 @@
         android:text="@string/label_time"
         app:layout_constraintEnd_toEndOf="@+id/et_time"
         app:layout_constraintStart_toStartOf="@+id/et_time"
-        app:layout_constraintTop_toBottomOf="@+id/tv_last_value_of_mileage" />
+        app:layout_constraintTop_toBottomOf="@+id/til_mileage" />
 
     <TextView
         android:id="@+id/tv_label_for_date"
@@ -83,7 +72,7 @@
         android:text="@string/label_of_date"
         app:layout_constraintEnd_toEndOf="@+id/et_date"
         app:layout_constraintStart_toStartOf="@+id/et_date"
-        app:layout_constraintTop_toBottomOf="@+id/tv_last_value_of_mileage" />
+        app:layout_constraintTop_toBottomOf="@+id/til_mileage" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_horizontal"

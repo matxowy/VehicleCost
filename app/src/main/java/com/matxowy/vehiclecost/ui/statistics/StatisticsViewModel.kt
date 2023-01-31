@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.dao.VehicleDao
+import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
-import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -55,7 +55,7 @@ class StatisticsViewModel @Inject constructor(
     }
 
     // Vehicle cars
-    val vehiclesNames = vehicleDao.getVehiclesNames().asLiveData()
+    val vehiclesNames = vehicleDao.getVehicles().asLiveData()
 
     fun onAddNewRefuelClick() = viewModelScope.launch {
         statisticsChannel.send(StatisticsEvent.NavigateToAddRefuelScreen)
@@ -66,21 +66,23 @@ class StatisticsViewModel @Inject constructor(
     }
 
     fun onAddNewVehicleClick() = viewModelScope.launch {
-        statisticsChannel.send(StatisticsEvent.NavigateToAddEditVehicleScreen)
+        statisticsChannel.send(StatisticsEvent.NavigateToAddVehicleScreen)
     }
 
-    fun saveSelectedVehicleAndRefreshStatistics(position: Int, vehicleName: String) {
+    fun saveSelectedVehicleAndRefreshStatistics(position: Int, vehicleId: Int) {
         if (position != 0) {
-            localPreferences.saveSelectedVehiclePosition(position)
-            localPreferences.saveSelectedVehicleName(vehicleName)
+            localPreferences.apply {
+                saveSelectedVehiclePosition(position)
+                saveSelectedVehicleId(vehicleId)
+            }
             refreshStatistics()
         }
     }
 
-    fun getSelectedVehicleId() = localPreferences.getSelectedVehiclePosition()
+    fun getSelectedVehiclePosition() = localPreferences.getSelectedVehiclePosition()
 
     private fun refreshStatistics() {
-        val selectedVehicleId = getSelectedVehicleId()
+        val selectedVehicleId = localPreferences.getSelectedVehicleId()
 
         viewModelScope.launch(Dispatchers.IO) {
             sumOfFuelAmount.postValue(refuelDao.getSumOfRefuels(selectedVehicleId))
@@ -93,33 +95,27 @@ class StatisticsViewModel @Inject constructor(
         }
     }
 
-    fun getListOfVehiclesNamesWithAddingOptionOnFirstPosition(listOfVehiclesNames: List<String>, addNewVehicleText: String): List<String> {
+    fun getListOfVehiclesNamesWithAddingOptionOnFirstPosition(listOfVehiclesNames: List<Vehicle>, addNewVehicleText: String): List<Vehicle> {
         val newList = listOfVehiclesNames.toMutableList()
-        newList.add(0, addNewVehicleText)
+        newList.add(0, Vehicle(name = addNewVehicleText))
         return newList
     }
 
-    fun onAddEditVehicleResult(result: Int) {
+    fun onAddVehicleResult(result: Int) {
         when (result) {
             ADD_RESULT_OK -> showVehicleAddedConfirmationMessage()
-            EDIT_RESULT_OK -> showVehicleEditedConfirmationMessage()
         }
     }
 
-    private fun showVehicleEditedConfirmationMessage() = viewModelScope.launch {
-        statisticsChannel.send(StatisticsEvent.ShowVehicleSavedConfirmationMessage)
-    }
-
     private fun showVehicleAddedConfirmationMessage() = viewModelScope.launch {
-        statisticsChannel.send(StatisticsEvent.ShowVehicleEditedConfirmationMessage)
+        statisticsChannel.send(StatisticsEvent.ShowVehicleSavedConfirmationMessage)
     }
 
     sealed class StatisticsEvent {
         object NavigateToAddRefuelScreen : StatisticsEvent()
         object NavigateToAddRepairScreen : StatisticsEvent()
-        object NavigateToAddEditVehicleScreen : StatisticsEvent()
+        object NavigateToAddVehicleScreen : StatisticsEvent()
         object ShowVehicleSavedConfirmationMessage : StatisticsEvent()
-        object ShowVehicleEditedConfirmationMessage : StatisticsEvent()
     }
 
     companion object {

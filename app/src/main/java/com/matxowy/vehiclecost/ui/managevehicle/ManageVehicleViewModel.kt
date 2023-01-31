@@ -38,10 +38,10 @@ class ManageVehicleViewModel @Inject constructor(
             state[MILEAGE_STATE_KEY] = value
         }
 
-    val vehiclesNames = vehicleDao.getVehiclesNames().asLiveData()
+    val listOfVehicles = vehicleDao.getVehicles().asLiveData()
 
-    fun onSelectVehicle(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        val vehicle = vehicleDao.getVehicleByName(name)
+    fun onSelectVehicle(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val vehicle = vehicleDao.getVehicleById(id)
 
         vehicleId = vehicle.vehicleId
         vehicleName = vehicle.name
@@ -50,11 +50,11 @@ class ManageVehicleViewModel @Inject constructor(
         manageVehicleChannel.send(ManageVehicleEvents.SetFieldsWithData)
     }
 
-    fun onDeleteVehicleButtonClick(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        val vehicle = vehicleDao.getVehicleByName(name)
-        val currentSelectedVehicleName = localPreferences.getSelectedVehicleName()
+    fun onDeleteVehicleButtonClick(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val vehicle = vehicleDao.getVehicleById(id)
+        val currentSelectedVehicleId = localPreferences.getSelectedVehicleId()
 
-        if (currentSelectedVehicleName == vehicle.name){
+        if (currentSelectedVehicleId == vehicle.vehicleId){
             manageVehicleChannel.send(ManageVehicleEvents.ShowCannotDeleteCurrentSelectedVehicleMessage)
         } else {
             vehicleDao.delete(vehicle)
@@ -66,14 +66,14 @@ class ManageVehicleViewModel @Inject constructor(
         vehicleDao.insert(vehicle)
     }
 
-    fun onEditVehicleButtonClick(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        val currentSelectedVehicleName = localPreferences.getSelectedVehicleName()
+    fun onEditVehicleButtonClick() = viewModelScope.launch(Dispatchers.IO) {
         val vehicle = Vehicle(vehicleId = vehicleId, name = vehicleName, mileage = vehicleMileage.toString().toInt())
-        vehicleDao.update(vehicle)
-        if (currentSelectedVehicleName == name) {
-            localPreferences.saveSelectedVehicleName(vehicle.name)
+        try {
+            vehicleDao.update(vehicle)
+            manageVehicleChannel.send(ManageVehicleEvents.ShowUpdateConfirmMessage)
+        } catch (e: Exception) {
+            manageVehicleChannel.send(ManageVehicleEvents.ShowEditingErrorMessage)
         }
-        manageVehicleChannel.send(ManageVehicleEvents.ShowUpdateConfirmMessage)
     }
 
     companion object {
@@ -85,6 +85,7 @@ class ManageVehicleViewModel @Inject constructor(
         object SetFieldsWithData : ManageVehicleEvents()
         object ShowUpdateConfirmMessage : ManageVehicleEvents()
         object ShowCannotDeleteCurrentSelectedVehicleMessage : ManageVehicleEvents()
+        object ShowEditingErrorMessage : ManageVehicleEvents()
         data class ShowDeleteConfirmMessageWithUndoOption(val vehicle: Vehicle) : ManageVehicleEvents()
     }
 }

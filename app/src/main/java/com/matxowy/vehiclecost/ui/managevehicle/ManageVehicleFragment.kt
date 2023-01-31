@@ -3,6 +3,7 @@ package com.matxowy.vehiclecost.ui.managevehicle
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
+import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.databinding.ManageVehiclesFragmentBinding
 import com.matxowy.vehiclecost.util.exhaustive
 import com.matxowy.vehiclecost.util.hideKeyboard
@@ -21,6 +23,8 @@ class ManageVehicleFragment : Fragment(R.layout.manage_vehicles_fragment) {
     private val viewModel: ManageVehicleViewModel by viewModels()
     private var _binding: ManageVehiclesFragmentBinding? = null
     private val binding get() = _binding!!
+
+    private var selectedVehicleId = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,6 +63,10 @@ class ManageVehicleFragment : Fragment(R.layout.manage_vehicles_fragment) {
                         hideKeyboard()
                         Snackbar.make(requireView(), R.string.delete_current_selected_vehicle_error_message, Snackbar.LENGTH_LONG).show()
                     }
+                    ManageVehicleViewModel.ManageVehicleEvents.ShowEditingErrorMessage -> {
+                        hideKeyboard()
+                        Snackbar.make(requireView(), R.string.insert_edit_vehicle_error_message, Snackbar.LENGTH_LONG).show()
+                    }
                 }.exhaustive
             }
         }
@@ -78,8 +86,8 @@ class ManageVehicleFragment : Fragment(R.layout.manage_vehicles_fragment) {
     }
 
     private fun setObservers() {
-        viewModel.vehiclesNames.observe(viewLifecycleOwner) { listOfVehiclesNames ->
-            setSpinner(requireContext(), listOfVehiclesNames)
+        viewModel.listOfVehicles.observe(viewLifecycleOwner) { listOfVehicles ->
+            setSpinner(requireContext(), listOfVehicles)
         }
     }
 
@@ -93,17 +101,12 @@ class ManageVehicleFragment : Fragment(R.layout.manage_vehicles_fragment) {
                 viewModel.vehicleMileage = it.toString()
             }
 
-            spinnerVehicle.setOnItemClickListener { _, _, _, _ ->
-                binding.llManagingVehicle.visibility = View.VISIBLE
-                viewModel.onSelectVehicle(spinnerVehicle.text.toString())
-            }
-
             btnEditVehicle.setOnClickListener {
-                viewModel.onEditVehicleButtonClick(spinnerVehicle.text.toString())
+                viewModel.onEditVehicleButtonClick()
             }
 
             btnDeleteVehicle.setOnClickListener {
-                viewModel.onDeleteVehicleButtonClick(spinnerVehicle.text.toString())
+                viewModel.onDeleteVehicleButtonClick(selectedVehicleId)
             }
         }
     }
@@ -115,9 +118,14 @@ class ManageVehicleFragment : Fragment(R.layout.manage_vehicles_fragment) {
         }
     }
 
-    private fun setSpinner(context: Context, listOfVehiclesNames: List<String>) {
-        val spinnerAdapter = ArrayAdapter(context, R.layout.spinner_item_list, listOfVehiclesNames)
+    private fun setSpinner(context: Context, listOfVehicles: List<Vehicle>) {
+        val spinnerAdapter = ArrayAdapter(context, R.layout.spinner_item_list, listOfVehicles)
         binding.spinnerVehicle.setAdapter(spinnerAdapter)
+        binding.spinnerVehicle.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            selectedVehicleId = listOfVehicles[position].vehicleId
+            binding.llManagingVehicle.visibility = View.VISIBLE
+            viewModel.onSelectVehicle(selectedVehicleId)
+        }
     }
 
     override fun onDestroyView() {

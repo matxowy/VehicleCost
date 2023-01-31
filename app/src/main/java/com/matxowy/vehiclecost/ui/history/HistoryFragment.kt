@@ -79,12 +79,12 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
     private fun setFragmentResultListeners() {
         setFragmentResultListener(ADD_EDIT_REPAIR_REQUEST) { _, bundle ->
             val result = bundle.getInt(ADD_EDIT_REPAIR_RESULT)
-            viewModel.onAddEditRefuelResult(result)
+            viewModel.onAddEditRepairResult(result)
         }
 
         setFragmentResultListener(ADD_EDIT_REFUEL_REQUEST) { _, bundle ->
             val result = bundle.getInt(ADD_EDIT_REFUEL_RESULT)
-            viewModel.onAddEditRepairResult(result)
+            viewModel.onAddEditRefuelResult(result)
         }
     }
 

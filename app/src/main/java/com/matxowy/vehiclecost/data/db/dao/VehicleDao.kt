@@ -19,6 +19,9 @@ interface VehicleDao {
     @Query("SELECT * FROM vehicle WHERE name = :name")
     fun getVehicleByName(name: String): Vehicle
 
+    @Query("UPDATE vehicle SET mileage = :mileage WHERE vehicleId = :vehicleId")
+    fun updateMileageOfVehicle(vehicleId: Int, mileage: Int)
+
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(vehicle: Vehicle)
 

@@ -2,15 +2,16 @@ package com.matxowy.vehiclecost.ui.addeditrepair
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
+import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.LocalDateConverter
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -65,8 +66,7 @@ class AddEditRepairViewModel @Inject constructor(
     private val addEditRepairEventChannel = Channel<AddEditRepairEvent>()
     val addEditRepairEvent = addEditRepairEventChannel.receiveAsFlow()
 
-    private val selectedVehicleId = localPreferences.getSelectedVehiclePosition()
-    var lastMileage = repairDao.getLastMileage(selectedVehicleId).asLiveData()
+    private val selectedVehicleId = localPreferences.getSelectedVehicleId()
 
     fun onSaveRepairClick() {
         if (title.isBlank()
@@ -75,16 +75,6 @@ class AddEditRepairViewModel @Inject constructor(
         ) {
             showFieldsCannotBeEmptyMessage()
             return
-        }
-
-        // The new mileage can't be less than previous
-        if (repair == null) {
-            lastMileage.value?.let { lastMileage ->
-                if (mileage.toString().toInt() <= lastMileage) {
-                    showMileageCannotBeLessThanPreviousMessage()
-                    return
-                }
-            }
         }
 
         if (repair != null) {
@@ -97,7 +87,6 @@ class AddEditRepairViewModel @Inject constructor(
                 comments = comments,
                 vehicleId = selectedVehicleId,
             )
-
             updateRepair(updatedRepair)
         } else {
             val repair = Repair(
@@ -109,7 +98,6 @@ class AddEditRepairViewModel @Inject constructor(
                 comments = comments,
                 vehicleId = selectedVehicleId,
             )
-
             createRepair(repair)
         }
     }
@@ -118,16 +106,12 @@ class AddEditRepairViewModel @Inject constructor(
         addEditRepairEventChannel.send(AddEditRepairEvent.ShowFieldsCannotBeEmptyMessage)
     }
 
-    private fun showMileageCannotBeLessThanPreviousMessage() = viewModelScope.launch {
-        addEditRepairEventChannel.send(AddEditRepairEvent.ShowMileageCannotBeLessThanPreviousMessage)
-    }
-
-    private fun createRepair(repair: Repair) = viewModelScope.launch {
+    private fun createRepair(repair: Repair) = viewModelScope.launch(Dispatchers.IO) {
         repairDao.insert(repair)
         addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
     }
 
-    private fun updateRepair(updatedRepair: Repair) = viewModelScope.launch {
+    private fun updateRepair(updatedRepair: Repair) = viewModelScope.launch(Dispatchers.IO) {
         repairDao.update(updatedRepair)
         addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
     }
@@ -144,7 +128,6 @@ class AddEditRepairViewModel @Inject constructor(
 
     sealed class AddEditRepairEvent {
         object ShowFieldsCannotBeEmptyMessage : AddEditRepairEvent()
-        object ShowMileageCannotBeLessThanPreviousMessage : AddEditRepairEvent()
         data class NavigateToHistoryWithResult(val result: Int) : AddEditRepairEvent()
     }
 

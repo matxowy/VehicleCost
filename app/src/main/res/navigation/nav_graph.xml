@@ -17,8 +17,8 @@
             android:id="@+id/action_statisticsFragment_to_addEditRepairFragment"
             app:destination="@id/addEditRepairFragment" />
         <action
-            android:id="@+id/action_statisticsFragment_to_addEditVehicleFragment"
-            app:destination="@id/addEditVehicleFragment" />
+            android:id="@+id/action_statisticsFragment_to_addVehicleFragment"
+            app:destination="@id/addVehicleFragment" />
         <action
             android:id="@+id/action_statisticsFragment_to_manageVehicleFragment"
             app:destination="@id/manageVehicleFragment" />
@@ -75,22 +75,22 @@
             app:destination="@id/historyFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addEditVehicleFragment"
-        android:name="com.matxowy.vehiclecost.ui.addeditvehicle.AddEditVehicleFragment"
+        android:id="@+id/addVehicleFragment"
+        android:name="com.matxowy.vehiclecost.ui.addvehicle.AddVehicleFragment"
         android:label="{title}"
-        tools:layout="@layout/add_edit_vehicle_fragment">
+        tools:layout="@layout/add_vehicle_fragment">
         <argument
             android:name="title"
             app:argType="string" />
         <action
-            android:id="@+id/action_addEditVehicleFragment_to_statisticsFragment"
+            android:id="@+id/action_addVehicleFragment_to_statisticsFragment"
             app:destination="@id/statisticsFragment" />
     </fragment>
     <fragment
         android:id="@+id/manageVehicleFragment"
         android:name="com.matxowy.vehiclecost.ui.managevehicle.ManageVehicleFragment"
         android:label="{title}"
-        tools:layout="@layout/add_edit_vehicle_fragment">
+        tools:layout="@layout/add_vehicle_fragment">
     <argument
         android:name="title"
         app:argType="string" />

@@ -45,14 +45,12 @@ abstract class VehicleCostDatabase : RoomDatabase() {
                 vehicleDao.insert(
                     Vehicle(
                         name = context.getString(R.string.default_vehicle),
-                        mileage = 0,
                     )
 
                 )
                 vehicleDao.insert(
                     Vehicle(
                         name = "My Car2",
-                        mileage = 0,
                     )
 
                 )

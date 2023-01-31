@@ -18,7 +18,6 @@ import com.matxowy.vehiclecost.util.*
 import com.matxowy.vehiclecost.util.constants.Formats.DATE_FORMAT
 import com.matxowy.vehiclecost.util.constants.Formats.TIME_FORMAT
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
@@ -32,30 +31,12 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
 
         _binding = AddEditRefuelFragmentBinding.bind(view)
 
-        // Setting spinner adapter
-        val spinnerAdapter = ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.type_of_fuel,
-            R.layout.spinner_item_list
-        )
-
-        binding.apply {
-            // Setting date and time pickers to EditTexts
-            setPickersForDateAndTime()
-
-            // Setting adapter for spinner
-            spinnerTypeOfFuel.setAdapter(spinnerAdapter)
-
-            // Setting fields with data
-            setFieldsWithData()
-
-            setListenersToFieldsAndButton()
-
-            setObservers()
-
-            setProperTextForButton()
-        }
-
+        setAdapterForSpinner()
+        setPickersForDateAndTime()
+        setFieldsWithData()
+        setListenersToFieldsAndButton()
+        setObservers()
+        setProperTextForButton()
         handleAddEditRefuelEvents()
     }
 
@@ -82,78 +63,97 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
         }
     }
 
-    private fun AddEditRefuelFragmentBinding.setProperTextForButton() {
-        if (viewModel.mileage.toString().isEmpty()) {
-            btnAddNewRefueled.text = getString(R.string.add_refuel_button_text)
-        } else {
-            btnAddNewRefueled.text = getString(R.string.edit_refuel_button_text)
+    private fun setAdapterForSpinner() {
+        val spinnerAdapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.type_of_fuel,
+            R.layout.spinner_item_list
+        )
+        binding.spinnerTypeOfFuel.setAdapter(spinnerAdapter)
+    }
+
+    private fun setProperTextForButton() {
+        binding.apply {
+            if (viewModel.mileage.toString().isEmpty()) {
+                btnAddNewRefueled.text = getString(R.string.add_refuel_button_text)
+            } else {
+                btnAddNewRefueled.text = getString(R.string.edit_refuel_button_text)
+            }
         }
     }
 
-    private fun AddEditRefuelFragmentBinding.setObservers() {
-        viewModel.lastMileage.observe(viewLifecycleOwner) {
-            tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it?.addSpace() ?: ZERO_KILOMETERS_STRING)
+    private fun setObservers() {
+        binding.apply {
+            viewModel.lastMileage.observe(viewLifecycleOwner) {
+                tvLastValueOfMileage.text = getString(R.string.last_value_of_mileage, it?.addSpace() ?: ZERO_KILOMETERS_STRING)
+            }
         }
     }
 
-    private fun AddEditRefuelFragmentBinding.setListenersToFieldsAndButton() {
-        etMileage.addTextChangedListener {
-            viewModel.mileage = it.toString()
-        }
+    private fun setListenersToFieldsAndButton() {
+        binding.apply {
+            etMileage.addTextChangedListener {
+                viewModel.mileage = it.toString()
+            }
 
-        etPricePerLiter.addTextChangedListener {
-            viewModel.price = it.toString()
-        }
+            etPricePerLiter.addTextChangedListener {
+                viewModel.price = it.toString()
+            }
 
-        etAmountOfFuel.addTextChangedListener {
-            viewModel.amountOfFuel = it.toString()
-        }
+            etAmountOfFuel.addTextChangedListener {
+                viewModel.amountOfFuel = it.toString()
+            }
 
-        etCost.addTextChangedListener {
-            viewModel.cost = it.toString()
-        }
+            etCost.addTextChangedListener {
+                viewModel.cost = it.toString()
+            }
 
-        etDate.addTextChangedListener {
-            viewModel.date = it.toString()
-        }
+            etDate.addTextChangedListener {
+                viewModel.date = it.toString()
+            }
 
-        etTime.addTextChangedListener {
-            viewModel.time = it.toString()
-        }
+            etTime.addTextChangedListener {
+                viewModel.time = it.toString()
+            }
 
-        etComments.addTextChangedListener {
-            viewModel.comments = it.toString()
-        }
+            etComments.addTextChangedListener {
+                viewModel.comments = it.toString()
+            }
 
-        switchFullRefueled.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.fullRefueled = isChecked
-        }
+            switchFullRefueled.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.fullRefueled = isChecked
+            }
 
-        btnAddNewRefueled.setOnClickListener {
-            viewModel.onSaveRefueledClick()
-        }
+            btnAddNewRefueled.setOnClickListener {
+                viewModel.onSaveRefueledClick()
+            }
 
-        spinnerTypeOfFuel.doOnTextChanged { text, _, _, _ ->
-            viewModel.fuelType = text.toString()
+            spinnerTypeOfFuel.doOnTextChanged { text, _, _, _ ->
+                viewModel.fuelType = text.toString()
+            }
         }
     }
 
-    private fun AddEditRefuelFragmentBinding.setPickersForDateAndTime() {
-        etDate.transformIntoDatePicker(requireContext(), DATE_FORMAT)
-        etTime.transformIntoTimePicker(requireContext(), TIME_FORMAT)
+    private fun setPickersForDateAndTime() {
+        binding.apply {
+            etDate.transformIntoDatePicker(requireContext(), DATE_FORMAT)
+            etTime.transformIntoTimePicker(requireContext(), TIME_FORMAT)
+        }
     }
 
-    private fun AddEditRefuelFragmentBinding.setFieldsWithData() {
-        etMileage.setText(viewModel.mileage.toString())
-        etTime.setText(viewModel.time)
-        etDate.setText(viewModel.date)
-        etCost.setText(StringUtils.trimTrailingZero(viewModel.cost.toString()))
-        etAmountOfFuel.setText(StringUtils.trimTrailingZero(viewModel.amountOfFuel.toString()))
-        etPricePerLiter.setText(StringUtils.trimTrailingZero(viewModel.price.toString()))
-        etComments.setText(viewModel.comments)
-        spinnerTypeOfFuel.setText(viewModel.fuelType, false)
-        switchFullRefueled.isChecked = viewModel.fullRefueled
-        switchFullRefueled.jumpDrawablesToCurrentState()
+    private fun setFieldsWithData() {
+        binding.apply {
+            etMileage.setText(viewModel.mileage.toString())
+            etTime.setText(viewModel.time)
+            etDate.setText(viewModel.date)
+            etCost.setText(StringUtils.trimTrailingZero(viewModel.cost.toString()))
+            etAmountOfFuel.setText(StringUtils.trimTrailingZero(viewModel.amountOfFuel.toString()))
+            etPricePerLiter.setText(StringUtils.trimTrailingZero(viewModel.price.toString()))
+            etComments.setText(viewModel.comments)
+            spinnerTypeOfFuel.setText(viewModel.fuelType, false)
+            switchFullRefueled.isChecked = viewModel.fullRefueled
+            switchFullRefueled.jumpDrawablesToCurrentState()
+        }
     }
 
     override fun onDestroyView() {

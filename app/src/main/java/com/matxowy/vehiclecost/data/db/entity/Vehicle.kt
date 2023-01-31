@@ -8,5 +8,7 @@ import androidx.room.PrimaryKey
 data class Vehicle(
     @PrimaryKey(autoGenerate = true) val vehicleId: Int = 0,
     val name: String,
-    val mileage: Int,
-)
+    val mileage: Int = 0,
+) {
+    override fun toString(): String = name
+}

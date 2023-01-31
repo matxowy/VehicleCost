@@ -87,8 +87,8 @@
     <string name="message_about_missing_paid_data">Brak danych o zapłaconej kwocie</string>
     <string name="required_fields_cannot_be_empty_text">Wymagane pola nie mogą być puste</string>
     <string name="mileage_cannot_be_less_than_previous">Przebieg nie może być niższy od poprzedniego</string>
-    <string name="insert_new_vehicle_error_message">
-        Wystąpił błąd przy dodawaniu nowego pojazdu. Upewnij się, że nazwa pojazdu nie jest już używana.
+    <string name="insert_edit_vehicle_error_message">
+        Wystąpił błąd. Upewnij się, że nazwa pojazdu nie jest już używana.
     </string>
     <string name="delete_current_selected_vehicle_error_message">
         Nie można usunąć aktualnie wybranego pojazdu gdyż jest on pojazdem głównym.

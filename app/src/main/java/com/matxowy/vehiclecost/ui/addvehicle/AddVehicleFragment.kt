@@ -1,4 +1,4 @@
-package com.matxowy.vehiclecost.ui.addeditvehicle
+package com.matxowy.vehiclecost.ui.addvehicle
 
 import android.os.Bundle
 import android.view.View
@@ -11,25 +11,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
-import com.matxowy.vehiclecost.databinding.AddEditVehicleFragmentBinding
+import com.matxowy.vehiclecost.databinding.AddVehicleFragmentBinding
 import com.matxowy.vehiclecost.util.exhaustive
 import com.matxowy.vehiclecost.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddEditVehicleFragment : Fragment(R.layout.add_edit_vehicle_fragment) {
+class AddVehicleFragment : Fragment(R.layout.add_vehicle_fragment) {
 
-    private val viewModel: AddEditVehicleViewModel by viewModels()
-    private var _binding: AddEditVehicleFragmentBinding? = null
+    private val viewModel: AddVehicleViewModel by viewModels()
+    private var _binding: AddVehicleFragmentBinding? = null
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _binding = AddEditVehicleFragmentBinding.bind(view)
+        _binding = AddVehicleFragmentBinding.bind(view)
 
         setListeners()
-        handleAddEditVehicleEvents()
+        handleAddVehicleEvents()
     }
 
     private fun setListeners() {
@@ -48,25 +48,25 @@ class AddEditVehicleFragment : Fragment(R.layout.add_edit_vehicle_fragment) {
         }
     }
 
-    private fun handleAddEditVehicleEvents() {
+    private fun handleAddVehicleEvents() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.addEditVehicleEvent.collect { event ->
+            viewModel.addVehicleEvent.collect { event ->
                 when (event) {
-                    is AddEditVehicleViewModel.AddEditVehicleEvent.NavigateToStatisticsWithResult -> {
+                    is AddVehicleViewModel.AddVehicleEvent.NavigateToStatisticsWithResult -> {
                         setFragmentResult(
                             requestKey = ADD_EDIT_VEHICLE_REQUEST,
                             result = bundleOf(ADD_EDIT_VEHICLE_RESULT to event.result)
                         )
-                        val action = AddEditVehicleFragmentDirections.actionAddEditVehicleFragmentToStatisticsFragment()
+                        val action = AddVehicleFragmentDirections.actionAddVehicleFragmentToStatisticsFragment()
                         findNavController().navigate(action)
                     }
-                    is AddEditVehicleViewModel.AddEditVehicleEvent.ShowInvalidDataMessage -> {
+                    is AddVehicleViewModel.AddVehicleEvent.ShowInvalidDataMessage -> {
                         hideKeyboard()
                         Snackbar.make(requireView(), R.string.required_fields_cannot_be_empty_text, Snackbar.LENGTH_LONG).show()
                     }
-                    AddEditVehicleViewModel.AddEditVehicleEvent.ShowAddErrorMessage -> {
+                    AddVehicleViewModel.AddVehicleEvent.ShowAddErrorMessage -> {
                         hideKeyboard()
-                        Snackbar.make(requireView(), R.string.insert_new_vehicle_error_message, Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(requireView(), R.string.insert_edit_vehicle_error_message, Snackbar.LENGTH_LONG).show()
                     }
                 }.exhaustive
             }
