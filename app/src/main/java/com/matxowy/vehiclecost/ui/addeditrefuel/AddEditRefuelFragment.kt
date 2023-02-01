@@ -58,6 +58,9 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
                     is AddEditRefuelViewModel.AddEditRefuelEvent.ShowMileageCannotBeLessThanPreviousMessage -> {
                         Snackbar.make(requireView(), getString(R.string.mileage_cannot_be_less_than_previous), Snackbar.LENGTH_LONG).show()
                     }
+                    is AddEditRefuelViewModel.AddEditRefuelEvent.ShowDefaultErrorMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.default_error_message), Snackbar.LENGTH_LONG).show()
+                    }
                 }.exhaustive
             }
         }

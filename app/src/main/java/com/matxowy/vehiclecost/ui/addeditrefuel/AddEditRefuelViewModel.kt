@@ -150,15 +150,23 @@ class AddEditRefuelViewModel @Inject constructor(
     }
 
     private fun updateRefuel(updatedRefuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
-        vehicleDao.updateMileageOfVehicle(updatedRefuel.vehicleId, updatedRefuel.mileage)
-        refuelDao.update(updatedRefuel)
-        addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
+        try {
+            vehicleDao.updateMileageOfVehicle(updatedRefuel.vehicleId, updatedRefuel.mileage)
+            refuelDao.update(updatedRefuel)
+            addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
+        } catch (e: Exception) {
+            addEditRefuelEventChannel.send(AddEditRefuelEvent.ShowDefaultErrorMessage)
+        }
     }
 
     private fun createRefuel(refuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
-        vehicleDao.updateMileageOfVehicle(refuel.vehicleId, refuel.mileage)
-        refuelDao.insert(refuel)
-        addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
+        try {
+            vehicleDao.updateMileageOfVehicle(refuel.vehicleId, refuel.mileage)
+            refuelDao.insert(refuel)
+            addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
+        } catch (e: Exception) {
+            addEditRefuelEventChannel.send(AddEditRefuelEvent.ShowDefaultErrorMessage)
+        }
     }
 
     companion object {
@@ -175,6 +183,7 @@ class AddEditRefuelViewModel @Inject constructor(
     }
 
     sealed class AddEditRefuelEvent {
+        object ShowDefaultErrorMessage : AddEditRefuelEvent()
         object ShowFieldsCannotBeEmptyMessage : AddEditRefuelEvent()
         object ShowMileageCannotBeLessThanPreviousMessage : AddEditRefuelEvent()
         data class NavigateToHistoryWithResult(val result: Int) : AddEditRefuelEvent()

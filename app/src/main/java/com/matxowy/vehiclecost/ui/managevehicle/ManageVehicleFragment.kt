@@ -53,19 +53,23 @@ class ManageVehicleFragment : Fragment(R.layout.manage_vehicles_fragment) {
                                 viewModel.onUndoDeleteVehicleClick(event.vehicle)
                             }.show()
                     }
-                    ManageVehicleViewModel.ManageVehicleEvents.ShowUpdateConfirmMessage -> {
+                    is ManageVehicleViewModel.ManageVehicleEvents.ShowUpdateConfirmMessage -> {
                         hideKeyboard()
                         hideFields()
                         resetSpinnerChoose()
                         Snackbar.make(requireView(), R.string.vehicle_updated_message, Snackbar.LENGTH_LONG).show()
                     }
-                    ManageVehicleViewModel.ManageVehicleEvents.ShowCannotDeleteCurrentSelectedVehicleMessage -> {
+                    is ManageVehicleViewModel.ManageVehicleEvents.ShowCannotDeleteCurrentSelectedVehicleMessage -> {
                         hideKeyboard()
                         Snackbar.make(requireView(), R.string.delete_current_selected_vehicle_error_message, Snackbar.LENGTH_LONG).show()
                     }
-                    ManageVehicleViewModel.ManageVehicleEvents.ShowEditingErrorMessage -> {
+                    is ManageVehicleViewModel.ManageVehicleEvents.ShowEditingErrorMessage -> {
                         hideKeyboard()
                         Snackbar.make(requireView(), R.string.insert_edit_vehicle_error_message, Snackbar.LENGTH_LONG).show()
+                    }
+                    is ManageVehicleViewModel.ManageVehicleEvents.ShowDefaultErrorMessage -> {
+                        hideKeyboard()
+                        Snackbar.make(requireView(), R.string.default_error_message, Snackbar.LENGTH_LONG).show()
                     }
                 }.exhaustive
             }

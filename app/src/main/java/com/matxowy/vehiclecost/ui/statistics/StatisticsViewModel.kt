@@ -50,12 +50,11 @@ class StatisticsViewModel @Inject constructor(
         MutableLiveData<Double>(DEFAULT_STATISTICS_VALUE)
     }
 
+    val vehiclesNames = vehicleDao.getVehicles().asLiveData()
+
     init {
         refreshStatistics()
     }
-
-    // Vehicle cars
-    val vehiclesNames = vehicleDao.getVehicles().asLiveData()
 
     fun onAddNewRefuelClick() = viewModelScope.launch {
         statisticsChannel.send(StatisticsEvent.NavigateToAddRefuelScreen)

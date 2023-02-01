@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
-import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.LocalDateConverter
@@ -107,13 +106,21 @@ class AddEditRepairViewModel @Inject constructor(
     }
 
     private fun createRepair(repair: Repair) = viewModelScope.launch(Dispatchers.IO) {
-        repairDao.insert(repair)
-        addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
+        try {
+            repairDao.insert(repair)
+            addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
+        } catch (e: Exception) {
+            addEditRepairEventChannel.send(AddEditRepairEvent.ShowDefaultErrorMessage)
+        }
     }
 
     private fun updateRepair(updatedRepair: Repair) = viewModelScope.launch(Dispatchers.IO) {
-        repairDao.update(updatedRepair)
-        addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
+        try {
+            repairDao.update(updatedRepair)
+            addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
+        } catch (e: Exception) {
+            addEditRepairEventChannel.send(AddEditRepairEvent.ShowDefaultErrorMessage)
+        }
     }
 
     companion object {
@@ -128,6 +135,7 @@ class AddEditRepairViewModel @Inject constructor(
 
     sealed class AddEditRepairEvent {
         object ShowFieldsCannotBeEmptyMessage : AddEditRepairEvent()
+        object ShowDefaultErrorMessage : AddEditRepairEvent()
         data class NavigateToHistoryWithResult(val result: Int) : AddEditRepairEvent()
     }
 

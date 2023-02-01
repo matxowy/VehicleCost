@@ -51,6 +51,9 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
                     is AddEditRepairViewModel.AddEditRepairEvent.ShowFieldsCannotBeEmptyMessage -> {
                         Snackbar.make(requireView(), getString(R.string.required_fields_cannot_be_empty_text), Snackbar.LENGTH_LONG).show()
                     }
+                    is AddEditRepairViewModel.AddEditRepairEvent.ShowDefaultErrorMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.default_error_message), Snackbar.LENGTH_LONG).show()
+                    }
                 }.exhaustive
             }
         }

@@ -64,7 +64,7 @@ class AddVehicleFragment : Fragment(R.layout.add_vehicle_fragment) {
                         hideKeyboard()
                         Snackbar.make(requireView(), R.string.required_fields_cannot_be_empty_text, Snackbar.LENGTH_LONG).show()
                     }
-                    AddVehicleViewModel.AddVehicleEvent.ShowAddErrorMessage -> {
+                    is AddVehicleViewModel.AddVehicleEvent.ShowAddErrorMessage -> {
                         hideKeyboard()
                         Snackbar.make(requireView(), R.string.insert_edit_vehicle_error_message, Snackbar.LENGTH_LONG).show()
                     }

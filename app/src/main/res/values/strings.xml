@@ -79,6 +79,7 @@
     <string name="default_vehicle">Mój Pojazd</string>
 
     // Errors messages
+    <string name="default_error_message">Coś poszło nie tak. Spróbuj ponownie</string>
     <string name="message_about_missing_refueled_data">Brak danych o zatankowanym paliwie</string>
     <string name="message_about_missing_km_traveled_data">Brak danych o przejechanych kilometrach</string>
     <string name="message_about_missing_price_per_liter_data">Brak danych o cenie za litr paliwa</string>

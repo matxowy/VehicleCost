@@ -90,4 +90,5 @@
     <string name="insert_edit_vehicle_error_message">An error occurred during adding a new vehicle. Make sure the vehicle name is not already in use.</string>
     <string name="default_vehicle">My Vehicle</string>
     <string name="delete_current_selected_vehicle_error_message">You cannot delete the currently selected vehicle as it is the primary vehicle.</string>
+    <string name="default_error_message">Something went wrong. Try again</string>
 </resources>

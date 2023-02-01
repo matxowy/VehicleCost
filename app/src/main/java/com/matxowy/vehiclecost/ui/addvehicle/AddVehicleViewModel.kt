@@ -47,7 +47,6 @@ class AddVehicleViewModel @Inject constructor(
     }
 
     private fun createVehicle(newVehicle: Vehicle) = viewModelScope.launch {
-        // TODO Add try catch block for all types of similar actions with error handling
         try {
             vehicleDao.insert(newVehicle)
             addVehicleChannel.send(AddVehicleEvent.NavigateToStatisticsWithResult(ADD_RESULT_OK))

@@ -40,8 +40,7 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
     private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(context, R.anim.from_bottom_anim) }
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(context, R.anim.to_bottom_anim) }
 
-    // Flag to know if fab is clicked or not
-    private var clicked = false
+    private var fabClicked = false
 
     private val viewModel: HistoryViewModel by viewModels()
 
@@ -53,27 +52,17 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
 
         _binding = HistoryFragmentBinding.bind(view)
 
-        //Radio group operation
-        onRadioButtonCheckedChanged()
-
-        //RecyclerView operations
         val refuelAdapter = RefuelAdapter(this)
         val repairAdapter = RepairAdapter(this)
-
         setAdapters(refuelAdapter, repairAdapter)
         setObservers(refuelAdapter, repairAdapter)
 
-        //Swipe actions in RecyclerView
+        onRadioButtonCheckedChanged()
         addSwipeToDeleteActionForRefuelRecyclerView(refuelAdapter)
         addSwipeToDeleteActionForRepairRecyclerView(repairAdapter)
-
-        //FAB operations
         setFabListeners()
-
         setFragmentResultListeners()
-
-        // Navigation between screens
-        handleRefuelAndRepairEvents()
+        handleHistoryEvents()
     }
 
     private fun setFragmentResultListeners() {
@@ -104,65 +93,68 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
         }
     }
 
-    private fun handleRefuelAndRepairEvents() {
+    private fun handleHistoryEvents() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.refuelAndRepairEvent.collect { event ->
                 when (event) {
-                    is HistoryViewModel.RefuelAndRepairEvent.NavigateToAddRefuelScreen -> {
+                    is HistoryViewModel.HistoryEvent.NavigateToAddRefuelScreen -> {
                         val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(
                             null,
                             getString(R.string.title_new_refuel)
                         )
                         findNavController().navigate(action)
-                        clicked = false
+                        fabClicked = false
                     }
-                    is HistoryViewModel.RefuelAndRepairEvent.NavigateToAddRepairScreen -> {
+                    is HistoryViewModel.HistoryEvent.NavigateToAddRepairScreen -> {
                         val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(
                             null,
                             getString(R.string.title_new_repair)
                         )
                         findNavController().navigate(action)
-                        clicked = false
+                        fabClicked = false
                     }
-                    is HistoryViewModel.RefuelAndRepairEvent.NavigateToEditRefuelScreen -> {
+                    is HistoryViewModel.HistoryEvent.NavigateToEditRefuelScreen -> {
                         val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRefuelFragment(
                             event.refuel,
                             getString(R.string.title_edit_refuel)
                         )
                         findNavController().navigate(action)
-                        clicked = false
+                        fabClicked = false
                     }
-                    is HistoryViewModel.RefuelAndRepairEvent.NavigateToEditRepairScreen -> {
+                    is HistoryViewModel.HistoryEvent.NavigateToEditRepairScreen -> {
                         val action = HistoryFragmentDirections.actionHistoryFragmentToAddEditRepairFragment(
                             event.repair,
                             getString(R.string.title_edit_repair)
                         )
                         findNavController().navigate(action)
-                        clicked = false
+                        fabClicked = false
                     }
-                    is HistoryViewModel.RefuelAndRepairEvent.ShowUndoDeleteRefuelMessage -> {
+                    is HistoryViewModel.HistoryEvent.ShowUndoDeleteRefuelMessage -> {
                         Snackbar.make(requireView(), getString(R.string.removed_text), Snackbar.LENGTH_LONG)
                             .setAction(getString(R.string.restore_text)) {
                                 viewModel.onUndoDeleteRefuelClick(event.refuel)
                             }.show()
                     }
-                    is HistoryViewModel.RefuelAndRepairEvent.ShowUndoDeleteRepairMessage -> {
+                    is HistoryViewModel.HistoryEvent.ShowUndoDeleteRepairMessage -> {
                         Snackbar.make(requireView(), getString(R.string.removed_text), Snackbar.LENGTH_LONG)
                             .setAction(getString(R.string.restore_text)) {
                                 viewModel.onUndoDeleteRepairClick(event.repair)
                             }.show()
                     }
-                    is HistoryViewModel.RefuelAndRepairEvent.ShowRefuelSavedConfirmationMessage -> {
+                    is HistoryViewModel.HistoryEvent.ShowRefuelSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), getString(R.string.refueled_added_message), Snackbar.LENGTH_SHORT).show()
                     }
-                    is HistoryViewModel.RefuelAndRepairEvent.ShowRepairSavedConfirmationMessage -> {
+                    is HistoryViewModel.HistoryEvent.ShowRepairSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), getString(R.string.repair_added_message), Snackbar.LENGTH_SHORT).show()
                     }
-                    is HistoryViewModel.RefuelAndRepairEvent.ShowRefuelEditedConfirmationMessage -> {
+                    is HistoryViewModel.HistoryEvent.ShowRefuelEditedConfirmationMessage -> {
                         Snackbar.make(requireView(), getString(R.string.refueled_updated_message), Snackbar.LENGTH_SHORT).show()
                     }
-                    is HistoryViewModel.RefuelAndRepairEvent.ShowRepairEditedConfirmationMessage -> {
+                    is HistoryViewModel.HistoryEvent.ShowRepairEditedConfirmationMessage -> {
                         Snackbar.make(requireView(), getString(R.string.repair_updated_message), Snackbar.LENGTH_SHORT).show()
+                    }
+                    is HistoryViewModel.HistoryEvent.ShowDefaultErrorMessage -> {
+                        Snackbar.make(requireView(), getString(R.string.default_error_message), Snackbar.LENGTH_SHORT).show()
                     }
                 }.exhaustive
             }
@@ -283,11 +275,11 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
         setVisibility()
         setAnimation()
         setClickable()
-        clicked = !clicked
+        fabClicked = !fabClicked
     }
 
     private fun setVisibility() {
-        if (!clicked) {
+        if (!fabClicked) {
             binding.apply {
                 fabAddRepair.visibility = View.VISIBLE
                 fabAddRefuel.visibility = View.VISIBLE
@@ -301,7 +293,7 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
     }
 
     private fun setAnimation() {
-        if (!clicked) {
+        if (!fabClicked) {
             binding.apply {
                 fabAddRepair.startAnimation(fromBottom)
                 fabAddRefuel.startAnimation(fromBottom)
@@ -317,7 +309,7 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
     }
 
     private fun setClickable() {
-        if (!clicked) {
+        if (!fabClicked) {
             binding.apply {
                 fabAddRefuel.isClickable = true
                 fabAddRepair.isClickable = true
