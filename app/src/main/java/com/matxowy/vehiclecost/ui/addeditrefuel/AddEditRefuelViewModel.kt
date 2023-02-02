@@ -88,7 +88,7 @@ class AddEditRefuelViewModel @Inject constructor(
     val addEditRefuelEvent = addEditRefuelEventChannel.receiveAsFlow()
 
     private val selectedVehicleId = localPreferences.getSelectedVehicleId()
-    var lastMileage = refuelDao.getLastMileage(selectedVehicleId).asLiveData()
+    var lastMileage = vehicleDao.getVehicleMileageById(selectedVehicleId).asLiveData()
 
     fun onSaveRefueledClick() {
         if (mileage.toString().isBlank()

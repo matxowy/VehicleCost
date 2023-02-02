@@ -19,6 +19,9 @@ interface VehicleDao {
     @Query("SELECT * FROM vehicle WHERE name = :name")
     fun getVehicleByName(name: String): Vehicle
 
+    @Query("SELECT mileage FROM vehicle WHERE vehicleId = :id")
+    fun getVehicleMileageById(id: Int): Flow<Int>
+
     @Query("UPDATE vehicle SET mileage = :mileage WHERE vehicleId = :vehicleId")
     fun updateMileageOfVehicle(vehicleId: Int, mileage: Int)
 

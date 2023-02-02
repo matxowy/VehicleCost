@@ -101,25 +101,23 @@ class AddEditRepairViewModel @Inject constructor(
         }
     }
 
-    private fun showFieldsCannotBeEmptyMessage() = viewModelScope.launch {
-        addEditRepairEventChannel.send(AddEditRepairEvent.ShowFieldsCannotBeEmptyMessage)
-    }
+    private fun showFieldsCannotBeEmptyMessage() = AddEditRepairEvent.ShowFieldsCannotBeEmptyMessage.send()
 
     private fun createRepair(repair: Repair) = viewModelScope.launch(Dispatchers.IO) {
         try {
             repairDao.insert(repair)
-            addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
+            AddEditRepairEvent.NavigateToHistoryWithResult(ADD_RESULT_OK).send()
         } catch (e: Exception) {
-            addEditRepairEventChannel.send(AddEditRepairEvent.ShowDefaultErrorMessage)
+            AddEditRepairEvent.ShowDefaultErrorMessage.send()
         }
     }
 
     private fun updateRepair(updatedRepair: Repair) = viewModelScope.launch(Dispatchers.IO) {
         try {
             repairDao.update(updatedRepair)
-            addEditRepairEventChannel.send(AddEditRepairEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
+            AddEditRepairEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK).send()
         } catch (e: Exception) {
-            addEditRepairEventChannel.send(AddEditRepairEvent.ShowDefaultErrorMessage)
+            AddEditRepairEvent.ShowDefaultErrorMessage.send()
         }
     }
 
@@ -139,4 +137,7 @@ class AddEditRepairViewModel @Inject constructor(
         data class NavigateToHistoryWithResult(val result: Int) : AddEditRepairEvent()
     }
 
+    private fun AddEditRepairEvent.send() {
+        viewModelScope.launch { addEditRepairEventChannel.send(this@send) }
+    }
 }

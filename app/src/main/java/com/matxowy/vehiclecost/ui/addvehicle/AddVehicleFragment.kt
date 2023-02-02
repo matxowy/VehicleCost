@@ -54,8 +54,8 @@ class AddVehicleFragment : Fragment(R.layout.add_vehicle_fragment) {
                 when (event) {
                     is AddVehicleViewModel.AddVehicleEvent.NavigateToStatisticsWithResult -> {
                         setFragmentResult(
-                            requestKey = ADD_EDIT_VEHICLE_REQUEST,
-                            result = bundleOf(ADD_EDIT_VEHICLE_RESULT to event.result)
+                            requestKey = ADD_VEHICLE_REQUEST,
+                            result = bundleOf(ADD_VEHICLE_RESULT to event.result)
                         )
                         val action = AddVehicleFragmentDirections.actionAddVehicleFragmentToStatisticsFragment()
                         findNavController().navigate(action)
@@ -79,7 +79,7 @@ class AddVehicleFragment : Fragment(R.layout.add_vehicle_fragment) {
     }
 
     companion object {
-        const val ADD_EDIT_VEHICLE_REQUEST = "add_edit_vehicle_request"
-        const val ADD_EDIT_VEHICLE_RESULT = "add_edit_vehicle_result"
+        const val ADD_VEHICLE_REQUEST = "add_vehicle_request"
+        const val ADD_VEHICLE_RESULT = "add_vehicle_result"
     }
 }

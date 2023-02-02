@@ -11,6 +11,7 @@ import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -26,54 +27,42 @@ class HistoryViewModel @Inject constructor(
     private val refuelAndRepairEventChannel = Channel<HistoryEvent>()
     val refuelAndRepairEvent = refuelAndRepairEventChannel.receiveAsFlow()
 
-    fun onAddNewRefuelClick() = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(HistoryEvent.NavigateToAddRefuelScreen)
-    }
+    private val selectedVehicleId = localPreferences.getSelectedVehicleId()
+    val refuels = refuelDao.getRefuels(selectedVehicleId).asLiveData()
+    val repairs = repairDao.getRepairs(selectedVehicleId).asLiveData()
 
-    fun onAddNewRepairClick() = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(HistoryEvent.NavigateToAddRepairScreen)
-    }
-
-    fun onRefuelSwiped(refuel: Refuel) = viewModelScope.launch {
+    fun onRefuelSwiped(refuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
         try {
             refuelDao.delete(refuel)
-            refuelAndRepairEventChannel.send(HistoryEvent.ShowUndoDeleteRefuelMessage(refuel))
+            HistoryEvent.ShowUndoDeleteRefuelMessage(refuel).send()
         } catch (e: Exception) {
-            refuelAndRepairEventChannel.send(HistoryEvent.ShowDefaultErrorMessage)
+            HistoryEvent.ShowDefaultErrorMessage.send()
         }
     }
 
-    fun onRepairSwiped(repair: Repair) = viewModelScope.launch {
+    fun onRepairSwiped(repair: Repair) = viewModelScope.launch(Dispatchers.IO) {
         try {
             repairDao.delete(repair)
-            refuelAndRepairEventChannel.send(HistoryEvent.ShowUndoDeleteRepairMessage(repair))
+            HistoryEvent.ShowUndoDeleteRepairMessage(repair).send()
         } catch (e: Exception) {
-            refuelAndRepairEventChannel.send(HistoryEvent.ShowDefaultErrorMessage)
+            HistoryEvent.ShowDefaultErrorMessage.send()
         }
     }
 
-    fun onUndoDeleteRefuelClick(refuel: Refuel) = viewModelScope.launch {
+    fun onUndoDeleteRefuelClick(refuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
         try {
             refuelDao.insert(refuel)
         } catch (e: Exception) {
-            refuelAndRepairEventChannel.send(HistoryEvent.ShowDefaultErrorMessage)
+            HistoryEvent.ShowDefaultErrorMessage.send()
         }
     }
 
-    fun onUndoDeleteRepairClick(repair: Repair) = viewModelScope.launch {
+    fun onUndoDeleteRepairClick(repair: Repair) = viewModelScope.launch(Dispatchers.IO) {
         try {
             repairDao.insert(repair)
         } catch (e: Exception) {
-            refuelAndRepairEventChannel.send(HistoryEvent.ShowDefaultErrorMessage)
+            HistoryEvent.ShowDefaultErrorMessage.send()
         }
-    }
-
-    fun onRepairItemSelected(repair: Repair) = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(HistoryEvent.NavigateToEditRepairScreen(repair))
-    }
-
-    fun onRefuelItemSelected(refuel: Refuel) = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(HistoryEvent.NavigateToEditRefuelScreen(refuel))
     }
 
     fun onAddEditRefuelResult(result: Int) {
@@ -90,25 +79,21 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    private fun showRefuelSavedConfirmationMessage() = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(HistoryEvent.ShowRefuelSavedConfirmationMessage)
-    }
+    fun onAddNewRefuelClick() = HistoryEvent.NavigateToAddRefuelScreen.send()
 
-    private fun showRefuelEditedConfirmationMessage() = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(HistoryEvent.ShowRefuelEditedConfirmationMessage)
-    }
+    fun onAddNewRepairClick() = HistoryEvent.NavigateToAddRepairScreen.send()
 
-    private fun showRepairSavedConfirmationMessage() = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(HistoryEvent.ShowRepairSavedConfirmationMessage)
-    }
+    fun onRepairItemSelected(repair: Repair) = HistoryEvent.NavigateToEditRepairScreen(repair).send()
 
-    private fun showRepairEditedConfirmationMessage() = viewModelScope.launch {
-        refuelAndRepairEventChannel.send(HistoryEvent.ShowRepairEditedConfirmationMessage)
-    }
+    fun onRefuelItemSelected(refuel: Refuel) = HistoryEvent.NavigateToEditRefuelScreen(refuel).send()
 
-    private val selectedVehicleId = localPreferences.getSelectedVehicleId()
-    val refuels = refuelDao.getRefuels(selectedVehicleId).asLiveData()
-    val repairs = repairDao.getRepairs(selectedVehicleId).asLiveData()
+    private fun showRefuelSavedConfirmationMessage() = HistoryEvent.ShowRefuelSavedConfirmationMessage.send()
+
+    private fun showRefuelEditedConfirmationMessage() = HistoryEvent.ShowRefuelEditedConfirmationMessage.send()
+
+    private fun showRepairSavedConfirmationMessage() = HistoryEvent.ShowRepairSavedConfirmationMessage.send()
+
+    private fun showRepairEditedConfirmationMessage() = HistoryEvent.ShowRepairEditedConfirmationMessage.send()
 
     sealed class HistoryEvent {
         object NavigateToAddRefuelScreen : HistoryEvent()
@@ -122,5 +107,9 @@ class HistoryViewModel @Inject constructor(
         data class NavigateToEditRepairScreen(val repair: Repair) : HistoryEvent()
         data class ShowUndoDeleteRefuelMessage(val refuel: Refuel) : HistoryEvent()
         data class ShowUndoDeleteRepairMessage(val repair: Repair) : HistoryEvent()
+    }
+
+    private fun HistoryEvent.send() {
+        viewModelScope.launch { refuelAndRepairEventChannel.send(this@send) }
     }
 }

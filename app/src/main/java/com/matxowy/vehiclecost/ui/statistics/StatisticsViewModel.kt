@@ -56,17 +56,7 @@ class StatisticsViewModel @Inject constructor(
         refreshStatistics()
     }
 
-    fun onAddNewRefuelClick() = viewModelScope.launch {
-        statisticsChannel.send(StatisticsEvent.NavigateToAddRefuelScreen)
-    }
-
-    fun onAddNewRepairClick() = viewModelScope.launch {
-        statisticsChannel.send(StatisticsEvent.NavigateToAddRepairScreen)
-    }
-
-    fun onAddNewVehicleClick() = viewModelScope.launch {
-        statisticsChannel.send(StatisticsEvent.NavigateToAddVehicleScreen)
-    }
+    fun getSelectedVehiclePosition() = localPreferences.getSelectedVehiclePosition()
 
     fun saveSelectedVehicleAndRefreshStatistics(position: Int, vehicleId: Int) {
         if (position != 0) {
@@ -75,22 +65,6 @@ class StatisticsViewModel @Inject constructor(
                 saveSelectedVehicleId(vehicleId)
             }
             refreshStatistics()
-        }
-    }
-
-    fun getSelectedVehiclePosition() = localPreferences.getSelectedVehiclePosition()
-
-    private fun refreshStatistics() {
-        val selectedVehicleId = localPreferences.getSelectedVehicleId()
-
-        viewModelScope.launch(Dispatchers.IO) {
-            sumOfFuelAmount.postValue(refuelDao.getSumOfRefuels(selectedVehicleId))
-            sumCostsOfRefuels.postValue(refuelDao.getSumOfCosts(selectedVehicleId))
-            lastPriceOfFuel.postValue(refuelDao.getLastPriceOfFuel(selectedVehicleId))
-
-            sumCostOfRepair.postValue(repairDao.getSumCostOfRepair(selectedVehicleId))
-            maxCostOfRepair.postValue(repairDao.getMaxCostOfRepair(selectedVehicleId))
-            lastCostOfRepair.postValue(repairDao.getLastCost(selectedVehicleId))
         }
     }
 
@@ -106,8 +80,26 @@ class StatisticsViewModel @Inject constructor(
         }
     }
 
-    private fun showVehicleAddedConfirmationMessage() = viewModelScope.launch {
-        statisticsChannel.send(StatisticsEvent.ShowVehicleSavedConfirmationMessage)
+    fun onAddNewRefuelClick() = StatisticsEvent.NavigateToAddRefuelScreen.send()
+
+    fun onAddNewRepairClick() = StatisticsEvent.NavigateToAddRepairScreen.send()
+
+    fun onAddNewVehicleClick() = StatisticsEvent.NavigateToAddVehicleScreen.send()
+
+    private fun showVehicleAddedConfirmationMessage() = StatisticsEvent.ShowVehicleSavedConfirmationMessage.send()
+
+    private fun refreshStatistics() {
+        val selectedVehicleId = localPreferences.getSelectedVehicleId()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            sumOfFuelAmount.postValue(refuelDao.getSumOfRefuels(selectedVehicleId))
+            sumCostsOfRefuels.postValue(refuelDao.getSumOfCosts(selectedVehicleId))
+            lastPriceOfFuel.postValue(refuelDao.getLastPriceOfFuel(selectedVehicleId))
+
+            sumCostOfRepair.postValue(repairDao.getSumCostOfRepair(selectedVehicleId))
+            maxCostOfRepair.postValue(repairDao.getMaxCostOfRepair(selectedVehicleId))
+            lastCostOfRepair.postValue(repairDao.getLastCost(selectedVehicleId))
+        }
     }
 
     sealed class StatisticsEvent {
@@ -115,6 +107,10 @@ class StatisticsViewModel @Inject constructor(
         object NavigateToAddRepairScreen : StatisticsEvent()
         object NavigateToAddVehicleScreen : StatisticsEvent()
         object ShowVehicleSavedConfirmationMessage : StatisticsEvent()
+    }
+
+    private fun StatisticsEvent.send() {
+        viewModelScope.launch { statisticsChannel.send(this@send) }
     }
 
     companion object {

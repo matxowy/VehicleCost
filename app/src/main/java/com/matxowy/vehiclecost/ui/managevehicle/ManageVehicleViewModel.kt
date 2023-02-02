@@ -48,9 +48,9 @@ class ManageVehicleViewModel @Inject constructor(
             vehicleName = vehicle.name
             vehicleMileage = vehicle.mileage
 
-            manageVehicleChannel.send(ManageVehicleEvents.SetFieldsWithData)
+            ManageVehicleEvents.SetFieldsWithData.send()
         } catch (e: Exception) {
-            manageVehicleChannel.send(ManageVehicleEvents.ShowDefaultErrorMessage)
+            ManageVehicleEvents.ShowDefaultErrorMessage.send()
         }
     }
 
@@ -60,13 +60,13 @@ class ManageVehicleViewModel @Inject constructor(
             val currentSelectedVehicleId = localPreferences.getSelectedVehicleId()
 
             if (currentSelectedVehicleId == vehicle.vehicleId) {
-                manageVehicleChannel.send(ManageVehicleEvents.ShowCannotDeleteCurrentSelectedVehicleMessage)
+                ManageVehicleEvents.ShowCannotDeleteCurrentSelectedVehicleMessage.send()
             } else {
                 vehicleDao.delete(vehicle)
-                manageVehicleChannel.send(ManageVehicleEvents.ShowDeleteConfirmMessageWithUndoOption(vehicle))
+                ManageVehicleEvents.ShowDeleteConfirmMessageWithUndoOption(vehicle).send()
             }
         } catch (e: Exception) {
-            manageVehicleChannel.send(ManageVehicleEvents.ShowDefaultErrorMessage)
+            ManageVehicleEvents.ShowDefaultErrorMessage.send()
         }
     }
 
@@ -74,7 +74,7 @@ class ManageVehicleViewModel @Inject constructor(
         try {
             vehicleDao.insert(vehicle)
         } catch (e: Exception) {
-            manageVehicleChannel.send(ManageVehicleEvents.ShowDefaultErrorMessage)
+            ManageVehicleEvents.ShowDefaultErrorMessage.send()
         }
     }
 
@@ -82,9 +82,9 @@ class ManageVehicleViewModel @Inject constructor(
         val vehicle = Vehicle(vehicleId = vehicleId, name = vehicleName, mileage = vehicleMileage.toString().toInt())
         try {
             vehicleDao.update(vehicle)
-            manageVehicleChannel.send(ManageVehicleEvents.ShowUpdateConfirmMessage)
+            ManageVehicleEvents.ShowUpdateConfirmMessage.send()
         } catch (e: Exception) {
-            manageVehicleChannel.send(ManageVehicleEvents.ShowEditingErrorMessage)
+            ManageVehicleEvents.ShowEditingErrorMessage.send()
         }
     }
 
@@ -100,5 +100,9 @@ class ManageVehicleViewModel @Inject constructor(
         object ShowUpdateConfirmMessage : ManageVehicleEvents()
         object ShowCannotDeleteCurrentSelectedVehicleMessage : ManageVehicleEvents()
         data class ShowDeleteConfirmMessageWithUndoOption(val vehicle: Vehicle) : ManageVehicleEvents()
+    }
+
+    private fun ManageVehicleEvents.send() {
+        viewModelScope.launch { manageVehicleChannel.send(this@send) }
     }
 }

@@ -7,6 +7,7 @@ import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -46,28 +47,30 @@ class AddVehicleViewModel @Inject constructor(
         createVehicle(newVehicle)
     }
 
-    private fun createVehicle(newVehicle: Vehicle) = viewModelScope.launch {
+    private fun createVehicle(newVehicle: Vehicle) = viewModelScope.launch(Dispatchers.IO) {
         try {
             vehicleDao.insert(newVehicle)
-            addVehicleChannel.send(AddVehicleEvent.NavigateToStatisticsWithResult(ADD_RESULT_OK))
+            AddVehicleEvent.NavigateToStatisticsWithResult(ADD_RESULT_OK).send()
         } catch (e: Exception) {
-            addVehicleChannel.send(AddVehicleEvent.ShowAddErrorMessage)
+            AddVehicleEvent.ShowAddErrorMessage.send()
         }
     }
 
-    private fun showInvalidInputMessage() = viewModelScope.launch {
-        addVehicleChannel.send(AddVehicleEvent.ShowInvalidDataMessage)
-    }
-
-    companion object {
-        const val NAME_STATE_KEY = "vehicleName"
-        const val MILEAGE_STATE_KEY = "vehicleMileage"
-    }
+    private fun showInvalidInputMessage() = AddVehicleEvent.ShowInvalidDataMessage.send()
 
     sealed class AddVehicleEvent {
         object ShowInvalidDataMessage : AddVehicleEvent()
         object ShowAddErrorMessage : AddVehicleEvent()
         data class NavigateToStatisticsWithResult(val result: Int) : AddVehicleEvent()
+    }
+
+    private fun AddVehicleEvent.send() {
+        viewModelScope.launch { addVehicleChannel.send(this@send) }
+    }
+
+    companion object {
+        const val NAME_STATE_KEY = "vehicleName"
+        const val MILEAGE_STATE_KEY = "vehicleMileage"
     }
 }
 

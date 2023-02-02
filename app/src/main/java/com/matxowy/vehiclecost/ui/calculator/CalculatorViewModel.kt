@@ -95,39 +95,39 @@ class CalculatorViewModel @Inject constructor(
         }
     }
 
-    private fun doCalculationInConsumptionTab() = viewModelScope.launch {
+    private fun doCalculationInConsumptionTab() {
         if (refueled.toString().isBlank() || kmTraveled.toString().isBlank() || fuelPrice.toString().isBlank()) {
-            calculatorEventChannel.send(CalculatorEvent.ShowMessageAboutMissingData)
+            CalculatorEvent.ShowMessageAboutMissingData.send()
         } else {
             val avgConsumption = refueled.toString().toDouble() / kmTraveled.toString().toDouble() * 100
             val priceFor100km = avgConsumption * fuelPrice.toString().toDouble()
 
-            calculatorEventChannel.send(CalculatorEvent.ShowResultForConsumptionTab(avgConsumption, priceFor100km))
+            CalculatorEvent.ShowResultForConsumptionTab(avgConsumption, priceFor100km).send()
         }
     }
 
-    private fun doCalculationInCostsTab() = viewModelScope.launch {
+    private fun doCalculationInCostsTab() {
         if (avgFuelConsumption.toString().isBlank() || kmTraveled.toString().isBlank() || fuelPrice.toString().isBlank()
             || numberOfPeople.toString().isBlank()
         ) {
-            calculatorEventChannel.send(CalculatorEvent.ShowMessageAboutMissingData)
+            CalculatorEvent.ShowMessageAboutMissingData.send()
         } else {
             val requiredAmountOfFuel = (kmTraveled.toString().toDouble() / 100) * avgFuelConsumption.toString().toDouble()
             val costForTravel = fuelPrice.toString().toDouble() * requiredAmountOfFuel
             val costPerPerson = costForTravel / numberOfPeople.toString().toDouble()
 
-            calculatorEventChannel.send(CalculatorEvent.ShowResultForCostsTab(requiredAmountOfFuel, costForTravel, costPerPerson))
+            CalculatorEvent.ShowResultForCostsTab(requiredAmountOfFuel, costForTravel, costPerPerson).send()
         }
     }
 
-    private fun doCalculationInRangeTab() = viewModelScope.launch {
+    private fun doCalculationInRangeTab() {
         if (avgFuelConsumption.toString().isBlank() || paid.toString().isBlank() || fuelPrice.toString().isBlank()) {
-            calculatorEventChannel.send(CalculatorEvent.ShowMessageAboutMissingData)
+            CalculatorEvent.ShowMessageAboutMissingData.send()
         } else {
             val amountOfFilledWithFuel = paid.toString().toDouble() / fuelPrice.toString().toDouble()
             val rangeInKm = amountOfFilledWithFuel / avgFuelConsumption.toString().toDouble() * 100
 
-            calculatorEventChannel.send(CalculatorEvent.ShowResultForRangeTab(amountOfFilledWithFuel, rangeInKm))
+            CalculatorEvent.ShowResultForRangeTab(amountOfFilledWithFuel, rangeInKm).send()
         }
     }
 
@@ -147,4 +147,7 @@ class CalculatorViewModel @Inject constructor(
         data class ShowResultForRangeTab(val amountOfFilledWithFuel: Double, val rangeInKm: Double) : CalculatorEvent()
     }
 
+    private fun CalculatorEvent.send() {
+        viewModelScope.launch { calculatorEventChannel.send(this@send) }
+    }
 }

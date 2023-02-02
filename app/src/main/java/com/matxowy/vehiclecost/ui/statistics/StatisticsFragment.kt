@@ -23,8 +23,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.databinding.StatisticsFragmentBinding
-import com.matxowy.vehiclecost.ui.addvehicle.AddVehicleFragment.Companion.ADD_EDIT_VEHICLE_REQUEST
-import com.matxowy.vehiclecost.ui.addvehicle.AddVehicleFragment.Companion.ADD_EDIT_VEHICLE_RESULT
+import com.matxowy.vehiclecost.ui.addvehicle.AddVehicleFragment.Companion.ADD_VEHICLE_REQUEST
+import com.matxowy.vehiclecost.ui.addvehicle.AddVehicleFragment.Companion.ADD_VEHICLE_RESULT
 import com.matxowy.vehiclecost.util.decimalFormat
 import com.matxowy.vehiclecost.util.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,8 +79,8 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
     }
 
     private fun setFragmentResultListeners() {
-        setFragmentResultListener(ADD_EDIT_VEHICLE_REQUEST) { _, bundle ->
-            val result = bundle.getInt(ADD_EDIT_VEHICLE_RESULT)
+        setFragmentResultListener(ADD_VEHICLE_REQUEST) { _, bundle ->
+            val result = bundle.getInt(ADD_VEHICLE_RESULT)
             viewModel.onAddVehicleResult(result)
         }
     }
