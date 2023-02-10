@@ -27,6 +27,10 @@ buildscript {
         testExtJunitVersion = "1.1.5"
         coreTestingVersion = "2.1.0"
         coroutinesTestVersion = "1.6.1"
+        mockkVersion = "1.12.8"
+        kotestVersion = "5.5.4"
+        turbineVersion = "0.12.1"
+        coreTestVersion = "1.5.0"
     }
 
     repositories {

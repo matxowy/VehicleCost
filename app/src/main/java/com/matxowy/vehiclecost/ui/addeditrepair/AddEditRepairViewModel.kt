@@ -10,18 +10,20 @@ import com.matxowy.vehiclecost.util.LocalDateConverter
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class AddEditRepairViewModel @Inject constructor(
     private val repairDao: RepairDao,
     private val state: SavedStateHandle,
+    @Named("IO") private val coroutineDispatcher: CoroutineDispatcher,
     val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
     val repair = state.get<Repair>(REPAIR_STATE_KEY)
@@ -103,7 +105,7 @@ class AddEditRepairViewModel @Inject constructor(
 
     private fun showFieldsCannotBeEmptyMessage() = AddEditRepairEvent.ShowFieldsCannotBeEmptyMessage.send()
 
-    private fun createRepair(repair: Repair) = viewModelScope.launch(Dispatchers.IO) {
+    private fun createRepair(repair: Repair) = viewModelScope.launch(coroutineDispatcher) {
         try {
             repairDao.insert(repair)
             AddEditRepairEvent.NavigateToHistoryWithResult(ADD_RESULT_OK).send()
@@ -112,7 +114,7 @@ class AddEditRepairViewModel @Inject constructor(
         }
     }
 
-    private fun updateRepair(updatedRepair: Repair) = viewModelScope.launch(Dispatchers.IO) {
+    private fun updateRepair(updatedRepair: Repair) = viewModelScope.launch(coroutineDispatcher) {
         try {
             repairDao.update(updatedRepair)
             AddEditRepairEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK).send()

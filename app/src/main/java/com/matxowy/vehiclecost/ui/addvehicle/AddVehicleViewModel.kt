@@ -7,16 +7,18 @@ import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class AddVehicleViewModel @Inject constructor(
     private val vehicleDao: VehicleDao,
     private val state: SavedStateHandle,
+    @Named("IO") private val coroutineDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     var vehicleName = state.get<String>(NAME_STATE_KEY) ?: ""
@@ -47,7 +49,7 @@ class AddVehicleViewModel @Inject constructor(
         createVehicle(newVehicle)
     }
 
-    private fun createVehicle(newVehicle: Vehicle) = viewModelScope.launch(Dispatchers.IO) {
+    private fun createVehicle(newVehicle: Vehicle) = viewModelScope.launch(coroutineDispatcher) {
         try {
             vehicleDao.insert(newVehicle)
             AddVehicleEvent.NavigateToStatisticsWithResult(ADD_RESULT_OK).send()

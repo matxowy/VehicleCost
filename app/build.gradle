@@ -102,4 +102,10 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "androidx.arch.core:core-testing:$coreTestingVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "io.mockk:mockk-android:$mockkVersion"
+    testImplementation "io.mockk:mockk-agent:$mockkVersion"
+    testImplementation "io.kotest:kotest-assertions-core:$kotestVersion"
+    testImplementation "app.cash.turbine:turbine:$turbineVersion"
+    testImplementation "androidx.test:core-ktx:$coreTestVersion"
 }

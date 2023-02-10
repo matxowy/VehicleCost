@@ -11,8 +11,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import javax.inject.Named
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -47,6 +50,11 @@ object AppModule {
     @Provides
     fun provideSharedPreference(@ApplicationContext context: Context): SharedPreferences =
         context.getSharedPreferences("vehicle_cost_preferences", Context.MODE_PRIVATE)
+
+    @Provides
+    @Singleton
+    @Named("IO")
+    fun providesIOCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @ApplicationScope
     @Provides

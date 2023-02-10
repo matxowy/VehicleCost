@@ -12,19 +12,21 @@ import com.matxowy.vehiclecost.util.LocalDateConverter
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class AddEditRefuelViewModel @Inject constructor(
     private val refuelDao: RefuelDao,
     private val vehicleDao: VehicleDao,
     private val state: SavedStateHandle,
+    @Named("IO") private val coroutineDispatcher: CoroutineDispatcher,
     val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
 
@@ -141,33 +143,29 @@ class AddEditRefuelViewModel @Inject constructor(
         }
     }
 
-    private fun showFieldsCannotBeEmptyMessage() = viewModelScope.launch {
-        addEditRefuelEventChannel.send(AddEditRefuelEvent.ShowFieldsCannotBeEmptyMessage)
-    }
-
-    private fun showMileageCannotBeLessThanPreviousMessage() = viewModelScope.launch {
-        addEditRefuelEventChannel.send(AddEditRefuelEvent.ShowMileageCannotBeLessThanPreviousMessage)
-    }
-
-    private fun updateRefuel(updatedRefuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
+    private fun updateRefuel(updatedRefuel: Refuel) = viewModelScope.launch(coroutineDispatcher) {
         try {
             vehicleDao.updateMileageOfVehicle(updatedRefuel.vehicleId, updatedRefuel.mileage)
             refuelDao.update(updatedRefuel)
-            addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK))
+            AddEditRefuelEvent.NavigateToHistoryWithResult(EDIT_RESULT_OK).send()
         } catch (e: Exception) {
-            addEditRefuelEventChannel.send(AddEditRefuelEvent.ShowDefaultErrorMessage)
+            AddEditRefuelEvent.ShowDefaultErrorMessage.send()
         }
     }
 
-    private fun createRefuel(refuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
+    private fun createRefuel(refuel: Refuel) = viewModelScope.launch(coroutineDispatcher) {
         try {
             vehicleDao.updateMileageOfVehicle(refuel.vehicleId, refuel.mileage)
             refuelDao.insert(refuel)
-            addEditRefuelEventChannel.send(AddEditRefuelEvent.NavigateToHistoryWithResult(ADD_RESULT_OK))
+            AddEditRefuelEvent.NavigateToHistoryWithResult(ADD_RESULT_OK).send()
         } catch (e: Exception) {
-            addEditRefuelEventChannel.send(AddEditRefuelEvent.ShowDefaultErrorMessage)
+            AddEditRefuelEvent.ShowDefaultErrorMessage.send()
         }
     }
+
+    private fun showFieldsCannotBeEmptyMessage() = AddEditRefuelEvent.ShowFieldsCannotBeEmptyMessage.send()
+
+    private fun showMileageCannotBeLessThanPreviousMessage() = AddEditRefuelEvent.ShowMileageCannotBeLessThanPreviousMessage.send()
 
     companion object {
         const val REFUEL_STATE_KEY = "refuel"
@@ -187,5 +185,9 @@ class AddEditRefuelViewModel @Inject constructor(
         object ShowFieldsCannotBeEmptyMessage : AddEditRefuelEvent()
         object ShowMileageCannotBeLessThanPreviousMessage : AddEditRefuelEvent()
         data class NavigateToHistoryWithResult(val result: Int) : AddEditRefuelEvent()
+    }
+
+    private fun AddEditRefuelEvent.send() {
+        viewModelScope.launch { addEditRefuelEventChannel.send(this@send) }
     }
 }
