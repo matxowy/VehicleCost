@@ -1,9 +1,6 @@
 package com.matxowy.vehiclecost.data.localpreferences
 
-import android.content.Context
 import android.content.SharedPreferences
-import com.matxowy.vehiclecost.R
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class LocalPreferencesService @Inject constructor(

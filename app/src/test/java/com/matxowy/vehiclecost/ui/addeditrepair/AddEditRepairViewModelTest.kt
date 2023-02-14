@@ -13,6 +13,14 @@ import com.matxowy.vehiclecost.ui.addeditrepair.AddEditRepairViewModel.Companion
 import com.matxowy.vehiclecost.ui.addeditrepair.AddEditRepairViewModel.Companion.TIME_STATE_KEY
 import com.matxowy.vehiclecost.ui.addeditrepair.AddEditRepairViewModel.Companion.TITLE_STATE_KEY
 import com.matxowy.vehiclecost.util.MainCoroutineRule
+import com.matxowy.vehiclecost.util.RepairTestHelper
+import com.matxowy.vehiclecost.util.RepairTestHelper.COMMENTS
+import com.matxowy.vehiclecost.util.RepairTestHelper.COST
+import com.matxowy.vehiclecost.util.RepairTestHelper.DATE
+import com.matxowy.vehiclecost.util.RepairTestHelper.MILEAGE
+import com.matxowy.vehiclecost.util.RepairTestHelper.TIME
+import com.matxowy.vehiclecost.util.RepairTestHelper.TITLE
+import com.matxowy.vehiclecost.util.RepairTestHelper.VEHICLE_ID
 import com.matxowy.vehiclecost.util.constants.ResultCodes
 import io.kotest.matchers.shouldBe
 import io.mockk.*
@@ -32,15 +40,7 @@ class AddEditRepairViewModelTest {
     private val mockkLocalPreferences = mockk<LocalPreferencesApi> {
         every { getSelectedVehicleId() } returns VEHICLE_ID
     }
-    private val testRepair = Repair(
-        title = TITLE,
-        mileage = MILEAGE,
-        cost = COST,
-        date = DATE,
-        time = TIME,
-        comments = COMMENTS,
-        vehicleId = 0,
-    )
+    private val testRepair = RepairTestHelper.repair()
     private var mockkSavedStateHandle = SavedStateHandle(
         mapOf(
             TITLE_STATE_KEY to TITLE,
@@ -65,13 +65,6 @@ class AddEditRepairViewModelTest {
     )
 
     companion object {
-        const val VEHICLE_ID = 0
-        const val TITLE = "Repair"
-        const val MILEAGE = 100
-        const val DATE = "11.11.2011"
-        const val TIME = "12:54"
-        const val COST = 190.03
-        const val COMMENTS = "Comment"
         const val LOCAL_DATE_FORMATTED_STRING = "2012-12-12"
         const val LOCAL_DATE_TIME_FORMATTED_STRING = "13:53"
         val LOCAL_DATE_TIME: Clock = Clock.fixed(Instant.parse("2012-12-12T13:53:30.00Z"), ZoneId.of("UTC"))

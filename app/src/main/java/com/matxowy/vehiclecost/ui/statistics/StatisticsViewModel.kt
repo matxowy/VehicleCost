@@ -11,17 +11,19 @@ import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     val refuelDao: RefuelDao,
     val repairDao: RepairDao,
     val vehicleDao: VehicleDao,
+    @Named("IO") private val coroutineDispatcher: CoroutineDispatcher,
     private val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
 
@@ -91,7 +93,7 @@ class StatisticsViewModel @Inject constructor(
     private fun refreshStatistics() {
         val selectedVehicleId = localPreferences.getSelectedVehicleId()
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineDispatcher) {
             sumOfFuelAmount.postValue(refuelDao.getSumOfRefuels(selectedVehicleId))
             sumCostsOfRefuels.postValue(refuelDao.getSumOfCosts(selectedVehicleId))
             lastPriceOfFuel.postValue(refuelDao.getLastPriceOfFuel(selectedVehicleId))

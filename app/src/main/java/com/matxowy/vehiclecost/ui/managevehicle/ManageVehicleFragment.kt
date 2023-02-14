@@ -102,7 +102,7 @@ class ManageVehicleFragment : Fragment(R.layout.manage_vehicles_fragment) {
             }
 
             etMileage.addTextChangedListener {
-                viewModel.vehicleMileage = it.toString()
+                viewModel.vehicleMileage = it.toString().toInt()
             }
 
             btnEditVehicle.setOnClickListener {

@@ -18,6 +18,17 @@ import com.matxowy.vehiclecost.ui.addeditrefuel.AddEditRefuelViewModel.Companion
 import com.matxowy.vehiclecost.ui.addeditrefuel.AddEditRefuelViewModel.Companion.REFUEL_STATE_KEY
 import com.matxowy.vehiclecost.ui.addeditrefuel.AddEditRefuelViewModel.Companion.TIME_STATE_KEY
 import com.matxowy.vehiclecost.util.MainCoroutineRule
+import com.matxowy.vehiclecost.util.RefuelTestHelper
+import com.matxowy.vehiclecost.util.RefuelTestHelper.AMOUNT_OF_FUEL
+import com.matxowy.vehiclecost.util.RefuelTestHelper.COMMENTS
+import com.matxowy.vehiclecost.util.RefuelTestHelper.COST
+import com.matxowy.vehiclecost.util.RefuelTestHelper.DATE
+import com.matxowy.vehiclecost.util.RefuelTestHelper.FUEL_TYPE
+import com.matxowy.vehiclecost.util.RefuelTestHelper.FULL_REFUELED
+import com.matxowy.vehiclecost.util.RefuelTestHelper.MILEAGE
+import com.matxowy.vehiclecost.util.RefuelTestHelper.PRICE
+import com.matxowy.vehiclecost.util.RefuelTestHelper.TIME
+import com.matxowy.vehiclecost.util.RefuelTestHelper.VEHICLE_ID
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import io.kotest.matchers.shouldBe
@@ -44,18 +55,7 @@ class AddEditRefuelViewModelTest {
     private val mockkLocalPreferences = mockk<LocalPreferencesApi> {
         every { getSelectedVehicleId() } returns VEHICLE_ID
     }
-    private val testRefuel = Refuel(
-        mileage = MILEAGE,
-        date = DATE,
-        time = TIME,
-        amountOfFuel = AMOUNT_OF_FUEL,
-        cost = COST,
-        price = PRICE,
-        fuelType = FUEL_TYPE,
-        fullRefueled = FULL_REFUELED,
-        comments = COMMENTS,
-        vehicleId = VEHICLE_ID,
-    )
+    private val testRefuel = RefuelTestHelper.refuel()
     private var mockkSavedStateHandle = SavedStateHandle(
         mapOf(
             MILEAGE_STATE_KEY to MILEAGE,
@@ -88,16 +88,6 @@ class AddEditRefuelViewModelTest {
     )
 
     companion object {
-        const val VEHICLE_ID = 0
-        const val MILEAGE = 100
-        const val DATE = "11.11.2011"
-        const val TIME = "12:54"
-        const val AMOUNT_OF_FUEL = 42.23
-        const val COST = 190.03
-        const val PRICE = 4.5
-        const val FULL_REFUELED = true
-        const val COMMENTS = "Comment"
-        const val FUEL_TYPE = "ON"
         const val LOCAL_DATE_FORMATTED_STRING = "2012-12-12"
         const val LOCAL_DATE_TIME_FORMATTED_STRING = "13:53"
         val LOCAL_DATE_TIME: Clock = Clock.fixed(Instant.parse("2012-12-12T13:53:30.00Z"), ZoneId.of("UTC"))

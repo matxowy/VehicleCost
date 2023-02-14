@@ -11,16 +11,18 @@ import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val refuelDao: RefuelDao,
     private val repairDao: RepairDao,
+    @Named("IO") private val coroutineDispatcher: CoroutineDispatcher,
     val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
 
@@ -31,7 +33,7 @@ class HistoryViewModel @Inject constructor(
     val refuels = refuelDao.getRefuels(selectedVehicleId).asLiveData()
     val repairs = repairDao.getRepairs(selectedVehicleId).asLiveData()
 
-    fun onRefuelSwiped(refuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
+    fun onRefuelSwiped(refuel: Refuel) = viewModelScope.launch(coroutineDispatcher) {
         try {
             refuelDao.delete(refuel)
             HistoryEvent.ShowUndoDeleteRefuelMessage(refuel).send()
@@ -40,7 +42,7 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    fun onRepairSwiped(repair: Repair) = viewModelScope.launch(Dispatchers.IO) {
+    fun onRepairSwiped(repair: Repair) = viewModelScope.launch(coroutineDispatcher) {
         try {
             repairDao.delete(repair)
             HistoryEvent.ShowUndoDeleteRepairMessage(repair).send()
@@ -49,7 +51,7 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    fun onUndoDeleteRefuelClick(refuel: Refuel) = viewModelScope.launch(Dispatchers.IO) {
+    fun onUndoDeleteRefuelClick(refuel: Refuel) = viewModelScope.launch(coroutineDispatcher) {
         try {
             refuelDao.insert(refuel)
         } catch (e: Exception) {
@@ -57,7 +59,7 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    fun onUndoDeleteRepairClick(repair: Repair) = viewModelScope.launch(Dispatchers.IO) {
+    fun onUndoDeleteRepairClick(repair: Repair) = viewModelScope.launch(coroutineDispatcher) {
         try {
             repairDao.insert(repair)
         } catch (e: Exception) {
