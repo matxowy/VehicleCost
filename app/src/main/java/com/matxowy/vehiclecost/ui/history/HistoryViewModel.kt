@@ -5,6 +5,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
+import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
@@ -13,6 +14,7 @@ import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +24,7 @@ import javax.inject.Named
 class HistoryViewModel @Inject constructor(
     private val refuelDao: RefuelDao,
     private val repairDao: RepairDao,
+    private val vehicleDao: VehicleDao,
     @Named("IO") private val coroutineDispatcher: CoroutineDispatcher,
     val localPreferences: LocalPreferencesApi,
 ) : ViewModel() {
@@ -35,7 +38,12 @@ class HistoryViewModel @Inject constructor(
 
     fun onRefuelSwiped(refuel: Refuel) = viewModelScope.launch(coroutineDispatcher) {
         try {
+            val currentVehicleMileage = vehicleDao.getVehicleMileageById(refuel.vehicleId).first()
             refuelDao.delete(refuel)
+            if (refuel.mileage == currentVehicleMileage) {
+                val newVehicleMileage = refuelDao.getLastMileage(refuel.vehicleId).first()
+                vehicleDao.updateMileageOfVehicle(refuel.vehicleId, newVehicleMileage)
+            }
             HistoryEvent.ShowUndoDeleteRefuelMessage(refuel).send()
         } catch (e: Exception) {
             HistoryEvent.ShowDefaultErrorMessage.send()
@@ -53,7 +61,11 @@ class HistoryViewModel @Inject constructor(
 
     fun onUndoDeleteRefuelClick(refuel: Refuel) = viewModelScope.launch(coroutineDispatcher) {
         try {
+            val currentVehicleMileage = vehicleDao.getVehicleMileageById(refuel.vehicleId).first()
             refuelDao.insert(refuel)
+            if (refuel.mileage > currentVehicleMileage) {
+                vehicleDao.updateMileageOfVehicle(refuel.vehicleId, refuel.mileage)
+            }
         } catch (e: Exception) {
             HistoryEvent.ShowDefaultErrorMessage.send()
         }

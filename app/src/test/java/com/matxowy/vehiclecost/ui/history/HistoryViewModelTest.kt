@@ -3,6 +3,7 @@ package com.matxowy.vehiclecost.ui.history
 import app.cash.turbine.test
 import com.matxowy.vehiclecost.data.db.dao.RefuelDao
 import com.matxowy.vehiclecost.data.db.dao.RepairDao
+import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.MainCoroutineRule
 import com.matxowy.vehiclecost.util.RefuelTestHelper
@@ -11,10 +12,7 @@ import com.matxowy.vehiclecost.util.RepairTestHelper
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import io.kotest.matchers.shouldBe
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -34,6 +32,10 @@ class HistoryViewModelTest {
         coEvery { delete(any()) } returns Unit
         coEvery { getRepairs(any()) } returns flowOf(RepairTestHelper.listOfRepairs())
     }
+    private val mockkVehicleDao = mockk<VehicleDao> {
+        coEvery { getVehicleMileageById(any()) } returns flowOf(VEHICLE_MILEAGE)
+        coEvery { updateMileageOfVehicle(any(), any()) } returns Unit
+    }
     private val mockkLocalPreferences = mockk<LocalPreferencesApi> {
         every { getSelectedVehicleId() } returns VEHICLE_ID
     }
@@ -48,9 +50,14 @@ class HistoryViewModelTest {
     private val systemUnderTest = HistoryViewModel(
         refuelDao = mockkRefuelDao,
         repairDao = mockkRepairDao,
+        vehicleDao = mockkVehicleDao,
         coroutineDispatcher = testCoroutineDispatcher,
         localPreferences = mockkLocalPreferences,
     )
+
+    companion object {
+        const val VEHICLE_MILEAGE = 10000
+    }
 
     @Test
     fun `when onRefuelSwipe method is called and delete refuel was successfully then ShowUndoDeleteRefuelMessage should be sent`() = runTest {
@@ -61,6 +68,26 @@ class HistoryViewModelTest {
             cancelAndConsumeRemainingEvents()
         }
     }
+
+    @Test
+    fun `when onRefuelSwipe method is called then getVehicleMileageById should be called`() = runTest {
+        systemUnderTest.onRefuelSwiped(testRefuel)
+
+        verify(exactly = 1) { mockkVehicleDao.getVehicleMileageById(testRefuel.vehicleId) }
+    }
+
+    @Test
+    fun `when onRefuelSwipe method is called and current vehicle mileage is equal to deleting refuel mileage then updateMileageOfVehicle and getLastMileage should be called`() =
+        runTest {
+            val testRefuel = testRefuel.copy(mileage = VEHICLE_MILEAGE)
+            coEvery { mockkRefuelDao.getLastMileage(testRefuel.vehicleId) } returns flowOf(5000)
+            val newVehicleMileage = 5000
+
+            systemUnderTest.onRefuelSwiped(testRefuel)
+
+            verify(exactly = 1) { mockkRefuelDao.getLastMileage(testRefuel.vehicleId) }
+            verify(exactly = 1) { mockkVehicleDao.updateMileageOfVehicle(testRefuel.vehicleId, newVehicleMileage) }
+        }
 
     @Test
     fun `when onRefuelSwipe method is called but delete refuel throw exception then ShowDefaultErrorMessage should be sent`() = runTest {
@@ -95,6 +122,23 @@ class HistoryViewModelTest {
             cancelAndConsumeRemainingEvents()
         }
     }
+
+    @Test
+    fun `when onUndoDeleteRefuelClick method is called then getVehicleMileageById should be called`() = runTest {
+        systemUnderTest.onUndoDeleteRefuelClick(testRefuel)
+
+        coVerify(exactly = 1) { mockkVehicleDao.getVehicleMileageById(testRefuel.vehicleId) }
+    }
+
+    @Test
+    fun `when onUndoDeleteRefuelClick method is called and refuel mileage is higher than current vehicle mileage then updateMileageOfVehicle should be called`() =
+        runTest {
+            val testRefuel = testRefuel.copy(mileage = 12000)
+
+            systemUnderTest.onUndoDeleteRefuelClick(testRefuel)
+
+            coVerify(exactly = 1) { mockkVehicleDao.updateMileageOfVehicle(testRefuel.vehicleId, testRefuel.mileage) }
+        }
 
     @Test
     fun `when onUndoDeleteRefuelClick method is called then insert should be called`() = runTest {
