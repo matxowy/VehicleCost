@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.databinding.ItemRefuelBinding
-import com.matxowy.vehiclecost.util.StringUtils
 import com.matxowy.vehiclecost.util.decimalFormat
 
 class RefuelAdapter(private val listener: OnRefuelItemClickListener) :

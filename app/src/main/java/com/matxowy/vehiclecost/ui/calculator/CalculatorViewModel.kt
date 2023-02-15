@@ -5,6 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.internal.SelectedTab
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_DOUBLE_VALUE
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_INT_VALUE
+import com.matxowy.vehiclecost.util.hasDefaultValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -18,37 +21,37 @@ class CalculatorViewModel @Inject constructor(
 
     var currentTabSelected = SelectedTab.CONSUMPTION
 
-    var refueled = state.get<Double>(REFUELED_STATE_KEY) ?: ""
+    var refueled = state.get<Double>(REFUELED_STATE_KEY) ?: DEFAULT_DOUBLE_VALUE
         set(value) {
             field = value
             state[REFUELED_STATE_KEY] = value
         }
 
-    var kmTraveled = state.get<Double>(KM_TRAVELED_STATE_KEY) ?: ""
+    var kmTraveled = state.get<Double>(KM_TRAVELED_STATE_KEY) ?: DEFAULT_DOUBLE_VALUE
         set(value) {
             field = value
             state[KM_TRAVELED_STATE_KEY] = value
         }
 
-    var fuelPrice = state.get<Double>(FUEL_PRICE_STATE_KEY) ?: ""
+    var fuelPrice = state.get<Double>(FUEL_PRICE_STATE_KEY) ?: DEFAULT_DOUBLE_VALUE
         set(value) {
             field = value
             state[FUEL_PRICE_STATE_KEY] = value
         }
 
-    var avgFuelConsumption = state.get<Double>(AVG_FUEL_CONSUMPTION_STATE_KEY) ?: ""
+    var avgFuelConsumption = state.get<Double>(AVG_FUEL_CONSUMPTION_STATE_KEY) ?: DEFAULT_DOUBLE_VALUE
         set(value) {
             field = value
             state[AVG_FUEL_CONSUMPTION_STATE_KEY] = value
         }
 
-    var numberOfPeople = state.get<Int>(NUMBER_OF_PEOPLE_STATE_KEY) ?: ""
+    var numberOfPeople = state.get<Int>(NUMBER_OF_PEOPLE_STATE_KEY) ?: DEFAULT_INT_VALUE
         set(value) {
             field = value
             state[NUMBER_OF_PEOPLE_STATE_KEY] = value
         }
 
-    var paid = state.get<Double>(PAID_STATE_KEY) ?: ""
+    var paid = state.get<Double>(PAID_STATE_KEY) ?: DEFAULT_DOUBLE_VALUE
         set(value) {
             field = value
             state[PAID_STATE_KEY] = value
@@ -96,36 +99,34 @@ class CalculatorViewModel @Inject constructor(
     }
 
     private fun doCalculationInConsumptionTab() {
-        if (refueled.toString().isBlank() || kmTraveled.toString().isBlank() || fuelPrice.toString().isBlank()) {
+        if (refueled.hasDefaultValue() || kmTraveled.hasDefaultValue() || fuelPrice.hasDefaultValue()) {
             CalculatorEvent.ShowMessageAboutMissingData.send()
         } else {
-            val avgConsumption = refueled.toString().toDouble() / kmTraveled.toString().toDouble() * 100
-            val priceFor100km = avgConsumption * fuelPrice.toString().toDouble()
+            val avgConsumption = refueled / kmTraveled * 100
+            val priceFor100km = avgConsumption * fuelPrice
 
             CalculatorEvent.ShowResultForConsumptionTab(avgConsumption, priceFor100km).send()
         }
     }
 
     private fun doCalculationInCostsTab() {
-        if (avgFuelConsumption.toString().isBlank() || kmTraveled.toString().isBlank() || fuelPrice.toString().isBlank()
-            || numberOfPeople.toString().isBlank()
-        ) {
+        if (avgFuelConsumption.hasDefaultValue() || kmTraveled.hasDefaultValue() || fuelPrice.hasDefaultValue() || numberOfPeople.hasDefaultValue()) {
             CalculatorEvent.ShowMessageAboutMissingData.send()
         } else {
-            val requiredAmountOfFuel = (kmTraveled.toString().toDouble() / 100) * avgFuelConsumption.toString().toDouble()
-            val costForTravel = fuelPrice.toString().toDouble() * requiredAmountOfFuel
-            val costPerPerson = costForTravel / numberOfPeople.toString().toDouble()
+            val requiredAmountOfFuel = (kmTraveled / 100) * avgFuelConsumption
+            val costForTravel = fuelPrice * requiredAmountOfFuel
+            val costPerPerson = costForTravel / numberOfPeople.toDouble()
 
             CalculatorEvent.ShowResultForCostsTab(requiredAmountOfFuel, costForTravel, costPerPerson).send()
         }
     }
 
     private fun doCalculationInRangeTab() {
-        if (avgFuelConsumption.toString().isBlank() || paid.toString().isBlank() || fuelPrice.toString().isBlank()) {
+        if (avgFuelConsumption.hasDefaultValue() || paid.hasDefaultValue() || fuelPrice.hasDefaultValue()) {
             CalculatorEvent.ShowMessageAboutMissingData.send()
         } else {
-            val amountOfFilledWithFuel = paid.toString().toDouble() / fuelPrice.toString().toDouble()
-            val rangeInKm = amountOfFilledWithFuel / avgFuelConsumption.toString().toDouble() * 100
+            val amountOfFilledWithFuel = paid / fuelPrice
+            val rangeInKm = amountOfFilledWithFuel / avgFuelConsumption * 100
 
             CalculatorEvent.ShowResultForRangeTab(amountOfFilledWithFuel, rangeInKm).send()
         }

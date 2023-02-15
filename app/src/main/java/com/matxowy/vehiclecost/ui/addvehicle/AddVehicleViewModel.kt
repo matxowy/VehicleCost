@@ -5,7 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.db.entity.Vehicle
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_INT_VALUE
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_STRING_VALUE
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
+import com.matxowy.vehiclecost.util.hasDefaultValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -21,13 +24,13 @@ class AddVehicleViewModel @Inject constructor(
     @Named("IO") private val coroutineDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    var vehicleName = state.get<String>(NAME_STATE_KEY) ?: ""
+    var vehicleName = state.get<String>(NAME_STATE_KEY) ?: DEFAULT_STRING_VALUE
         set(value) {
             field = value
             state[NAME_STATE_KEY] = value
         }
 
-    var vehicleMileage = state.get<Int>(MILEAGE_STATE_KEY) ?: ""
+    var vehicleMileage = state.get<Int>(MILEAGE_STATE_KEY) ?: DEFAULT_INT_VALUE
         set(value) {
             field = value
             state[MILEAGE_STATE_KEY] = value
@@ -37,14 +40,14 @@ class AddVehicleViewModel @Inject constructor(
     val addVehicleEvent = addVehicleChannel.receiveAsFlow()
 
     fun onAddVehicleButtonClick() {
-        if (vehicleName.isBlank() || vehicleMileage.toString().isBlank()) {
+        if (vehicleName.isBlank() || vehicleMileage.hasDefaultValue()) {
             showInvalidInputMessage()
             return
         }
 
         val newVehicle = Vehicle(
             name = vehicleName,
-            mileage = vehicleMileage.toString().toInt(),
+            mileage = vehicleMileage,
         )
         createVehicle(newVehicle)
     }

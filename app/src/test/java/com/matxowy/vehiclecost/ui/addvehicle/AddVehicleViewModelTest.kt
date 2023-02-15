@@ -7,6 +7,7 @@ import com.matxowy.vehiclecost.data.db.entity.Vehicle
 import com.matxowy.vehiclecost.ui.addvehicle.AddVehicleViewModel.Companion.MILEAGE_STATE_KEY
 import com.matxowy.vehiclecost.ui.addvehicle.AddVehicleViewModel.Companion.NAME_STATE_KEY
 import com.matxowy.vehiclecost.util.MainCoroutineRule
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_INT_VALUE
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -65,7 +66,7 @@ class AddVehicleViewModelTest {
             coroutineDispatcher = testCoroutineDispatcher
         )
 
-        systemUnderTest.vehicleMileage shouldBe ""
+        systemUnderTest.vehicleMileage shouldBe DEFAULT_INT_VALUE
     }
 
     @Test
@@ -81,8 +82,8 @@ class AddVehicleViewModelTest {
     }
 
     @Test
-    fun `when vehicleMileage is blank while onAddVehicleButtonClick method is triggered then ShowInvalidDataMessage should be sent`() = runTest {
-        systemUnderTest.vehicleMileage = ""
+    fun `when vehicleMileage have default value while onAddVehicleButtonClick method is triggered then ShowInvalidDataMessage should be sent`() = runTest {
+        systemUnderTest.vehicleMileage = DEFAULT_INT_VALUE
 
         systemUnderTest.onAddVehicleButtonClick()
 

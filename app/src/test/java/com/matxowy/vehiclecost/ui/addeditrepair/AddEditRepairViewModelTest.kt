@@ -21,6 +21,8 @@ import com.matxowy.vehiclecost.util.RepairTestHelper.MILEAGE
 import com.matxowy.vehiclecost.util.RepairTestHelper.TIME
 import com.matxowy.vehiclecost.util.RepairTestHelper.TITLE
 import com.matxowy.vehiclecost.util.RepairTestHelper.VEHICLE_ID
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_DOUBLE_VALUE
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_INT_VALUE
 import com.matxowy.vehiclecost.util.constants.ResultCodes
 import io.kotest.matchers.shouldBe
 import io.mockk.*
@@ -133,17 +135,17 @@ class AddEditRepairViewModelTest {
 
         systemUnderTest.apply {
             title shouldBe ""
-            mileage shouldBe ""
+            mileage shouldBe DEFAULT_INT_VALUE
             date shouldBe LOCAL_DATE_FORMATTED_STRING
             time shouldBe LOCAL_DATE_TIME_FORMATTED_STRING
-            cost shouldBe ""
+            cost shouldBe DEFAULT_DOUBLE_VALUE
             comments shouldBe ""
         }
     }
 
     @Test
-    fun `when onSaveRepairClick method is triggered and mileage is blank then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
-        systemUnderTest.mileage = ""
+    fun `when onSaveRepairClick method is triggered and mileage have default value then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
+        systemUnderTest.mileage = DEFAULT_INT_VALUE
 
         systemUnderTest.onSaveRepairClick()
 
@@ -167,8 +169,8 @@ class AddEditRepairViewModelTest {
         }
 
     @Test
-    fun `when onSaveRepairClick method is triggered and cost is blank then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
-        systemUnderTest.cost = ""
+    fun `when onSaveRepairClick method is triggered and cost have default value then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
+        systemUnderTest.cost = DEFAULT_DOUBLE_VALUE
 
         systemUnderTest.onSaveRepairClick()
 

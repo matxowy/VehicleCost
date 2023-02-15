@@ -10,6 +10,8 @@ import com.matxowy.vehiclecost.ui.calculator.CalculatorViewModel.Companion.NUMBE
 import com.matxowy.vehiclecost.ui.calculator.CalculatorViewModel.Companion.PAID_STATE_KEY
 import com.matxowy.vehiclecost.ui.calculator.CalculatorViewModel.Companion.REFUELED_STATE_KEY
 import com.matxowy.vehiclecost.util.MainCoroutineRule
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_DOUBLE_VALUE
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_INT_VALUE
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -69,19 +71,19 @@ class CalculatorViewModelTest {
         systemUnderTest = CalculatorViewModel(mockkSavedStateHandle)
 
         systemUnderTest.apply {
-            refueled shouldBe ""
-            kmTraveled shouldBe ""
-            fuelPrice shouldBe ""
-            avgFuelConsumption shouldBe ""
-            numberOfPeople shouldBe ""
-            paid shouldBe ""
+            refueled shouldBe DEFAULT_DOUBLE_VALUE
+            kmTraveled shouldBe DEFAULT_DOUBLE_VALUE
+            fuelPrice shouldBe DEFAULT_DOUBLE_VALUE
+            avgFuelConsumption shouldBe DEFAULT_DOUBLE_VALUE
+            numberOfPeople shouldBe DEFAULT_INT_VALUE
+            paid shouldBe DEFAULT_DOUBLE_VALUE
         }
     }
 
     @Test
     fun `when consumption tab is selected and doCalculation is triggered but refueled is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
-            systemUnderTest.refueled = ""
+            systemUnderTest.refueled = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.doCalculation()
 
@@ -94,7 +96,7 @@ class CalculatorViewModelTest {
     @Test
     fun `when consumption tab is selected and doCalculation is triggered but kmTraveled is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
-            systemUnderTest.kmTraveled = ""
+            systemUnderTest.kmTraveled = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.doCalculation()
 
@@ -107,7 +109,7 @@ class CalculatorViewModelTest {
     @Test
     fun `when consumption tab is selected and doCalculation is triggered but fuelPrice is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
-            systemUnderTest.fuelPrice = ""
+            systemUnderTest.fuelPrice = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.doCalculation()
 
@@ -138,7 +140,7 @@ class CalculatorViewModelTest {
     fun `when costs tab is selected and doCalculation is triggered but avgFuelConsumption is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
             systemUnderTest.currentTabSelected = SelectedTab.COSTS
-            systemUnderTest.avgFuelConsumption = ""
+            systemUnderTest.avgFuelConsumption = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.doCalculation()
 
@@ -152,7 +154,7 @@ class CalculatorViewModelTest {
     fun `when costs tab is selected and doCalculation is triggered but kmTraveled is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
             systemUnderTest.currentTabSelected = SelectedTab.COSTS
-            systemUnderTest.kmTraveled = ""
+            systemUnderTest.kmTraveled = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.doCalculation()
 
@@ -166,7 +168,7 @@ class CalculatorViewModelTest {
     fun `when costs tab is selected and doCalculation is triggered but fuelPrice is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
             systemUnderTest.currentTabSelected = SelectedTab.COSTS
-            systemUnderTest.fuelPrice = ""
+            systemUnderTest.fuelPrice = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.doCalculation()
 
@@ -180,7 +182,7 @@ class CalculatorViewModelTest {
     fun `when costs tab is selected and doCalculation is triggered but numberOfPeople is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
             systemUnderTest.currentTabSelected = SelectedTab.COSTS
-            systemUnderTest.numberOfPeople = ""
+            systemUnderTest.numberOfPeople = DEFAULT_INT_VALUE
 
             systemUnderTest.doCalculation()
 
@@ -214,7 +216,7 @@ class CalculatorViewModelTest {
     fun `when range tab is selected and doCalculation is triggered but avgFuelConsumption is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
             systemUnderTest.currentTabSelected = SelectedTab.RANGE
-            systemUnderTest.avgFuelConsumption = ""
+            systemUnderTest.avgFuelConsumption = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.doCalculation()
 
@@ -228,7 +230,7 @@ class CalculatorViewModelTest {
     fun `when range tab is selected and doCalculation is triggered but paid is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
             systemUnderTest.currentTabSelected = SelectedTab.RANGE
-            systemUnderTest.paid = ""
+            systemUnderTest.paid = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.doCalculation()
 
@@ -242,7 +244,7 @@ class CalculatorViewModelTest {
     fun `when range tab is selected and doCalculation is triggered but fuelPrice is missing then ShowMessageAboutMissingData should be sent`() =
         runTest {
             systemUnderTest.currentTabSelected = SelectedTab.RANGE
-            systemUnderTest.fuelPrice = ""
+            systemUnderTest.fuelPrice = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.doCalculation()
 

@@ -9,8 +9,12 @@ import com.matxowy.vehiclecost.data.db.dao.VehicleDao
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.LocalDateConverter
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_DOUBLE_VALUE
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_INT_VALUE
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_STRING_VALUE
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
+import com.matxowy.vehiclecost.util.hasDefaultValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -32,7 +36,7 @@ class AddEditRefuelViewModel @Inject constructor(
 
     val refuel = state.get<Refuel>(REFUEL_STATE_KEY)
 
-    var mileage = state.get<Int>(MILEAGE_STATE_KEY) ?: refuel?.mileage ?: ""
+    var mileage = state.get<Int>(MILEAGE_STATE_KEY) ?: refuel?.mileage ?: DEFAULT_INT_VALUE
         set(value) {
             field = value
             state[MILEAGE_STATE_KEY] = value
@@ -50,19 +54,19 @@ class AddEditRefuelViewModel @Inject constructor(
             state[TIME_STATE_KEY] = value
         }
 
-    var amountOfFuel = state.get<Double>(AMOUNT_OF_FUEL_STATE_KEY) ?: refuel?.amountOfFuel ?: ""
+    var amountOfFuel = state.get<Double>(AMOUNT_OF_FUEL_STATE_KEY) ?: refuel?.amountOfFuel ?: DEFAULT_DOUBLE_VALUE
         set(value) {
             field = value
             state[AMOUNT_OF_FUEL_STATE_KEY] = value
         }
 
-    var cost = state.get<Double>(COST_STATE_KEY) ?: refuel?.cost ?: ""
+    var cost = state.get<Double>(COST_STATE_KEY) ?: refuel?.cost ?: DEFAULT_DOUBLE_VALUE
         set(value) {
             field = value
             state[COST_STATE_KEY] = value
         }
 
-    var price = state.get<Double>(PRICE_STATE_KEY) ?: refuel?.price ?: ""
+    var price = state.get<Double>(PRICE_STATE_KEY) ?: refuel?.price ?: DEFAULT_DOUBLE_VALUE
         set(value) {
             field = value
             state[PRICE_STATE_KEY] = value
@@ -74,7 +78,7 @@ class AddEditRefuelViewModel @Inject constructor(
             state[FULL_REFUELED_STATE_KEY] = value
         }
 
-    var comments = state.get<String>(COMMENTS_STATE_KEY) ?: refuel?.comments ?: ""
+    var comments = state.get<String>(COMMENTS_STATE_KEY) ?: refuel?.comments ?: DEFAULT_STRING_VALUE
         set(value) {
             field = value
             state[COMMENTS_STATE_KEY] = value
@@ -93,10 +97,10 @@ class AddEditRefuelViewModel @Inject constructor(
     var lastMileage = vehicleDao.getVehicleMileageById(selectedVehicleId).asLiveData()
 
     fun onSaveRefueledClick() {
-        if (mileage.toString().isBlank()
-            || amountOfFuel.toString().isBlank()
-            || cost.toString().isBlank()
-            || price.toString().isBlank()
+        if (mileage.hasDefaultValue()
+            || amountOfFuel.hasDefaultValue()
+            || cost.hasDefaultValue()
+            || price.hasDefaultValue()
         ) {
             showFieldsCannotBeEmptyMessage()
             return
@@ -105,7 +109,7 @@ class AddEditRefuelViewModel @Inject constructor(
         // The new mileage can't be less than previous
         if (refuel == null) {
             lastMileage.value?.let { lastMileage ->
-                if (mileage.toString().toInt() <= lastMileage) {
+                if (mileage <= lastMileage) {
                     showMileageCannotBeLessThanPreviousMessage()
                     return
                 }
@@ -114,12 +118,12 @@ class AddEditRefuelViewModel @Inject constructor(
 
         if (refuel != null) {
             val updatedRefuel = refuel.copy(
-                mileage = mileage.toString().toInt(),
+                mileage = mileage,
                 date = date.toString(),
                 time = time.toString(),
-                amountOfFuel = amountOfFuel.toString().toDouble(),
-                cost = cost.toString().toDouble(),
-                price = price.toString().toDouble(),
+                amountOfFuel = amountOfFuel,
+                cost = cost,
+                price = price,
                 fuelType = fuelType,
                 fullRefueled = fullRefueled,
                 comments = comments,
@@ -128,12 +132,12 @@ class AddEditRefuelViewModel @Inject constructor(
             updateRefuel(updatedRefuel)
         } else {
             val refuel = Refuel(
-                mileage = mileage.toString().toInt(),
+                mileage = mileage,
                 date = date.toString(),
                 time = time.toString(),
-                amountOfFuel = amountOfFuel.toString().toDouble(),
-                cost = cost.toString().toDouble(),
-                price = price.toString().toDouble(),
+                amountOfFuel = amountOfFuel,
+                cost = cost,
+                price = price,
                 fuelType = fuelType,
                 fullRefueled = fullRefueled,
                 comments = comments,

@@ -14,6 +14,7 @@ import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.AddVehicleFragmentBinding
 import com.matxowy.vehiclecost.util.exhaustive
 import com.matxowy.vehiclecost.util.hideKeyboard
+import com.matxowy.vehiclecost.util.toIntOrDefaultValue
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,7 +40,7 @@ class AddVehicleFragment : Fragment(R.layout.add_vehicle_fragment) {
             }
 
             etMileage.addTextChangedListener {
-                viewModel.vehicleMileage = it.toString()
+                viewModel.vehicleMileage = it.toString().toIntOrDefaultValue()
             }
 
             btnAddVehicle.setOnClickListener {

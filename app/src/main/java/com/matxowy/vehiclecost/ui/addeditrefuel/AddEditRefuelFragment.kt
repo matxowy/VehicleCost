@@ -77,7 +77,7 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
 
     private fun setProperTextForButton() {
         binding.apply {
-            if (viewModel.mileage.toString().isEmpty()) {
+            if (viewModel.mileage.hasDefaultValue()) {
                 btnAddNewRefueled.text = getString(R.string.add_refuel_button_text)
             } else {
                 btnAddNewRefueled.text = getString(R.string.edit_refuel_button_text)
@@ -96,19 +96,19 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
     private fun setListenersToFieldsAndButton() {
         binding.apply {
             etMileage.addTextChangedListener {
-                viewModel.mileage = it.toString()
+                viewModel.mileage = it.toString().toIntOrDefaultValue()
             }
 
             etPricePerLiter.addTextChangedListener {
-                viewModel.price = it.toString()
+                viewModel.price = it.toString().toDoubleOrDefaultValue()
             }
 
             etAmountOfFuel.addTextChangedListener {
-                viewModel.amountOfFuel = it.toString()
+                viewModel.amountOfFuel = it.toString().toDoubleOrDefaultValue()
             }
 
             etCost.addTextChangedListener {
-                viewModel.cost = it.toString()
+                viewModel.cost = it.toString().toDoubleOrDefaultValue()
             }
 
             etDate.addTextChangedListener {
@@ -146,12 +146,12 @@ class AddEditRefuelFragment : Fragment(R.layout.add_edit_refuel_fragment) {
 
     private fun setFieldsWithData() {
         binding.apply {
-            etMileage.setText(viewModel.mileage.toString())
+            etMileage.setText(viewModel.mileage.returnValueForField())
             etTime.setText(viewModel.time)
             etDate.setText(viewModel.date)
-            etCost.setText(StringUtils.trimTrailingZero(viewModel.cost.toString()))
-            etAmountOfFuel.setText(StringUtils.trimTrailingZero(viewModel.amountOfFuel.toString()))
-            etPricePerLiter.setText(StringUtils.trimTrailingZero(viewModel.price.toString()))
+            etCost.setText(viewModel.cost.returnValueForField())
+            etAmountOfFuel.setText(viewModel.amountOfFuel.returnValueForField())
+            etPricePerLiter.setText(viewModel.price.returnValueForField())
             etComments.setText(viewModel.comments)
             spinnerTypeOfFuel.setText(viewModel.fuelType, false)
             switchFullRefueled.isChecked = viewModel.fullRefueled

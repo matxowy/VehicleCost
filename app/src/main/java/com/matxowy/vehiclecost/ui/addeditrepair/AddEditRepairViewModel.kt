@@ -7,8 +7,12 @@ import com.matxowy.vehiclecost.data.db.dao.RepairDao
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.data.localpreferences.LocalPreferencesApi
 import com.matxowy.vehiclecost.util.LocalDateConverter
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_DOUBLE_VALUE
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_INT_VALUE
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_STRING_VALUE
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
+import com.matxowy.vehiclecost.util.hasDefaultValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -28,19 +32,19 @@ class AddEditRepairViewModel @Inject constructor(
 ) : ViewModel() {
     val repair = state.get<Repair>(REPAIR_STATE_KEY)
 
-    var title = state.get<String>(TITLE_STATE_KEY) ?: repair?.title ?: ""
+    var title = state.get<String>(TITLE_STATE_KEY) ?: repair?.title ?: DEFAULT_STRING_VALUE
         set(value) {
             field = value
             state[TITLE_STATE_KEY] = value
         }
 
-    var mileage = state.get<Int>(MILEAGE_STATE_KEY) ?: repair?.mileage ?: ""
+    var mileage = state.get<Int>(MILEAGE_STATE_KEY) ?: repair?.mileage ?: DEFAULT_INT_VALUE
         set(value) {
             field = value
             state[MILEAGE_STATE_KEY] = value
         }
 
-    var cost = state.get<Double>(COST_STATE_KEY) ?: repair?.cost ?: ""
+    var cost = state.get<Double>(COST_STATE_KEY) ?: repair?.cost ?: DEFAULT_DOUBLE_VALUE
         set(value) {
             field = value
             state[COST_STATE_KEY] = value
@@ -58,7 +62,7 @@ class AddEditRepairViewModel @Inject constructor(
             state[TIME_STATE_KEY] = value
         }
 
-    var comments = state.get<String>(COMMENTS_STATE_KEY) ?: repair?.comments ?: ""
+    var comments = state.get<String>(COMMENTS_STATE_KEY) ?: repair?.comments ?: DEFAULT_STRING_VALUE
         set(value) {
             field = value
             state[COMMENTS_STATE_KEY] = value
@@ -71,8 +75,8 @@ class AddEditRepairViewModel @Inject constructor(
 
     fun onSaveRepairClick() {
         if (title.isBlank()
-            || cost.toString().isBlank()
-            || mileage.toString().isBlank()
+            || cost.hasDefaultValue()
+            || mileage.hasDefaultValue()
         ) {
             showFieldsCannotBeEmptyMessage()
             return
@@ -81,8 +85,8 @@ class AddEditRepairViewModel @Inject constructor(
         if (repair != null) {
             val updatedRepair = repair.copy(
                 title = title,
-                mileage = mileage.toString().toInt(),
-                cost = cost.toString().toDouble(),
+                mileage = mileage,
+                cost = cost,
                 date = date.toString(),
                 time = time.toString(),
                 comments = comments,
@@ -92,8 +96,8 @@ class AddEditRepairViewModel @Inject constructor(
         } else {
             val repair = Repair(
                 title = title,
-                mileage = mileage.toString().toInt(),
-                cost = cost.toString().toDouble(),
+                mileage = mileage,
+                cost = cost,
                 date = date.toString(),
                 time = time.toString(),
                 comments = comments,

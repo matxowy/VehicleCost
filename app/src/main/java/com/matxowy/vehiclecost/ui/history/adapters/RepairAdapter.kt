@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.databinding.ItemRepairBinding
-import com.matxowy.vehiclecost.util.StringUtils
 import com.matxowy.vehiclecost.util.decimalFormat
 
 class RepairAdapter(private val listener: OnRepairItemClickListener) :

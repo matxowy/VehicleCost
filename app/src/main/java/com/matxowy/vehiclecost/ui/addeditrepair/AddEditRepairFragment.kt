@@ -61,7 +61,7 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
 
     private fun setProperTextForButton() {
         binding.apply {
-            if (viewModel.mileage.toString().isEmpty()) {
+            if (viewModel.mileage.hasDefaultValue()) {
                 btnAddNewRepair.text = getString(R.string.add_repair_button_text)
             } else {
                 btnAddNewRepair.text = getString(R.string.edit_repair_button_text)
@@ -72,7 +72,7 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
     private fun setListenersToFieldsAndButton() {
         binding.apply {
             etMileage.addTextChangedListener {
-                viewModel.mileage = it.toString()
+                viewModel.mileage = it.toString().toIntOrDefaultValue()
             }
 
             etComments.addTextChangedListener {
@@ -88,7 +88,7 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
             }
 
             etCost.addTextChangedListener {
-                viewModel.cost = it.toString()
+                viewModel.cost = it.toString().toDoubleOrDefaultValue()
             }
 
             etTitle.addTextChangedListener {
@@ -111,9 +111,9 @@ class AddEditRepairFragment : Fragment(R.layout.add_edit_repair_fragment) {
     private fun setFieldsWithData() {
         binding.apply {
             etTitle.setText(viewModel.title)
-            etCost.setText(StringUtils.trimTrailingZero(viewModel.cost.toString()))
+            etCost.setText(viewModel.cost.returnValueForField())
             etDate.setText(viewModel.date)
-            etMileage.setText(viewModel.mileage.toString())
+            etMileage.setText(viewModel.mileage.returnValueForField())
             etTime.setText(viewModel.time)
             etComments.setText(viewModel.comments)
         }

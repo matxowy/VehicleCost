@@ -29,6 +29,8 @@ import com.matxowy.vehiclecost.util.RefuelTestHelper.MILEAGE
 import com.matxowy.vehiclecost.util.RefuelTestHelper.PRICE
 import com.matxowy.vehiclecost.util.RefuelTestHelper.TIME
 import com.matxowy.vehiclecost.util.RefuelTestHelper.VEHICLE_ID
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_DOUBLE_VALUE
+import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_INT_VALUE
 import com.matxowy.vehiclecost.util.constants.ResultCodes.ADD_RESULT_OK
 import com.matxowy.vehiclecost.util.constants.ResultCodes.EDIT_RESULT_OK
 import io.kotest.matchers.shouldBe
@@ -169,12 +171,12 @@ class AddEditRefuelViewModelTest {
         )
 
         systemUnderTest.apply {
-            mileage shouldBe ""
+            mileage shouldBe DEFAULT_INT_VALUE
             date shouldBe LOCAL_DATE_FORMATTED_STRING
             time shouldBe LOCAL_DATE_TIME_FORMATTED_STRING
-            amountOfFuel shouldBe ""
-            cost shouldBe ""
-            price shouldBe ""
+            amountOfFuel shouldBe DEFAULT_DOUBLE_VALUE
+            cost shouldBe DEFAULT_DOUBLE_VALUE
+            price shouldBe DEFAULT_DOUBLE_VALUE
             fullRefueled shouldBe false
             comments shouldBe ""
             fuelType shouldBe FUEL_TYPE
@@ -182,8 +184,8 @@ class AddEditRefuelViewModelTest {
     }
 
     @Test
-    fun `when onSaveRefueledClick method is triggered and mileage is blank then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
-        systemUnderTest.mileage = ""
+    fun `when onSaveRefueledClick method is triggered and mileage have default value then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
+        systemUnderTest.mileage = DEFAULT_INT_VALUE
 
         systemUnderTest.onSaveRefueledClick()
 
@@ -194,9 +196,9 @@ class AddEditRefuelViewModelTest {
     }
 
     @Test
-    fun `when onSaveRefueledClick method is triggered and amountOfFuel is blank then ShowFieldsCannotBeEmptyMessage event should be sent`() =
+    fun `when onSaveRefueledClick method is triggered and amountOfFuel have default value then ShowFieldsCannotBeEmptyMessage event should be sent`() =
         runTest {
-            systemUnderTest.amountOfFuel = ""
+            systemUnderTest.amountOfFuel = DEFAULT_DOUBLE_VALUE
 
             systemUnderTest.onSaveRefueledClick()
 
@@ -207,8 +209,8 @@ class AddEditRefuelViewModelTest {
         }
 
     @Test
-    fun `when onSaveRefueledClick method is triggered and cost is blank then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
-        systemUnderTest.cost = ""
+    fun `when onSaveRefueledClick method is triggered and cost have default value then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
+        systemUnderTest.cost = DEFAULT_DOUBLE_VALUE
 
         systemUnderTest.onSaveRefueledClick()
 
@@ -219,8 +221,8 @@ class AddEditRefuelViewModelTest {
     }
 
     @Test
-    fun `when onSaveRefueledClick method is triggered and price is blank then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
-        systemUnderTest.price = ""
+    fun `when onSaveRefueledClick method is triggered and price have default value then ShowFieldsCannotBeEmptyMessage event should be sent`() = runTest {
+        systemUnderTest.price = DEFAULT_DOUBLE_VALUE
 
         systemUnderTest.onSaveRefueledClick()
 
