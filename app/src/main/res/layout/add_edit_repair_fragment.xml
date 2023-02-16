@@ -5,24 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.addeditrepair.AddEditRepairFragment"
-    android:background="#E3E3E3">
+    android:background="@color/greyBackgroundColor">
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/default_side_margin">
 
     <EditText
         android:id="@+id/et_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:layout_marginEnd="@dimen/small_margin"
         android:clickable="false"
         android:cursorVisible="false"
-        android:ems="7"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:minHeight="48dp"
+        android:importantForAutofill="no"
+        android:inputType="date"
+        android:minHeight="@dimen/minimum_field_height"
         android:textAlignment="center"
         android:background="@color/white"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/til_mileage" />
@@ -31,17 +37,18 @@
         android:id="@+id/et_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/medium_margin"
         android:clickable="false"
         android:cursorVisible="false"
-        android:ems="7"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:minHeight="48dp"
+        android:importantForAutofill="no"
+        android:inputType="datetime"
+        android:minHeight="@dimen/minimum_field_height"
         android:textAlignment="center"
         android:background="@color/white"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical"
         app:layout_constraintTop_toBottomOf="@+id/til_mileage" />
@@ -50,9 +57,8 @@
         android:id="@+id/tv_label_for_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="18dp"
-        android:ems="8"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/date_time_labels_margin_top"
         android:gravity="start"
         android:labelFor="@+id/et_time"
         android:text="@string/label_time"
@@ -64,9 +70,8 @@
         android:id="@+id/tv_label_for_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="18dp"
-        android:ems="8"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/date_time_labels_margin_top"
         android:gravity="start"
         android:labelFor="@+id/et_date"
         android:text="@string/label_of_date"
@@ -92,9 +97,7 @@
         android:id="@+id/til_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="@dimen/medium_margin"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
         app:boxBackgroundColor="@android:color/transparent"
@@ -111,8 +114,7 @@
             android:hint="@string/title"
             android:inputType="text"
             android:maxLength="50"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -120,9 +122,7 @@
         android:id="@+id/til_mileage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="@dimen/medium_margin"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
         app:boxBackgroundColor="@android:color/transparent"
@@ -139,8 +139,7 @@
             android:hint="@string/text_input_hint_mileage"
             android:inputType="numberDecimal"
             android:maxLength="20"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -148,16 +147,14 @@
         android:id="@+id/till_cost"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="@dimen/medium_margin"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
         app:boxBackgroundColor="@android:color/transparent"
         app:endIconMode="clear_text"
+        app:startIconDrawable="@drawable/ic_payment_outlined"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:startIconDrawable="@drawable/ic_payment_outlined"
         app:layout_constraintTop_toBottomOf="@+id/et_time">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -166,16 +163,15 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_cost"
             android:inputType="numberDecimal"
-            android:maxLength="10"
-            android:textColor="@color/black" />
+            android:maxLength="8"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="@dimen/medium_margin"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
         app:boxBackgroundColor="@android:color/transparent"
@@ -192,7 +188,8 @@
             android:hint="@string/comments"
             android:inputType="textMultiLine"
             android:lines="5"
-            android:maxLines="8" />
+            android:maxLines="8"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -200,9 +197,7 @@
         android:id="@+id/btn_add_new_repair"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/high_margin"
         android:text="@string/btn_add_new_repair"
         app:icon="@drawable/ic_add"
         style="@style/Widget.MaterialComponents.Button.Icon"
@@ -210,5 +205,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
