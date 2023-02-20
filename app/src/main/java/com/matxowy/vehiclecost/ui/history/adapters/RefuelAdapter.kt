@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.matxowy.vehiclecost.data.db.entity.Refuel
 import com.matxowy.vehiclecost.databinding.ItemRefuelBinding
+import com.matxowy.vehiclecost.util.addSpace
 import com.matxowy.vehiclecost.util.decimalFormat
 
 class RefuelAdapter(private val listener: OnRefuelItemClickListener) :
@@ -41,7 +42,7 @@ class RefuelAdapter(private val listener: OnRefuelItemClickListener) :
             binding.apply {
                 tvAmountOfFuel.text = "${refuel.amountOfFuel.decimalFormat()} l"
                 tvDate.text = refuel.date
-                tvMileage.text = "${refuel.mileage} km"
+                tvMileage.text = "${refuel.mileage.addSpace()} km"
                 tvPrice.text = "${refuel.price.decimalFormat()} zł"
             }
         }

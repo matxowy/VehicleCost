@@ -10,52 +10,48 @@
         android:id="@+id/rg_types"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/small_margin"
         android:background="@drawable/radio_group_tab_background"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/rb_fuel_consumption"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/field_height"
             android:layout_weight="1"
-            android:background="@drawable/calculation_type_selector"
+            android:background="@drawable/type_selector"
             android:button="@null"
             android:checked="true"
             android:gravity="center"
             android:text="@string/fuel_consumption"
-            android:textColor="@drawable/calculation_type_text_color_selector"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textColor="@drawable/type_text_color_selector"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
         <RadioButton
             android:id="@+id/rb_costs"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/field_height"
             android:layout_weight="1"
-            android:background="@drawable/calculation_type_selector"
+            android:background="@drawable/type_selector"
             android:button="@null"
             android:checked="false"
             android:gravity="center"
             android:text="@string/costs"
-            android:textColor="@drawable/calculation_type_text_color_selector"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textColor="@drawable/type_text_color_selector"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
         <RadioButton
             android:id="@+id/rb_range"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/field_height"
             android:layout_weight="1"
-            android:background="@drawable/calculation_type_selector"
+            android:background="@drawable/type_selector"
             android:button="@null"
             android:checked="false"
             android:gravity="center"
             android:text="@string/range"
-            android:textColor="@drawable/calculation_type_text_color_selector"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textColor="@drawable/type_text_color_selector"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
     </RadioGroup>
 
     <LinearLayout
@@ -63,9 +59,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="70dp"
-        android:padding="10dp"
-        android:visibility="visible">
+        android:layout_marginTop="@dimen/large_margin"
+        android:padding="@dimen/small_padding"
+        android:visibility="visible"
+        tools:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,13 +70,14 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/small_margin"
                 android:src="@drawable/ic_fuel"
-                android:contentDescription="fuel_icon" />
+                android:contentDescription="@string/content_description_fuel_icon"
+                app:tint="@color/teal_200" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_refueled_from_fuel_consumption_tab"
@@ -95,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/refueled_hint"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -110,19 +108,21 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_gravity="center_vertical|start"
                 android:src="@drawable/ic_car"
-                android:contentDescription="car_icon" />
+                android:contentDescription="@string/content_description_car_icon"
+                app:tint="@color/teal_200" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_km_traveled_from_fuel_consumption_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/small_margin"
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent">
 
@@ -132,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/traveled_kilometers_hint"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -145,13 +145,15 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
                 android:src="@drawable/ic_money"
-                android:contentDescription="money_icon" />
+                android:layout_gravity="center_vertical|start"
+                android:contentDescription="@string/content_description_money_icon"
+                app:tint="@color/teal_200" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_fuel_price_from_fuel_consumption_tab"
@@ -184,23 +186,25 @@
                 android:id="@+id/tv_avg_fuel_consumption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Srednie spalanie wynosi: 6.6l/100km"
-                android:layout_marginTop="35dp"
-                android:textSize="18sp"
+                android:layout_marginTop="@dimen/very_high_margin"
                 android:layout_gravity="center"
                 android:visibility="gone"
                 android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.Body1"
+                tools:text="Srednie spalanie wynosi: 6.6l/100km"
+                tools:visibility="visible"
                 />
 
             <TextView
                 android:id="@+id/tv_cost_of_100km"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cena za przejechanie 100km wynosi: 20.38zł"
-                android:textSize="18sp"
                 android:layout_gravity="center"
                 android:visibility="gone"
                 android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.Body1"
+                tools:text="Cena za przejechanie 100km wynosi: 20.38zł"
+                tools:visibility="visible"
                 />
 
         </LinearLayout>
@@ -213,9 +217,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="70dp"
-        android:padding="10dp"
-        android:visibility="gone">
+        android:layout_marginTop="@dimen/large_margin"
+        android:padding="@dimen/small_padding"
+        android:visibility="gone"
+        tools:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -223,13 +228,14 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/small_margin"
                 android:src="@drawable/ic_fuel"
-                android:contentDescription="fuel_icon" />
+                android:contentDescription="@string/content_description_fuel_icon"
+                app:tint="@color/teal_200" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_avg_fuel_consumption_from_costs_tab"
@@ -245,7 +251,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/avg_consumption_hint"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -260,19 +266,21 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_gravity="center_vertical|start"
                 android:src="@drawable/ic_car"
-                android:contentDescription="car_icon" />
+                android:contentDescription="@string/content_description_car_icon"
+                app:tint="@color/teal_200" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_km_traveled_from_costs_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/small_margin"
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent">
 
@@ -282,7 +290,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/traveled_kilometers_hint"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -295,19 +303,21 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
                 android:src="@drawable/ic_money"
-                android:contentDescription="money_icon" />
+                android:layout_gravity="center_vertical|start"
+                android:contentDescription="@string/content_description_money_icon"
+                app:tint="@color/teal_200" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_fuel_price_from_costs_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/small_margin"
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent">
 
@@ -317,7 +327,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/price_per_liter_hint"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -330,19 +340,21 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
                 android:src="@drawable/ic_people"
-                android:contentDescription="people_icon" />
+                android:layout_gravity="center_vertical|start"
+                android:contentDescription="@string/content_description_people_icon"
+                app:tint="@color/teal_200" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_number_of_people_from_costs_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/small_margin"
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent">
 
@@ -352,7 +364,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/number_of_people_hint"
                     android:inputType="number"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -369,31 +381,37 @@
                 android:id="@+id/tv_required_amount_of_fuel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Wymagana ilość paliwa: 6.6l"
-                android:layout_marginTop="35dp"
-                android:textSize="18sp"
+                android:layout_marginTop="@dimen/very_high_margin"
+                android:textAppearance="@style/TextAppearance.Body1"
                 android:layout_gravity="center"
+                android:textAlignment="center"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Wymagana ilość paliwa: 6.6l"
                 />
 
             <TextView
                 android:id="@+id/tv_travel_cost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Koszt podróży wyniesie: 20.38zł"
-                android:textSize="18sp"
+                android:textAppearance="@style/TextAppearance.Body1"
                 android:layout_gravity="center"
+                android:textAlignment="center"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Koszt podróży wyniesie: 20.38zł"
                 />
 
             <TextView
                 android:id="@+id/tv_travel_cost_per_person"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Na osobę: 20.38zł"
-                android:textSize="18sp"
+                android:textAppearance="@style/TextAppearance.Body1"
                 android:layout_gravity="center"
+                android:textAlignment="center"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Na osobę: 20.38zł"
                 />
 
         </LinearLayout>
@@ -405,9 +423,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="70dp"
-        android:padding="10dp"
-        android:visibility="gone">
+        android:layout_marginTop="@dimen/large_margin"
+        android:padding="@dimen/small_padding"
+        android:visibility="gone"
+        tools:visibility="visible" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -415,13 +434,14 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/small_margin"
                 android:src="@drawable/ic_fuel"
-                android:contentDescription="fuel_icon" />
+                android:contentDescription="@string/content_description_fuel_icon"
+                app:tint="@color/teal_200" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_avg_fuel_consumption_from_range_tab"
@@ -437,7 +457,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/avg_consumption_hint"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -452,19 +472,21 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
                 android:src="@drawable/ic_payment"
-                android:contentDescription="payment_icon" />
+                android:layout_gravity="center_vertical|start"
+                android:contentDescription="@string/content_description_payment_icon"
+                app:tint="@color/teal_200"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_paid_from_range_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/small_margin"
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent">
 
@@ -474,7 +496,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/paid_hint"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -487,19 +509,21 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/very_small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_gravity="center_vertical|start"
                 android:src="@drawable/ic_money"
-                android:contentDescription="money_icon" />
+                android:contentDescription="@string/content_description_money_icon"
+                app:tint="@color/teal_200" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_fuel_price_from_range_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/small_margin"
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent">
 
@@ -509,7 +533,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/price_per_liter_hint"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -526,21 +550,25 @@
                 android:id="@+id/tv_filled_with_fuel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Zatankowano: 6.6l"
-                android:layout_marginTop="35dp"
-                android:textSize="18sp"
+                android:layout_marginTop="@dimen/very_high_margin"
+                android:textAppearance="@style/TextAppearance.Body1"
                 android:layout_gravity="center"
+                android:textAlignment="center"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Zatankowano: 6.6l"
                 />
 
             <TextView
                 android:id="@+id/tv_expected_range"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Przewidywany zasięg wynosi: 50km"
-                android:textSize="18sp"
+                android:textAppearance="@style/TextAppearance.Body1"
                 android:layout_gravity="center"
+                android:textAlignment="center"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Przewidywany zasięg wynosi: 50km"
                 />
 
         </LinearLayout>

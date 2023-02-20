@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.matxowy.vehiclecost.data.db.entity.Repair
 import com.matxowy.vehiclecost.databinding.ItemRepairBinding
+import com.matxowy.vehiclecost.util.addSpace
 import com.matxowy.vehiclecost.util.decimalFormat
 
 class RepairAdapter(private val listener: OnRepairItemClickListener) :
@@ -41,7 +42,7 @@ class RepairAdapter(private val listener: OnRepairItemClickListener) :
             binding.apply {
                 tvCost.text = "${repair.cost.decimalFormat()} zł"
                 tvDate.text = repair.date
-                tvMileage.text = "${repair.mileage} km"
+                tvMileage.text = "${repair.mileage.addSpace()} km"
                 tvRepairTitle.text = repair.title
             }
         }

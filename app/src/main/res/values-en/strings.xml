@@ -91,4 +91,9 @@
     <string name="default_vehicle">My Vehicle</string>
     <string name="delete_current_selected_vehicle_error_message">You cannot delete the currently selected vehicle as it is the primary vehicle.</string>
     <string name="default_error_message">Something went wrong. Try again</string>
+    <string name="content_description_fuel_icon">fuel_icon</string>
+    <string name="content_description_car_icon">car_icon</string>
+    <string name="content_description_money_icon">money_icon</string>
+    <string name="content_description_people_icon">people_icon</string>
+    <string name="content_description_payment_icon">payment_icon</string>
 </resources>

@@ -258,12 +258,14 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
                     binding.apply {
                         recyclerViewRepair.visibility = View.GONE
                         recyclerViewRefuel.visibility = View.VISIBLE
+                        if (fabClicked) onAddButtonClicked()
                     }
                 }
                 R.id.rb_repair_history -> {
                     binding.apply {
                         recyclerViewRepair.visibility = View.VISIBLE
                         recyclerViewRefuel.visibility = View.GONE
+                        if (fabClicked) onAddButtonClicked()
                     }
                 }
             }
@@ -283,11 +285,13 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
             binding.apply {
                 fabAddRepair.visibility = View.VISIBLE
                 fabAddRefuel.visibility = View.VISIBLE
+                clMain.alpha = SEMI_TRANSPARENT
             }
         } else {
             binding.apply {
                 fabAddRepair.visibility = View.GONE
                 fabAddRefuel.visibility = View.GONE
+                clMain.alpha = OPAQUE
             }
         }
     }
@@ -325,5 +329,10 @@ class HistoryFragment : Fragment(R.layout.history_fragment),
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val SEMI_TRANSPARENT = 0.5F
+        const val OPAQUE = 1F
     }
 }

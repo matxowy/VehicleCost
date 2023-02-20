@@ -132,6 +132,9 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
             fabAddRepair.setOnClickListener {
                 viewModel.onAddNewRepairClick()
             }
+            spinnerVehicle.setOnClickListener {
+                if (clicked) onAddButtonClicked()
+            }
         }
     }
 
@@ -204,11 +207,13 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
             binding.apply {
                 fabAddRepair.visibility = View.VISIBLE
                 fabAddRefuel.visibility = View.VISIBLE
+                clMain.alpha = SEMI_TRANSPARENT
             }
         } else {
             binding.apply {
                 fabAddRepair.visibility = View.GONE
                 fabAddRefuel.visibility = View.GONE
+                clMain.alpha = OPAQUE
             }
         }
     }
@@ -251,5 +256,7 @@ class StatisticsFragment : Fragment(R.layout.statistics_fragment) {
     companion object {
         const val UNIT_OF_VOLUME = "l"
         const val CURRENCY = "zł"
+        const val SEMI_TRANSPARENT = 0.5F
+        const val OPAQUE = 1F
     }
 }

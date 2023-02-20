@@ -7,11 +7,15 @@
     android:orientation="vertical"
     tools:context=".ui.history.HistoryFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         app:constraint_referenced_ids="progressBar_loading, textView_loading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,10 +24,7 @@
         android:id="@+id/textView_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_margin = "@dimen/small_margin"
         android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,10 +38,7 @@
         android:id="@+id/progressBar_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_margin = "@dimen/small_margin"
         android:indeterminate="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,40 +49,37 @@
         android:id="@+id/rg_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginStart="9dp"
+        android:layout_margin="@dimen/small_margin"
         android:background="@drawable/radio_group_tab_background"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@+id/recyclerView_refuel"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
             android:id="@+id/rb_fuel_history"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/field_height"
             android:layout_weight="1"
-            android:background="@drawable/calculation_type_selector"
+            android:background="@drawable/type_selector"
             android:button="@null"
             android:checked="true"
             android:gravity="center"
             android:text="@string/rb_fuel_text"
-            android:textColor="@drawable/calculation_type_text_color_selector"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@drawable/type_text_color_selector"
+            android:textAppearance="@style/TextAppearance.HeadlineSmallBold" />
 
         <RadioButton
             android:id="@+id/rb_repair_history"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/field_height"
             android:layout_weight="1"
-            android:background="@drawable/calculation_type_selector"
+            android:background="@drawable/type_selector"
             android:button="@null"
             android:checked="false"
             android:gravity="center"
             android:text="@string/rb_repair_text"
-            android:textColor="@drawable/calculation_type_text_color_selector"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@drawable/type_text_color_selector"
+            android:textAppearance="@style/TextAppearance.HeadlineSmallBold" />
 
     </RadioGroup>
 
@@ -93,9 +88,9 @@
         android:id="@+id/recyclerView_refuel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginStart="@dimen/very_small_margin"
+        android:layout_marginTop="@dimen/large_margin"
+        android:layout_marginEnd="@dimen/very_small_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rg_history" />
@@ -104,24 +99,28 @@
         android:id="@+id/recyclerView_repair"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginStart="@dimen/very_small_margin"
+        android:layout_marginTop="@dimen/large_margin"
+        android:layout_marginEnd="@dimen/very_small_margin"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rg_history" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_repair"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="15dp"
+        android:layout_margin="@dimen/medium_margin"
         android:contentDescription="@string/content_description_fab_add_repair"
         android:focusable="true"
         android:src="@drawable/ic_repair"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/fab_add_refuel"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@android:color/white" />
@@ -131,12 +130,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
         android:contentDescription="@string/content_description_fab_add_refuel"
         android:focusable="true"
         android:src="@drawable/ic_add_refuel"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/fab_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@android:color/white" />
@@ -146,8 +146,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
         android:backgroundTint="@color/purple_500"
         android:clickable="true"
         android:contentDescription="@string/add_text"

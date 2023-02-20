@@ -99,6 +99,13 @@
     <string name="numerical_value_with_unit_of_volume">%1$s %2$s</string>
     <string name="numerical_value_with_currency">%1$s %2$s</string>
 
+    // Content descriptions
+    <string name="content_description_fuel_icon">ikona_paliwa</string>
+    <string name="content_description_car_icon">ikona_auta</string>
+    <string name="content_description_money_icon">ikona_pieniędzy</string>
+    <string name="content_description_people_icon">ikona_ludzi</string>
+    <string name="content_description_payment_icon">ikona_platnosci</string>
+
     <string-array name="type_of_fuel">
         <item>ON</item>
         <item>PB</item>

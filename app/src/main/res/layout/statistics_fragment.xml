@@ -1,62 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.statistics.StatisticsFragment"
     android:orientation="vertical"
-    android:background="#E3E3E3">
+    android:background="@color/greyBackgroundColor">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/default_side_margin">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_spinner_vehicle"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="@color/white">
+        android:layout_marginTop="@dimen/small_margin"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <AutoCompleteTextView
             android:id="@+id/spinner_vehicle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
+        android:id="@+id/tv_fuel_headline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:textSize="30sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:text="@string/stat_header_fuel" />
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textAppearance="@style/TextAppearance.HeadlineMediumBold"
+        android:text="@string/stat_header_fuel"
+        app:layout_constraintTop_toBottomOf="@id/til_spinner_vehicle"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcv_fuel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/ll_background_under_statistics_text"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp">
+        app:cardCornerRadius="@dimen/statistics_card_corner_radius"
+        app:layout_constraintTop_toBottomOf="@id/tv_fuel_headline">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/small_margin">
 
         <LinearLayout
+            android:id="@+id/ll_refueled_stat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="@dimen/small_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/stat_refueled_text"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_weight="1"
                 />
 
@@ -65,10 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="0 l"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:layout_marginEnd="10dp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.HeadlineSmallBold"
                 android:maxLines="1"
                 android:maxLength="15"
                 android:ellipsize="end"
@@ -77,17 +88,18 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_fuel_costs_stat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/ll_refueled_stat"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/stat_paid_text"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_weight="1"
                 />
 
@@ -96,10 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="0 zł"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:layout_marginEnd="10dp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.HeadlineSmallBold"
                 android:maxLines="1"
                 android:maxLength="15"
                 android:ellipsize="end"
@@ -108,18 +117,19 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_last_fuel_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:paddingBottom="@dimen/small_padding"
+            app:layout_constraintTop_toBottomOf="@id/ll_fuel_costs_stat"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/stat_last_fuel_price_text"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_weight="1"
                 />
 
@@ -128,10 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="0 zł"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:layout_marginEnd="10dp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.HeadlineSmallBold"
                 android:maxLines="1"
                 android:maxLength="15"
                 android:ellipsize="end"
@@ -139,39 +146,46 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
+        android:id="@+id/tv_repair_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="10dp"
-        android:textSize="30sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:text="@string/stat_header_repair" />
+        android:layout_marginTop="@dimen/very_high_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textAppearance="@style/TextAppearance.HeadlineMediumBold"
+        android:text="@string/stat_header_repair"
+        app:layout_constraintTop_toBottomOf="@id/mcv_fuel"/>
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/ll_background_under_statistics_text"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp">
+        app:cardCornerRadius="@dimen/statistics_card_corner_radius"
+        app:layout_constraintTop_toBottomOf="@id/tv_repair_title">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/default_side_margin">
 
         <LinearLayout
+            android:id="@+id/ll_sum_cost_repair_stat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="@dimen/small_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/stat_sum_cost_repair"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_weight="1"
                 />
 
@@ -180,10 +194,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="0 zł"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:layout_marginEnd="10dp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.HeadlineSmallBold"
                 android:maxLines="1"
                 android:maxLength="15"
                 android:ellipsize="end"
@@ -192,17 +203,17 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_greatest_cost_repair_stat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/ll_sum_cost_repair_stat">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/stat_greatest_expense_repair"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_weight="1"
                 />
 
@@ -211,10 +222,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="0 zł"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:layout_marginEnd="10dp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.HeadlineSmallBold"
                 android:maxLines="1"
                 android:maxLength="15"
                 android:ellipsize="end"
@@ -226,15 +234,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:paddingBottom="@dimen/small_padding"
+            app:layout_constraintTop_toBottomOf="@id/ll_greatest_cost_repair_stat">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/stat_latest_cost_repair"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_weight="1"
                 />
 
@@ -243,10 +250,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="0 zł"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:layout_marginEnd="10dp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.HeadlineSmallBold"
                 android:maxLines="1"
                 android:maxLength="15"
                 android:ellipsize="end"
@@ -254,48 +258,59 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_repair"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="15dp"
+        android:layout_margin="@dimen/medium_margin"
+        android:contentDescription="@string/content_description_fab_add_repair"
         android:focusable="true"
-        android:visibility="gone"
-        app:tint="@android:color/white"
         android:src="@drawable/ic_repair"
-        android:contentDescription="@string/content_description_fab_add_repair"/>
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/fab_add_refuel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_refuel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:contentDescription="@string/content_description_fab_add_refuel"
         android:focusable="true"
-        android:visibility="gone"
-        app:tint="@android:color/white"
         android:src="@drawable/ic_add_refuel"
-        android:contentDescription="@string/content_description_fab_add_refuel"/>
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/fab_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="15dp"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
         android:backgroundTint="@color/purple_500"
         android:clickable="true"
+        android:contentDescription="@string/add_text"
         android:focusable="true"
-        app:tint="@android:color/white"
         android:src="@drawable/ic_add"
-        android:contentDescription="@string/add_text"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
 
-</LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
