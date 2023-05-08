@@ -2,7 +2,7 @@ package com.matxowy.vehiclecost.ui.calculator
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.matxowy.vehiclecost.internal.SelectedTab
+import com.matxowy.vehiclecost.util.enums.SelectedTab
 import com.matxowy.vehiclecost.ui.calculator.CalculatorViewModel.Companion.AVG_FUEL_CONSUMPTION_STATE_KEY
 import com.matxowy.vehiclecost.ui.calculator.CalculatorViewModel.Companion.FUEL_PRICE_STATE_KEY
 import com.matxowy.vehiclecost.ui.calculator.CalculatorViewModel.Companion.KM_TRAVELED_STATE_KEY

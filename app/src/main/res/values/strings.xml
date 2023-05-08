@@ -52,7 +52,7 @@
     <string name="km_result_text">" km"</string>
     <string name="required_amount_of_fuel_result_text">"Wymagana ilość paliwa: "</string>
     <string name="cost_of_travel_result_text">"Koszt podróży wyniesie: "</string>
-    <string name="zloty_result_text">zł</string>
+    <string name="zloty_result_text">" zł"</string>
     <string name="per_person_result_text">"Na osobę: "</string>
     <string name="avg_consumtion_result_text">"Srednie spalanie wynosi: "</string>
     <string name="price_per_100km_result_text">"Cena za przejechanie 100km wynosi: "</string>

@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
 import com.matxowy.vehiclecost.R
 import com.matxowy.vehiclecost.databinding.CalculatorFragmentBinding
-import com.matxowy.vehiclecost.internal.SelectedTab
+import com.matxowy.vehiclecost.util.enums.SelectedTab
 import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_DOUBLE_VALUE
 import com.matxowy.vehiclecost.util.constants.DefaultFieldValues.DEFAULT_INT_VALUE
 import com.matxowy.vehiclecost.util.hasDefaultValue
@@ -111,12 +111,12 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
     private fun showResultForRangeTab(amountOfFilledWithFuel: Double, rangeInKm: Double) {
         val filledText = SpannableStringBuilder()
             .append(getString(R.string.refueled_result_text))
-            .bold { append(amountOfFilledWithFuel.roundTo(DECIMAL_PLACES).toString()) }
+            .bold { append(amountOfFilledWithFuel.roundTo(DECIMAL_PLACES).toString().trimTrailingZero()) }
             .bold { append(getString(R.string.liters_result_text)) }
 
         val expectedRangeText = SpannableStringBuilder()
             .append(getString(R.string.expected_range_is_result_text))
-            .bold { append(rangeInKm.roundTo(DECIMAL_PLACES).toString()) }
+            .bold { append(rangeInKm.roundTo(DECIMAL_PLACES).toString().trimTrailingZero()) }
             .bold { append(getString(R.string.km_result_text)) }
 
         binding.apply {
@@ -134,17 +134,17 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
     ) {
         val requiredAmountText = SpannableStringBuilder()
             .append(getString(R.string.required_amount_of_fuel_result_text))
-            .bold { append(requiredAmountOfFuel.roundTo(DECIMAL_PLACES).toString()) }
+            .bold { append(requiredAmountOfFuel.roundTo(DECIMAL_PLACES).toString().trimTrailingZero()) }
             .bold { append(getString(R.string.liters_result_text)) }
 
         val travelCostText = SpannableStringBuilder()
             .append(getString(R.string.cost_of_travel_result_text))
-            .bold { append(costForTravel.roundTo(DECIMAL_PLACES).toString()) }
+            .bold { append(costForTravel.roundTo(DECIMAL_PLACES).toString().trimTrailingZero()) }
             .bold { append(getString(R.string.zloty_result_text)) }
 
         val travelCostPerPersonText = SpannableStringBuilder()
             .append(getString(R.string.per_person_result_text))
-            .bold { append(costPerPerson.roundTo(DECIMAL_PLACES).toString()) }
+            .bold { append(costPerPerson.roundTo(DECIMAL_PLACES).toString().trimTrailingZero()) }
             .bold { append(getString(R.string.zloty_result_text)) }
 
         binding.apply {
@@ -160,12 +160,12 @@ class CalculatorFragment : Fragment(R.layout.calculator_fragment) {
     private fun showResultForConsumptionTab(avgConsumption: Double, price: Double) {
         val avgFuelConsumptionText = SpannableStringBuilder()
             .append(getString(R.string.avg_consumtion_result_text))
-            .bold { append(avgConsumption.roundTo(DECIMAL_PLACES).toString()) }
+            .bold { append(avgConsumption.roundTo(DECIMAL_PLACES).toString().trimTrailingZero()) }
             .bold { append(getString(R.string.liters_result_text)) }
 
         val costFor100kmText = SpannableStringBuilder()
             .append(getString(R.string.price_per_100km_result_text))
-            .bold { append(price.roundTo(DECIMAL_PLACES).toString()) }
+            .bold { append(price.roundTo(DECIMAL_PLACES).toString().trimTrailingZero()) }
             .bold { append(getString(R.string.zloty_result_text)) }
 
         binding.apply {

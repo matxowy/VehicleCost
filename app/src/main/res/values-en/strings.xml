@@ -51,7 +51,7 @@
     <string name="km_result_text">" km"</string>
     <string name="required_amount_of_fuel_result_text">"Required amount of fuel: "</string>
     <string name="cost_of_travel_result_text">"Cost of travel: "</string>
-    <string name="zloty_result_text">zl</string>
+    <string name="zloty_result_text">" zl"</string>
     <string name="per_person_result_text">"Per person: "</string>
     <string name="avg_consumtion_result_text">"Average fuel consumption: "</string>
     <string name="price_per_100km_result_text">"Price for traveled 100km is: "</string>
